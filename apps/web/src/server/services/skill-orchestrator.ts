@@ -94,8 +94,8 @@ export class SKILLOrchestrator {
 
       if (!AI_AVAILABLE) {
         const fallbackMessage = problem
-          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師目前不可用（請在 .env 中設定 GEMINI_API_KEY）。你仍然可以瀏覽題目、撰寫程式碼並提交。\n\n[S] 蘇格拉底`
-          : "⚠️ AI 導師目前不可用。請在 .env 中設定 GEMINI_API_KEY。";
+          ? `👋 Welcome to **${problem.title}**!\n\nI'm your AI Tutor, but I'm currently offline. Set \`GEMINI_API_KEY\` in \`.env\` to enable me.\n\nIn the meantime, try these on your own:\n- 🤔 What data structure fits this problem best?\n- ⏱️ What's the brute-force time complexity?\n- 🚀 Can you optimize it?\n\nYou can still write code and submit!\n\n[S] Socratic`
+          : "⚠️ AI Tutor is currently unavailable. Set `GEMINI_API_KEY` in `.env`.";
 
         await this.prisma.message.create({
           data: {
@@ -128,12 +128,10 @@ export class SKILLOrchestrator {
           systemInstruction: systemPrompt,
         });
 
-        const result = await model.generateContent("請開始引導我解這道題。");
+        const result = await model.generateContent("Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.");
         assistantMessage = result.response.text();
       } catch (error: any) {
-        assistantMessage = problem
-          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師暫時無法連線（${error.message}）。你仍然可以撰寫程式碼並提交。\n\n[S] 蘇格拉底`
-          : `⚠️ AI 導師暫時無法連線：${error.message}`;
+        assistantMessage = `👋 Welcome! I had trouble connecting (${error.message}).\n\nHere are some questions to get you started:\n- What's your first instinct for solving this?\n- What's the time complexity of the brute-force approach?\n- Is there a data structure that could help?\n\nYou can still write code and submit!\n\n[S] Socratic`;
       }
 
       // 儲存系統訊息
@@ -239,7 +237,7 @@ export class SKILLOrchestrator {
     phase: SKILLPhase;
   }): AsyncGenerator<string> {
     if (!AI_AVAILABLE) {
-      const fallback = "⚠️ AI 導師目前不可用。請在 .env 中設定 GEMINI_API_KEY。\n\n你仍然可以撰寫程式碼並提交測試。";
+      const fallback = "⚠️ AI Tutor is offline. Set `GEMINI_API_KEY` in `.env` to enable it.\n\nYou can still write code and submit!";
       yield fallback;
       await this.prisma.message.create({
         data: {

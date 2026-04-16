@@ -3,7 +3,9 @@ import { protectedProcedure, router } from "../trpc";
 import { ExecutionClient } from "../services/execution-client";
 import { ProblemService } from "../services/problem";
 
-const executionClient = new ExecutionClient();
+function getExecutionClient() {
+  return new ExecutionClient();
+}
 
 export const submissionRouter = router({
   // 提交程式碼
@@ -22,20 +24,30 @@ export const submissionRouter = router({
       // 取得所有測資（含隱藏）
       const testCases = await problemService.getAllTestCases(input.problemId);
 
+      // 建立輔助函式，過濾 Postgres 不支援的 null byte
+      const sanitizeDeep = (obj: any): any => {
+        if (typeof obj === 'string') return obj.replace(/\0/g, '');
+        if (Array.isArray(obj)) return obj.map(sanitizeDeep);
+        if (obj !== null && typeof obj === 'object') {
+          return Object.fromEntries(Object.entries(obj).map(([k, v]) => [k, sanitizeDeep(v)]));
+        }
+        return obj;
+      };
+
       // 建立提交記錄
       const submission = await ctx.prisma.submission.create({
         data: {
           userId: ctx.user.id,
           problemId: input.problemId,
           language: input.language,
-          code: input.code,
+          code: input.code.replace(/\0/g, ''),
           status: "PENDING",
         },
       });
 
       // 呼叫執行引擎
       try {
-        const result = await executionClient.executeSync({
+        const result = await getExecutionClient().executeSync({
           submissionId: submission.id,
           language: input.language,
           code: input.code,
@@ -57,7 +69,7 @@ export const submissionRouter = router({
             status: result.status as any,
             runtime: result.totalRuntime,
             memory: result.totalMemory,
-            results: result.testResults as any,
+            results: sanitizeDeep(result.testResults) as any,
           },
         });
 
@@ -75,7 +87,7 @@ export const submissionRouter = router({
           where: { id: submission.id },
           data: {
             status: "RUNTIME_ERROR",
-            aiAnalysis: `執行引擎錯誤: ${error.message}`,
+            aiAnalysis: `執行引擎錯誤: ${error.message}`.replace(/\0/g, ""),
           },
         });
 

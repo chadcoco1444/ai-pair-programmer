@@ -1,5 +1,5 @@
 import express from "express";
-import { executionQueue, type ExecutionJob } from "./queue";
+import { executionQueue, executionQueueEvents, type ExecutionJob } from "./queue";
 import { startWorker } from "./worker";
 import { ensureImagesExist } from "./sandbox";
 
@@ -84,7 +84,7 @@ app.post("/execute/sync", async (req, res) => {
 
   try {
     const result = await job.waitUntilFinished(
-      executionQueue.events,
+      executionQueueEvents,
       30000
     );
     res.json({ submissionId, ...result });
