@@ -14,9 +14,9 @@ export function judgeTestCase(
   return {
     testCaseId: testCase.id,
     passed: actual === expected,
-    input: testCase.isHidden ? "[隱藏]" : testCase.input,
-    expected: testCase.isHidden ? "[隱藏]" : testCase.expected,
-    actual: testCase.isHidden ? (actual === expected ? "[正確]" : "[錯誤]") : actual,
+    input: testCase.isHidden ? "[hidden]" : testCase.input,
+    expected: testCase.isHidden ? "[hidden]" : testCase.expected,
+    actual: testCase.isHidden ? (actual === expected ? "[correct]" : "[wrong]") : actual,
     runtime: runResult.runtime,
     memory: runResult.memory,
   };

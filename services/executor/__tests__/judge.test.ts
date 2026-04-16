@@ -49,17 +49,17 @@ describe("judgeTestCase", () => {
       makeTestCase({ isHidden: true }),
       makeRunResult()
     );
-    expect(result.input).toBe("[隱藏]");
-    expect(result.expected).toBe("[隱藏]");
-    expect(result.actual).toBe("[正確]");
+    expect(result.input).toBe("[hidden]");
+    expect(result.expected).toBe("[hidden]");
+    expect(result.actual).toBe("[correct]");
   });
 
-  it("隱藏測資答案錯誤時應顯示 [錯誤]", () => {
+  it("隱藏測資答案錯誤時應顯示 [wrong]", () => {
     const result = judgeTestCase(
       makeTestCase({ isHidden: true }),
       makeRunResult({ stdout: "wrong" })
     );
-    expect(result.actual).toBe("[錯誤]");
+    expect(result.actual).toBe("[wrong]");
   });
 });
 

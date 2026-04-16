@@ -1,6 +1,6 @@
 import Docker from "dockerode";
 import { Readable } from "stream";
-import type { RunConfig, RunResult, LANGUAGE_CONFIG } from "./runners/types";
+import type { RunConfig, RunResult } from "./runners/types";
 
 const docker = new Docker();
 
@@ -12,12 +12,45 @@ interface SandboxOptions {
   memoryLimit: number;
 }
 
-async function streamToString(stream: NodeJS.ReadableStream): Promise<string> {
-  const chunks: Buffer[] = [];
-  for await (const chunk of stream) {
-    chunks.push(Buffer.isBuffer(chunk) ? chunk : Buffer.from(chunk));
+/**
+ * Demux Docker multiplexed stream logs.
+ * Docker logs have 8-byte headers: [stream_type(1), 0, 0, 0, size(4 big-endian)]
+ * stream_type: 1 = stdout, 2 = stderr
+ */
+function demuxDockerLogs(buffer: Buffer): { stdout: string; stderr: string } {
+  let stdout = "";
+  let stderr = "";
+  let offset = 0;
+
+  while (offset < buffer.length) {
+    if (offset + 8 > buffer.length) {
+      // Incomplete header — treat remaining as stdout
+      stdout += buffer.subarray(offset).toString("utf-8");
+      break;
+    }
+
+    const streamType = buffer[offset];
+    const frameSize = buffer.readUInt32BE(offset + 4);
+    offset += 8;
+
+    if (offset + frameSize > buffer.length) {
+      // Incomplete frame
+      const chunk = buffer.subarray(offset).toString("utf-8");
+      if (streamType === 2) stderr += chunk;
+      else stdout += chunk;
+      break;
+    }
+
+    const chunk = buffer.subarray(offset, offset + frameSize).toString("utf-8");
+    if (streamType === 2) {
+      stderr += chunk;
+    } else {
+      stdout += chunk;
+    }
+    offset += frameSize;
   }
-  return Buffer.concat(chunks).toString("utf-8");
+
+  return { stdout, stderr };
 }
 
 export async function runInSandbox(options: SandboxOptions): Promise<RunResult> {
@@ -59,35 +92,39 @@ export async function runInSandbox(options: SandboxOptions): Promise<RunResult> 
 
     await container.start();
 
-    // 寫入 stdin
+    // Write stdin
     const stdinStream = new Readable();
     stdinStream.push(stdin);
     stdinStream.push(null);
     stdinStream.pipe(stream);
 
-    // 設定超時
+    // Set timeout
     const timeoutId = setTimeout(async () => {
       timedOut = true;
       try {
         await container.kill();
       } catch {
-        // 容器可能已經停止
+        // Container may already be stopped
       }
     }, timeout);
 
-    // 等待容器結束
+    // Wait for container to finish
     const waitResult = await container.wait();
     clearTimeout(timeoutId);
 
-    // 取得輸出
-    const logs = await container.logs({ stdout: true, stderr: true });
-    const output = logs.toString("utf-8");
+    // Get logs and properly demux
+    const logBuffer = await container.logs({
+      stdout: true,
+      stderr: true,
+      follow: false,
+    });
+    const rawBuffer = Buffer.isBuffer(logBuffer)
+      ? logBuffer
+      : Buffer.from(logBuffer as any);
 
-    // 分離 stdout 和 stderr（簡化處理）
-    const stdout = output;
-    const stderr = "";
+    const { stdout, stderr } = demuxDockerLogs(rawBuffer);
 
-    // 檢查 OOM
+    // Check OOM
     const inspectResult = await container.inspect();
     oomKilled = inspectResult.State.OOMKilled || false;
 
@@ -109,7 +146,7 @@ export async function runInSandbox(options: SandboxOptions): Promise<RunResult> 
     try {
       await container.remove({ force: true });
     } catch {
-      // 忽略移除失敗
+      // Ignore removal failure
     }
   }
 }
@@ -121,12 +158,15 @@ export async function compileInSandbox(
   compileCmd: string,
   timeout: number
 ): Promise<{ success: boolean; error?: string; compiledImage?: string }> {
+  const codeB64 = Buffer.from(code).toString("base64");
+
   const container = await docker.createContainer({
     Image: image,
-    Cmd: ["sh", "-c", `cat > /tmp/${filename} && ${compileCmd}`],
-    OpenStdin: true,
-    StdinOnce: true,
-    AttachStdin: true,
+    Cmd: [
+      "sh",
+      "-c",
+      `printf '%s' "${codeB64}" | base64 -d > /tmp/${filename} && ${compileCmd}`,
+    ],
     AttachStdout: true,
     AttachStderr: true,
     NetworkDisabled: true,
@@ -137,20 +177,7 @@ export async function compileInSandbox(
   });
 
   try {
-    const stream = await container.attach({
-      stream: true,
-      stdin: true,
-      stdout: true,
-      stderr: true,
-      hijack: true,
-    });
-
     await container.start();
-
-    const stdinStream = new Readable();
-    stdinStream.push(code);
-    stdinStream.push(null);
-    stdinStream.pipe(stream);
 
     const timeoutId = setTimeout(async () => {
       try { await container.kill(); } catch {}
@@ -160,17 +187,19 @@ export async function compileInSandbox(
     clearTimeout(timeoutId);
 
     if (waitResult.StatusCode !== 0) {
-      const logs = await container.logs({ stdout: true, stderr: true });
-      return { success: false, error: logs.toString("utf-8") };
+      const logBuffer = await container.logs({ stdout: true, stderr: true });
+      const rawBuffer = Buffer.isBuffer(logBuffer)
+        ? logBuffer
+        : Buffer.from(logBuffer as any);
+      const { stdout, stderr } = demuxDockerLogs(rawBuffer);
+      return { success: false, error: stderr || stdout };
     }
 
-    // 將編譯好的容器 commit 為新映像
-    const committedImage = await container.commit({
-      repo: "skill-compiled",
-      tag: Date.now().toString(),
-    });
+    // Commit compiled container as new image
+    const tag = Date.now().toString();
+    await container.commit({ repo: "skill-compiled", tag });
 
-    return { success: true, compiledImage: `skill-compiled:${Date.now()}` };
+    return { success: true, compiledImage: `skill-compiled:${tag}` };
   } finally {
     try {
       await container.remove({ force: true });
@@ -185,7 +214,7 @@ export async function ensureImagesExist(): Promise<void> {
     try {
       await docker.getImage(imageName).inspect();
     } catch {
-      console.warn(`映像 ${imageName} 不存在。請先建置語言映像。`);
+      console.warn(`Image ${imageName} not found. Please build language images first.`);
     }
   }
 }
