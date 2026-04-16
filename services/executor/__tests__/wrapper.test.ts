@@ -46,6 +46,14 @@ describe("wrapPythonCode", () => {
     expect(wrapped).toContain("re.split");
   });
 
+  it("REGRESSION: should use definition order not alphabetical for method selection", () => {
+    // Bug: dir() returns alphabetically → dfs before findWords
+    // Fix: use type().__dict__ which preserves definition order
+    const wrapped = wrapPythonCode("pass");
+    expect(wrapped).toContain("type(_sol).__dict__");
+    expect(wrapped).not.toContain("dir(_sol)");
+  });
+
   it("REGRESSION: empty output because no I/O wrapper was added", () => {
     const wrapped = wrapPythonCode("class Solution:\n    def isValid(self, s): return True");
     expect(wrapped).toContain("print(_format_result");

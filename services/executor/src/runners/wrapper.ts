@@ -74,7 +74,10 @@ if __name__ == "__main__":
     # Try class Solution first
     if "Solution" in dir():
         _sol = Solution()
-        _methods = [m for m in dir(_sol) if not m.startswith("_") and callable(getattr(_sol, m))]
+        # Use __dict__ to preserve definition order (not alphabetical like dir())
+        # Pick the first public method defined in the class
+        _methods = [k for k, v in type(_sol).__dict__.items()
+                    if not k.startswith("_") and callable(v)]
         if _methods:
             _result = getattr(_sol, _methods[0])(*_args)
             _found = True
