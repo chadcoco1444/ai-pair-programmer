@@ -12,6 +12,7 @@ import { ChatContainer } from "@/components/chat/chat-container";
 import { MacWindow } from "@/components/ui/mac-window";
 import { ResizableHorizontal, ResizableVertical } from "@/components/ui/resizable-panels";
 import { useSubmission } from "@/hooks/use-submission";
+import { ProblemListPanel } from "@/components/practice/problem-list-panel";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Language } from "@skill/shared";
@@ -42,6 +43,11 @@ export default function PracticePage() {
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [initialMessages, setInitialMessages] = useState<any[]>([]);
   const editorRef = useRef<CodeEditorHandle>(null);
+  const [showProblemList, setShowProblemList] = useState(false);
+  const [maximized, setMaximized] = useState<"none" | "problem" | "code" | "testcase">("none");
+  const [codeFolded, setCodeFolded] = useState(false);
+  const [testFolded, setTestFolded] = useState(false);
+  const [problemFolded, setProblemFolded] = useState(false);
 
   const { data: problem, isLoading: problemLoading } =
     trpc.problem.getBySlug.useQuery({ slug });
@@ -103,7 +109,14 @@ export default function PracticePage() {
 
   // ===== Left Panel Content =====
   const leftPanel = (
-    <MacWindow title="Problem" titleColor="text-gray-400" className="h-full">
+    <MacWindow
+      title="Problem"
+      titleColor="text-gray-400"
+      className="h-full"
+      folded={problemFolded}
+      onFold={() => setProblemFolded(!problemFolded)}
+      onMaximize={() => setMaximized(maximized === "problem" ? "none" : "problem")}
+    >
       {/* Tabs */}
       <div className="flex border-b border-gray-700/50 bg-[#252525]">
         {([
@@ -220,6 +233,9 @@ export default function PracticePage() {
       title={`</> Code — ${LANGUAGES.find((l) => l.value === language)?.label}`}
       titleColor="text-green-400"
       className="h-full"
+      folded={codeFolded}
+      onFold={() => setCodeFolded(!codeFolded)}
+      onMaximize={() => setMaximized(maximized === "code" ? "none" : "code")}
     >
       <div className="flex items-center bg-[#252525] px-3 py-1.5">
         <select
@@ -246,7 +262,14 @@ export default function PracticePage() {
 
   // ===== Right Bottom: Test Result =====
   const testPanel = (
-    <MacWindow title="Testcase" titleColor="text-green-400" className="h-full">
+    <MacWindow
+      title="Testcase"
+      titleColor="text-green-400"
+      className="h-full"
+      folded={testFolded}
+      onFold={() => setTestFolded(!testFolded)}
+      onMaximize={() => setMaximized(maximized === "testcase" ? "none" : "testcase")}
+    >
       <div className="flex-1 overflow-y-auto">
         {result ? (
           <ExecutionResult
@@ -280,53 +303,103 @@ export default function PracticePage() {
     </MacWindow>
   );
 
+  // Maximize overlay
+  if (maximized !== "none") {
+    const panel = maximized === "problem" ? leftPanel : maximized === "code" ? codePanel : testPanel;
+    return (
+      <div className="flex h-screen flex-col bg-[#0a0a0f]">
+        <div className="flex h-10 items-center justify-between border-b border-gray-800/60 bg-[#1a1a1a] px-4">
+          <span className="text-[13px] text-gray-400">Maximized — click □ to restore</span>
+          <button
+            onClick={() => setMaximized("none")}
+            className="rounded px-3 py-1 text-[12px] text-gray-400 hover:bg-[#333] hover:text-white"
+          >
+            ✕ Exit
+          </button>
+        </div>
+        <div className="flex-1 p-1.5">{panel}</div>
+      </div>
+    );
+  }
+
   return (
     <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-[#0a0a0f]">
-      {/* Top Action Bar */}
-      <div className="flex h-10 items-center justify-between border-b border-gray-800/60 bg-[#282828] px-4">
-        <div className="flex items-center gap-3">
-          <Link href="/practice" className="flex items-center gap-1.5 text-[13px] text-gray-400 hover:text-white">
-            <span>&#9776;</span> Problem List
-          </Link>
-          <span className="text-gray-600">|</span>
-          <span className="text-[13px] font-medium text-white">{problem.title}</span>
+      {/* Top Action Bar — LeetCode style */}
+      <div className="flex h-[42px] shrink-0 items-center justify-between border-b border-gray-800/60 bg-[#1a1a1a] px-3">
+        {/* Left: nav */}
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setShowProblemList(!showProblemList)}
+            className="flex items-center gap-1 text-[13px] text-gray-400 hover:text-white"
+          >
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4h12v1.5H2zm0 3.25h12v1.5H2zm0 3.25h12V12H2z"/></svg>
+            Problem List
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
+              <polyline points="2,3.5 5,6.5 8,3.5"/>
+            </svg>
+          </button>
+          <div className="flex items-center gap-1 text-gray-600">
+            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Previous">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="8,3 4,7 8,11"/></svg>
+            </button>
+            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Next">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="6,3 10,7 6,11"/></svg>
+            </button>
+            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Random">
+              <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 10l3-3 2 2 5-5M9 4h3v3"/></svg>
+            </button>
+          </div>
         </div>
+
+        {/* Center: Run / Submit */}
         <div className="flex items-center gap-2">
           <button
             onClick={handleTopRun}
             disabled={isSubmitting}
-            className="flex items-center gap-1.5 rounded bg-[#333] px-3.5 py-1.5 text-[12px] font-medium text-gray-200 hover:bg-[#444] disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded px-2 py-1 text-[13px] text-gray-300 hover:bg-[#333] disabled:opacity-50"
           >
-            <span className="text-green-400">&#9654;</span> Run
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="#4ade80"><polygon points="4,2 14,8 4,14"/></svg>
           </button>
           <button
             onClick={handleTopRun}
             disabled={isSubmitting}
-            className="flex items-center gap-1.5 rounded bg-green-600 px-3.5 py-1.5 text-[12px] font-medium text-white hover:bg-green-500 disabled:opacity-50"
+            className="flex items-center gap-1.5 rounded bg-[#2cbb5d]/20 px-3 py-1 text-[13px] font-medium text-[#2cbb5d] hover:bg-[#2cbb5d]/30 disabled:opacity-50"
           >
-            <span>&#9654;</span> Submit
+            <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="2"><polyline points="2,7 5.5,10.5 12,4"/></svg>
+            Submit
           </button>
         </div>
+
+        {/* Right: empty for now */}
+        <div className="w-24" />
       </div>
 
       {/* Main Content */}
       <div className="flex-1 p-1.5">
-      <ResizableHorizontal
-        left={leftPanel}
-        right={
-          <ResizableVertical
-            top={codePanel}
-            bottom={testPanel}
-            defaultRatio={0.6}
-            minTopHeight={150}
-            minBottomHeight={100}
-          />
-        }
-        defaultRatio={0.45}
-        minLeftWidth={350}
-        minRightWidth={400}
-      />
+        <ResizableHorizontal
+          left={leftPanel}
+          right={
+            <ResizableVertical
+              top={codePanel}
+              bottom={testPanel}
+              defaultRatio={codeFolded ? 0.05 : testFolded ? 0.95 : 0.6}
+              minTopHeight={codeFolded ? 36 : 150}
+              minBottomHeight={testFolded ? 36 : 100}
+            />
+          }
+          defaultRatio={problemFolded ? 0.03 : 0.45}
+          minLeftWidth={problemFolded ? 40 : 350}
+          minRightWidth={400}
+        />
       </div>
+
+      {/* Problem List Sidebar */}
+      {showProblemList && (
+        <ProblemListPanel
+          currentSlug={slug}
+          onClose={() => setShowProblemList(false)}
+        />
+      )}
     </div>
   );
 }
