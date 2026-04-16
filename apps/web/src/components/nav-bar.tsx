@@ -20,6 +20,11 @@ export function NavBar() {
   const { status } = useSession();
   const navItems = status === "authenticated" ? AUTH_ITEMS : PUBLIC_ITEMS;
 
+  // Hide on practice problem pages (they have their own nav bar)
+  if (pathname.startsWith("/practice/") && pathname !== "/practice") {
+    return null;
+  }
+
   return (
     <header className="border-b border-gray-800 bg-gray-950">
       <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">

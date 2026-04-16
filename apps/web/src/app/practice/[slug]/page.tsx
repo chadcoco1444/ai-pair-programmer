@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import { trpc } from "@/lib/trpc-client";
 import { CodeEditor, type CodeEditorHandle } from "@/components/editor/code-editor";
@@ -13,6 +13,7 @@ import { MacWindow } from "@/components/ui/mac-window";
 import { ResizableHorizontal, ResizableVertical } from "@/components/ui/resizable-panels";
 import { useSubmission } from "@/hooks/use-submission";
 import { ProblemListPanel } from "@/components/practice/problem-list-panel";
+import { AuthButton } from "@/components/auth-button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import type { Language } from "@skill/shared";
@@ -35,6 +36,7 @@ type LeftTab = "description" | "ai-tutor" | "submissions";
 
 export default function PracticePage() {
   const { status } = useSession();
+  const router = useRouter();
   const params = useParams();
   const slug = params.slug as string;
 
@@ -51,6 +53,9 @@ export default function PracticePage() {
 
   const { data: problem, isLoading: problemLoading } =
     trpc.problem.getBySlug.useQuery({ slug });
+
+  // All problems for prev/next/random navigation
+  const { data: allProblems } = trpc.problem.list.useQuery({});
 
   const startConversation = trpc.conversation.start.useMutation();
   const { submit, isSubmitting, result } = useSubmission();
@@ -105,6 +110,25 @@ export default function PracticePage() {
   const handleTopRun = () => {
     const code = editorRef.current?.getCode() ?? starterCode;
     handleSubmit(code);
+  };
+
+  const currentIndex = allProblems?.findIndex((p) => p.slug === slug) ?? -1;
+
+  const goToPrev = () => {
+    if (!allProblems || currentIndex <= 0) return;
+    router.push(`/practice/${allProblems[currentIndex - 1].slug}`);
+  };
+
+  const goToNext = () => {
+    if (!allProblems || currentIndex >= allProblems.length - 1) return;
+    router.push(`/practice/${allProblems[currentIndex + 1].slug}`);
+  };
+
+  const goToRandom = () => {
+    if (!allProblems || allProblems.length === 0) return;
+    const candidates = allProblems.filter((p) => p.slug !== slug);
+    const pick = candidates[Math.floor(Math.random() * candidates.length)];
+    if (pick) router.push(`/practice/${pick.slug}`);
   };
 
   // ===== Left Panel Content =====
@@ -323,29 +347,44 @@ export default function PracticePage() {
   }
 
   return (
-    <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-[#0a0a0f]">
-      {/* Top Action Bar — LeetCode style */}
+    <div className="flex h-screen flex-col bg-[#0a0a0f]">
+      {/* Unified Top Bar — LeetCode style */}
       <div className="flex h-[42px] shrink-0 items-center justify-between border-b border-gray-800/60 bg-[#1a1a1a] px-3">
-        {/* Left: nav */}
-        <div className="flex items-center gap-2">
+        {/* Left: Logo + Problem List + Arrows */}
+        <div className="flex items-center gap-3">
+          <Link href="/" className="text-[16px] font-bold text-orange-400 hover:text-orange-300">
+            S
+          </Link>
+          <div className="h-4 w-px bg-gray-700" />
           <button
             onClick={() => setShowProblemList(!showProblemList)}
             className="flex items-center gap-1 text-[13px] text-gray-400 hover:text-white"
           >
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4h12v1.5H2zm0 3.25h12v1.5H2zm0 3.25h12V12H2z"/></svg>
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M2 4h12v1.5H2zm0 3.25h12v1.5H2zm0 3.25h12V12H2z"/></svg>
             Problem List
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5">
-              <polyline points="2,3.5 5,6.5 8,3.5"/>
-            </svg>
           </button>
-          <div className="flex items-center gap-1 text-gray-600">
-            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Previous">
+          <div className="flex items-center gap-0.5 text-gray-600">
+            <button
+              onClick={goToPrev}
+              disabled={currentIndex <= 0}
+              className="rounded p-1 hover:bg-[#333] hover:text-gray-300 disabled:opacity-30 disabled:hover:bg-transparent"
+              title="Previous Problem"
+            >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="8,3 4,7 8,11"/></svg>
             </button>
-            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Next">
+            <button
+              onClick={goToNext}
+              disabled={!allProblems || currentIndex >= allProblems.length - 1}
+              className="rounded p-1 hover:bg-[#333] hover:text-gray-300 disabled:opacity-30 disabled:hover:bg-transparent"
+              title="Next Problem"
+            >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><polyline points="6,3 10,7 6,11"/></svg>
             </button>
-            <button className="rounded p-1 hover:bg-[#333] hover:text-gray-300" title="Random">
+            <button
+              onClick={goToRandom}
+              className="rounded p-1 hover:bg-[#333] hover:text-gray-300"
+              title="Random Problem"
+            >
               <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M2 10l3-3 2 2 5-5M9 4h3v3"/></svg>
             </button>
           </div>
@@ -370,8 +409,20 @@ export default function PracticePage() {
           </button>
         </div>
 
-        {/* Right: empty for now */}
-        <div className="w-24" />
+        {/* Right: Nav links + Auth */}
+        <div className="flex items-center gap-3">
+          <Link href="/dashboard" className="text-[12px] text-gray-500 hover:text-gray-300">
+            Dashboard
+          </Link>
+          <Link href="/practice" className="text-[12px] text-gray-500 hover:text-gray-300">
+            Problems
+          </Link>
+          <Link href="/profile" className="text-[12px] text-gray-500 hover:text-gray-300">
+            Profile
+          </Link>
+          <div className="h-4 w-px bg-gray-700" />
+          <AuthButton />
+        </div>
       </div>
 
       {/* Main Content */}

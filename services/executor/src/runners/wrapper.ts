@@ -1,12 +1,6 @@
 /**
  * Generate I/O wrapper code that reads stdin, calls the user's solution,
- * and prints the result. This bridges LeetCode-style class/function code
- * with the executor's stdin/stdout model.
- *
- * Handles input formats:
- * 1. One argument per line:         "[2,7,11,15]\n9"
- * 2. LeetCode var assignment:       'nums = [2,7], target = 9'
- * 3. Mixed multi-line assignments:  'board = [[...]]\nwords = [...]'
+ * and prints the result.
  */
 
 export function wrapPythonCode(userCode: string): string {
@@ -19,77 +13,86 @@ from functools import lru_cache
 ${userCode}
 
 # === Auto-generated I/O wrapper ===
-import sys, json, ast, re
+import sys, json, ast
 
-def _parse_leetcode_input(raw):
+def _parse_input(raw):
     raw = raw.strip()
     if not raw:
         return []
+    # Try to parse as Python expression directly (handles lists, tuples, etc.)
+    # Input lines can be: one value per line, or "var = val" per line,
+    # or a single line with "var1 = val1, var2 = val2"
+    lines = raw.split('\\n')
+    # If single line with multiple "var = val", split by top-level commas
+    if len(lines) == 1 and '=' in lines[0]:
+        raw_line = lines[0].strip()
+        # Use bracket-aware splitting
+        parts = _split_top_level(raw_line)
+        return [_parse_value(p) for p in parts]
+    # Multi-line: each line is either "var = val" or just a value
+    args = []
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue
+        args.append(_parse_value(line))
+    return args
 
-    # Check for "var = value" format
-    if re.match(r'^[a-zA-Z_]', raw) and '=' in raw.split('\\n')[0]:
-        joined = ' '.join(raw.split('\\n'))
-        # Use bracket counting to split at top-level ", var ="
-        args = []
-        depth = 0
-        current = ''
-        i = 0
-        while i < len(joined):
-            c = joined[i]
-            if c in '([{':
-                depth += 1
-                current += c
-            elif c in ')]}':
-                depth -= 1
-                current += c
-            elif c == '"' or c == "'":
-                # Skip quoted string
-                quote = c
-                current += c
+def _split_top_level(s):
+    """Split 'var1 = val1, var2 = val2' by top-level commas between assignments."""
+    parts = []
+    depth = 0
+    current = ''
+    in_str = False
+    str_char = None
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if in_str:
+            current += c
+            if c == str_char and (i == 0 or s[i-1] != chr(92)):
+                in_str = False
+        elif c in ('"', "'"):
+            in_str = True
+            str_char = c
+            current += c
+        elif c in ('(', '[', '{'):
+            depth += 1
+            current += c
+        elif c in (')', ']', '}'):
+            depth -= 1
+            current += c
+        elif c == ',' and depth == 0:
+            # Check if next non-space is a variable name followed by =
+            rest = s[i+1:].lstrip()
+            import re as _re
+            if _re.match(r'^[a-zA-Z_]\\w*\\s*=(?!=)', rest):
+                parts.append(current.strip())
+                current = ''
                 i += 1
-                while i < len(joined) and joined[i] != quote:
-                    if joined[i] == '\\\\':
-                        current += joined[i:i+2]
-                        i += 2
-                        continue
-                    current += joined[i]
-                    i += 1
-                if i < len(joined):
-                    current += joined[i]
-            elif c == ',' and depth == 0:
-                # Check if what follows is "varname ="
-                rest = joined[i+1:].lstrip()
-                if re.match(r'^[a-zA-Z_]\\w*\\s*=', rest):
-                    args.append(current.strip())
-                    current = ''
-                    i += 1
-                    continue
-                else:
-                    current += c
+                continue
             else:
                 current += c
-            i += 1
-        if current.strip():
-            args.append(current.strip())
+        else:
+            current += c
+        i += 1
+    if current.strip():
+        parts.append(current.strip())
+    return parts
 
-        # Strip "var = " prefix and parse each value
-        parsed = []
-        for a in args:
-            val = re.sub(r'^[a-zA-Z_]\\w*\\s*=\\s*', '', a)
-            try:
-                parsed.append(ast.literal_eval(val))
-            except:
-                parsed.append(val)
-        return parsed
-    else:
-        lines = [l.strip() for l in raw.split('\\n') if l.strip()]
-        args = []
-        for line in lines:
-            try:
-                args.append(ast.literal_eval(line))
-            except:
-                args.append(line)
-        return args
+def _parse_value(s):
+    """Parse 'var = value' or just 'value'."""
+    s = s.strip()
+    # Strip "varname = " prefix if present
+    import re as _re
+    m = _re.match(r'^[a-zA-Z_]\\w*\\s*=\\s*', s)
+    if m:
+        s = s[m.end():]
+    try:
+        return ast.literal_eval(s)
+    except:
+        # Return as string
+        return s
 
 def _format_result(r):
     if isinstance(r, bool):
@@ -103,8 +106,8 @@ def _format_result(r):
     return str(r)
 
 if __name__ == "__main__":
-    _raw_input = sys.stdin.read()
-    _args = _parse_leetcode_input(_raw_input)
+    _raw = sys.stdin.read()
+    _args = _parse_input(_raw)
 
     _result = None
     _found = False
@@ -112,15 +115,12 @@ if __name__ == "__main__":
     # Try class Solution first
     if "Solution" in dir():
         _sol = Solution()
-        # Use __dict__ to preserve definition order (not alphabetical like dir())
-        # Pick the first public method defined in the class
         _methods = [k for k, v in type(_sol).__dict__.items()
                     if not k.startswith("_") and callable(v)]
         if _methods:
             _result = getattr(_sol, _methods[0])(*_args)
             _found = True
 
-    # Then try standalone functions
     if not _found:
         import types
         _funcs = [(k, v) for k, v in list(globals().items())
@@ -140,23 +140,45 @@ export function wrapJavaScriptCode(userCode: string): string {
 // === Auto-generated I/O wrapper ===
 const _rawInput = require("fs").readFileSync("/dev/stdin", "utf-8").trim();
 
-function _parseLeetcodeInput(raw) {
+function _parseInput(raw) {
   if (!raw) return [];
-  // Check for "var = value" format
-  if (/^[a-zA-Z_]\\w*\\s*=/.test(raw)) {
-    const joined = raw.split("\\n").join(" ");
-    const parts = joined.split(/,\\s*(?=[a-zA-Z_]\\w*\\s*=)/);
-    return parts.map(p => {
-      const val = p.replace(/^[a-zA-Z_]\\w*\\s*=\\s*/, "").trim();
-      try { return JSON.parse(val); }
-      catch { return val; }
-    });
-  } else {
-    return raw.split("\\n").filter(l => l.trim()).map(l => {
-      try { return JSON.parse(l.trim()); }
-      catch { return l.trim(); }
-    });
+  const lines = raw.split("\\n");
+  if (lines.length === 1 && lines[0].includes("=")) {
+    // Single line with "var1 = val1, var2 = val2"
+    return _splitTopLevel(lines[0]).map(_parseValue);
   }
+  return lines.filter(l => l.trim()).map(l => _parseValue(l.trim()));
+}
+
+function _splitTopLevel(s) {
+  const parts = [];
+  let depth = 0, current = "", inStr = false, strChar = "";
+  for (let i = 0; i < s.length; i++) {
+    const c = s[i];
+    if (inStr) {
+      current += c;
+      if (c === strChar && s[i-1] !== "\\\\") inStr = false;
+    } else if (c === '"' || c === "'") {
+      inStr = true; strChar = c; current += c;
+    } else if ("([{".includes(c)) { depth++; current += c; }
+    else if (")]}".includes(c)) { depth--; current += c; }
+    else if (c === "," && depth === 0) {
+      const rest = s.slice(i+1).trimStart();
+      if (/^[a-zA-Z_]\\w*\\s*=(?!=)/.test(rest)) {
+        parts.push(current.trim());
+        current = "";
+        continue;
+      } else { current += c; }
+    } else { current += c; }
+  }
+  if (current.trim()) parts.push(current.trim());
+  return parts;
+}
+
+function _parseValue(s) {
+  s = s.trim().replace(/^[a-zA-Z_]\\w*\\s*=\\s*/, "");
+  try { return JSON.parse(s); }
+  catch { return s; }
 }
 
 function _formatResult(r) {
@@ -166,10 +188,9 @@ function _formatResult(r) {
   return String(r);
 }
 
-const _args = _parseLeetcodeInput(_rawInput);
+const _args = _parseInput(_rawInput);
 let _found = false;
 
-// Try class-based solution
 if (typeof Solution !== "undefined") {
   const _sol = new Solution();
   const _methods = Object.getOwnPropertyNames(Object.getPrototypeOf(_sol))
@@ -183,11 +204,11 @@ if (typeof Solution !== "undefined") {
 if (!_found) {
   const _funcNames = Object.keys(global).filter(k =>
     typeof global[k] === "function" && !k.startsWith("_") &&
-    k !== "require" && k !== "_parseLeetcodeInput" && k !== "_formatResult"
+    k !== "require" && k !== "_parseInput" && k !== "_splitTopLevel" &&
+    k !== "_parseValue" && k !== "_formatResult"
   );
   if (_funcNames.length > 0) {
-    const _name = _funcNames[_funcNames.length - 1];
-    console.log(_formatResult(global[_name](..._args)));
+    console.log(_formatResult(global[_funcNames[_funcNames.length - 1]](..._args)));
   }
 }
 `;
