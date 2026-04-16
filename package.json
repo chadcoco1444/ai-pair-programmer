@@ -7,9 +7,9 @@
     "services/*"
   ],
   "scripts": {
-    "setup": "bash scripts/setup.sh",
-    "dev:web": "bash scripts/dev.sh",
-    "stop": "bash scripts/stop.sh",
+    "setup": "node scripts/setup.mjs",
+    "dev:web": "node scripts/dev.mjs",
+    "stop": "node scripts/stop.mjs",
     "dev": "turbo dev",
     "build": "turbo build",
     "test": "turbo test",
