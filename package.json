@@ -1,0 +1,22 @@
+{
+  "name": "ai-pair-programmer",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "test": "turbo test",
+    "lint": "turbo lint",
+    "db:push": "cd apps/web && npx prisma db push",
+    "db:generate": "cd apps/web && npx prisma generate",
+    "db:studio": "cd apps/web && npx prisma studio"
+  },
+  "devDependencies": {
+    "turbo": "^2.5.0"
+  },
+  "packageManager": "npm@10.9.0"
+}
