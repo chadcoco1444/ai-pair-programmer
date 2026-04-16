@@ -4,19 +4,45 @@ function normalizeOutput(output: string): string {
   return output.trim().replace(/\r\n/g, "\n");
 }
 
+/**
+ * Compare two values, handling order-insensitive arrays.
+ * If both values are JSON arrays, compare sorted versions.
+ * Otherwise, compare as strings.
+ */
+function compareOutput(actual: string, expected: string): boolean {
+  if (actual === expected) return true;
+
+  // Try order-insensitive array comparison
+  try {
+    const a = JSON.parse(actual);
+    const e = JSON.parse(expected);
+    if (Array.isArray(a) && Array.isArray(e)) {
+      if (a.length !== e.length) return false;
+      const sortedA = JSON.stringify([...a].sort());
+      const sortedE = JSON.stringify([...e].sort());
+      return sortedA === sortedE;
+    }
+  } catch {
+    // Not JSON, fall through to string comparison
+  }
+
+  return false;
+}
+
 export function judgeTestCase(
   testCase: TestCaseInput,
   runResult: RunResult
 ): TestCaseResult {
   const actual = normalizeOutput(runResult.stdout);
   const expected = normalizeOutput(testCase.expected);
+  const passed = compareOutput(actual, expected);
 
   return {
     testCaseId: testCase.id,
-    passed: actual === expected,
+    passed,
     input: testCase.isHidden ? "[hidden]" : testCase.input,
     expected: testCase.isHidden ? "[hidden]" : testCase.expected,
-    actual: testCase.isHidden ? (actual === expected ? "[correct]" : "[wrong]") : actual,
+    actual: testCase.isHidden ? (passed ? "[correct]" : "[wrong]") : actual,
     stderr: runResult.stderr || "",
     runtime: runResult.runtime,
     memory: runResult.memory,

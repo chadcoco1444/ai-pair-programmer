@@ -42,6 +42,46 @@ describe("judgeTestCase", () => {
     expect(result.stderr).toContain("NameError");
   });
 
+  it("REGRESSION: order-insensitive array comparison (Word Search II)", () => {
+    const result = judgeTestCase(
+      makeTestCase({ expected: '["oath","eat"]' }),
+      makeRunResult({ stdout: '["eat","oath"]\n' })
+    );
+    expect(result.passed).toBe(true);
+  });
+
+  it("REGRESSION: same elements different order should pass", () => {
+    const result = judgeTestCase(
+      makeTestCase({ expected: '[1,2,3]' }),
+      makeRunResult({ stdout: '[3,1,2]\n' })
+    );
+    expect(result.passed).toBe(true);
+  });
+
+  it("should fail when arrays have different elements", () => {
+    const result = judgeTestCase(
+      makeTestCase({ expected: '[1,2,3]' }),
+      makeRunResult({ stdout: '[1,2,4]\n' })
+    );
+    expect(result.passed).toBe(false);
+  });
+
+  it("should fail when arrays have different lengths", () => {
+    const result = judgeTestCase(
+      makeTestCase({ expected: '[1,2,3]' }),
+      makeRunResult({ stdout: '[1,2]\n' })
+    );
+    expect(result.passed).toBe(false);
+  });
+
+  it("should still do exact match for non-array outputs", () => {
+    const result = judgeTestCase(
+      makeTestCase({ expected: "true" }),
+      makeRunResult({ stdout: "true\n" })
+    );
+    expect(result.passed).toBe(true);
+  });
+
   it("輸出錯誤時應不通過", () => {
     const result = judgeTestCase(
       makeTestCase(),
