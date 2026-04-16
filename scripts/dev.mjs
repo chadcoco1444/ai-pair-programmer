@@ -62,12 +62,17 @@ async function main() {
 
   // 啟動 Executor
   console.log("[2/3] 啟動執行引擎 (port 4000)...");
-  const executor = spawn("npx", ["tsx", "watch", "src/server.ts"], {
-    cwd: resolve(ROOT, "services/executor"),
-    stdio: ["ignore", "pipe", "pipe"],
-    shell: true,
-    env: { ...process.env, PORT: "4000", REDIS_URL: "redis://localhost:6379" },
-  });
+  const executorDir = resolve(ROOT, "services/executor");
+  const executor = spawn(
+    process.platform === "win32" ? "npx.cmd" : "npx",
+    ["tsx", "src/server.ts"],
+    {
+      cwd: executorDir,
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: true,
+      env: { ...process.env, PORT: "4000", REDIS_URL: "redis://localhost:6379" },
+    }
+  );
   children.push(executor);
 
   executor.stdout.on("data", (data) => {
@@ -76,14 +81,28 @@ async function main() {
   });
   executor.stderr.on("data", (data) => {
     const msg = data.toString().trim();
-    if (msg && !msg.includes("ExperimentalWarning")) {
+    if (msg && !msg.includes("ExperimentalWarning") && !msg.includes("DeprecationWarning")) {
       console.error(`  [executor] ${msg}`);
     }
   });
 
-  // 等一下讓 executor 啟動
-  await sleep(2000);
-  console.log("  ✓ 執行引擎已啟動\n");
+  // 等待 executor 真正啟動
+  let executorReady = false;
+  for (let i = 0; i < 15; i++) {
+    await sleep(1000);
+    try {
+      const res = await fetch("http://localhost:4000/health");
+      if (res.ok) {
+        executorReady = true;
+        break;
+      }
+    } catch {}
+  }
+  if (executorReady) {
+    console.log("  ✓ 執行引擎已啟動\n");
+  } else {
+    console.log("  ⚠ 執行引擎啟動超時，提交功能可能不可用\n");
+  }
 
   // 啟動 Next.js
   console.log("[3/3] 啟動 Next.js (port 3001)...\n");
