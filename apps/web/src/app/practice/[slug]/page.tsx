@@ -8,6 +8,7 @@ import { CodeEditor } from "@/components/editor/code-editor";
 import { ExecutionResult } from "@/components/submission/execution-result";
 import { ChatContainer } from "@/components/chat/chat-container";
 import { MacWindow } from "@/components/ui/mac-window";
+import { ResizableHorizontal, ResizableVertical } from "@/components/ui/resizable-panels";
 import { useSubmission } from "@/hooks/use-submission";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
@@ -92,208 +93,202 @@ export default function PracticePage() {
     await submit({ problemId: problem.id, language, code });
   };
 
-  return (
-    <div className="flex h-[calc(100vh-3.5rem)] gap-2 bg-[#0a0a0f] p-2">
-      {/* ===== Left: Problem Description (Mac Window) ===== */}
-      <MacWindow title="Problem" titleColor="text-gray-400" className="min-w-0 flex-1">
-        {/* Tabs inside window */}
-        <div className="flex border-b border-gray-700/50 bg-[#252525]">
-          {([
-            { key: "description" as LeftTab, label: "Description" },
-            { key: "ai-tutor" as LeftTab, label: "AI Tutor" },
-            { key: "submissions" as LeftTab, label: "Submissions" },
-          ]).map((tab) => (
-            <button
-              key={tab.key}
-              onClick={() => setActiveTab(tab.key)}
-              className={`px-4 py-2 text-[13px] font-medium transition-colors ${
-                activeTab === tab.key
-                  ? "border-b-2 border-blue-400 text-white"
-                  : "text-gray-500 hover:text-gray-300"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </div>
+  // ===== Left Panel Content =====
+  const leftPanel = (
+    <MacWindow title="Problem" titleColor="text-gray-400" className="h-full">
+      {/* Tabs */}
+      <div className="flex border-b border-gray-700/50 bg-[#252525]">
+        {([
+          { key: "description" as LeftTab, label: "Description" },
+          { key: "ai-tutor" as LeftTab, label: "AI Tutor" },
+          { key: "submissions" as LeftTab, label: "Submissions" },
+        ]).map((tab) => (
+          <button
+            key={tab.key}
+            onClick={() => setActiveTab(tab.key)}
+            className={`px-4 py-2 text-[13px] font-medium transition-colors ${
+              activeTab === tab.key
+                ? "border-b-2 border-blue-400 text-white"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
 
-        <div className="flex-1 overflow-y-auto">
-          {/* Description Tab */}
-          {activeTab === "description" && (
-            <div className="p-5">
-              <h1 className="text-[22px] font-bold leading-tight text-white">
-                {problem.title}
-              </h1>
-
-              <div className="mt-3 flex flex-wrap items-center gap-2">
-                <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${diffStyle.text} ${diffStyle.bg}`}>
-                  {problem.difficulty}
+      <div className="flex-1 overflow-y-auto">
+        {activeTab === "description" && (
+          <div className="p-5">
+            <h1 className="text-[22px] font-bold leading-tight text-white">
+              {problem.title}
+            </h1>
+            <div className="mt-3 flex flex-wrap items-center gap-2">
+              <span className={`rounded-full px-2.5 py-0.5 text-[12px] font-semibold ${diffStyle.text} ${diffStyle.bg}`}>
+                {problem.difficulty}
+              </span>
+              {problem.tags.map((t) => (
+                <span key={t.tag} className="rounded-full bg-[#333] px-2 py-0.5 text-[11px] text-gray-400">
+                  {t.tag}
                 </span>
-                {problem.tags.map((t) => (
-                  <span key={t.tag} className="rounded-full bg-[#333] px-2 py-0.5 text-[11px] text-gray-400">
-                    {t.tag}
-                  </span>
-                ))}
-              </div>
-
-              <div className="mt-6 text-[14px] leading-[1.85] text-[#eff1f6]">
-                <ReactMarkdown
-                  remarkPlugins={[remarkGfm]}
-                  components={{
-                    p({ children }) {
-                      return <p className="mb-4">{children}</p>;
-                    },
-                    strong({ children }) {
-                      return <strong className="font-bold text-white">{children}</strong>;
-                    },
-                    code({ className, children, ...props }) {
-                      const match = /language-(\w+)/.exec(className || "");
-                      const codeStr = String(children).replace(/\n$/, "");
-
-                      if (match || codeStr.includes("\n")) {
-                        return (
-                          <pre className="my-4 overflow-x-auto rounded-lg border border-gray-700/40 bg-[#0d1117] p-4 text-[13px] leading-[1.7]">
-                            <code className="text-[#e6edf3]" {...props}>
-                              {children}
-                            </code>
-                          </pre>
-                        );
-                      }
-
-                      return (
-                        <code className="rounded bg-[#343942] px-1.5 py-0.5 text-[13px] font-mono text-[#e06c75]" {...props}>
-                          {children}
-                        </code>
-                      );
-                    },
-                    ul({ children }) {
-                      return <ul className="mb-4 ml-5 list-disc space-y-1.5">{children}</ul>;
-                    },
-                    ol({ children }) {
-                      return <ol className="mb-4 ml-5 list-decimal space-y-1.5">{children}</ol>;
-                    },
-                    li({ children }) {
-                      return <li className="text-[#eff1f6]">{children}</li>;
-                    },
-                  }}
-                >
-                  {problem.description}
-                </ReactMarkdown>
-              </div>
-
-              {problem.hints && problem.hints.length > 0 && (
-                <div className="mt-6 border-t border-gray-700/40 pt-4">
-                  <details>
-                    <summary className="cursor-pointer text-[13px] font-medium text-blue-400 hover:text-blue-300">
-                      Hints ({problem.hints.length})
-                    </summary>
-                    <div className="mt-3 space-y-2">
-                      {problem.hints.map((hint, i) => (
-                        <details key={i} className="rounded-lg bg-[#252525] p-3">
-                          <summary className="cursor-pointer text-[13px] text-gray-400">Hint {i + 1}</summary>
-                          <p className="mt-2 text-[13px] leading-relaxed text-gray-300">{hint}</p>
-                        </details>
-                      ))}
-                    </div>
-                  </details>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* AI Tutor Tab */}
-          {activeTab === "ai-tutor" && (
-            <div className="flex h-full flex-col">
-              {status !== "authenticated" ? (
-                <div className="flex flex-1 items-center justify-center">
-                  <p className="text-gray-500">Please sign in to use AI Tutor</p>
-                </div>
-              ) : conversationId ? (
-                <ChatContainer conversationId={conversationId} initialMessages={initialMessages} />
-              ) : (
-                <div className="flex flex-1 items-center justify-center">
-                  <div className="text-gray-500">Starting AI Tutor...</div>
-                </div>
-              )}
-            </div>
-          )}
-
-          {/* Submissions Tab */}
-          {activeTab === "submissions" && (
-            <div className="p-5 text-[13px] text-gray-500">
-              No submissions yet.
-            </div>
-          )}
-        </div>
-      </MacWindow>
-
-      {/* ===== Right: Code Editor (Mac Window) ===== */}
-      <div className="flex min-w-0 flex-1 flex-col gap-2">
-        {/* Code Editor Window */}
-        <MacWindow
-          title={`</> Code — ${LANGUAGES.find((l) => l.value === language)?.label}`}
-          titleColor="text-green-400"
-          className="flex-1"
-        >
-          {/* Language Selector */}
-          <div className="flex items-center bg-[#252525] px-3 py-1.5">
-            <select
-              value={language}
-              onChange={(e) => setLanguage(e.target.value as Language)}
-              className="rounded bg-[#333] px-2 py-1 text-[12px] text-white focus:outline-none"
-            >
-              {LANGUAGES.map((l) => (
-                <option key={l.value} value={l.value}>{l.label}</option>
               ))}
-            </select>
-          </div>
-
-          {/* Editor (Run/Submit buttons are inside CodeEditor) */}
-          <div className="flex-1">
-            <CodeEditor
-              language={language}
-              initialCode={starterCode}
-              onSubmit={handleSubmit}
-              onRun={handleSubmit}
-              disabled={isSubmitting}
-            />
-          </div>
-        </MacWindow>
-
-        {/* Test Result Window */}
-        <MacWindow title="Testcase" titleColor="text-green-400" className="max-h-[35%] min-h-[120px]">
-          <div className="flex-1 overflow-y-auto">
-            {result ? (
-              <ExecutionResult
-                status={result.status}
-                testResults={result.testResults}
-                totalRuntime={result.totalRuntime}
-                totalMemory={result.totalMemory}
-                compileError={result.compileError}
-              />
-            ) : (
-              <div className="p-3">
-                <div className="flex gap-3 text-[12px]">
-                  <span className="font-medium text-green-400">Testcase</span>
-                  <span className="text-gray-600">Result</span>
-                </div>
-                {problem.testCases && problem.testCases.length > 0 && (
-                  <div className="mt-2 space-y-1.5">
-                    {problem.testCases.slice(0, 3).map((tc, i) => (
-                      <div key={tc.id} className="rounded bg-[#252525] px-3 py-2 text-[11px]">
-                        <span className="text-gray-500">Case {i + 1}: </span>
-                        <code className="font-mono text-gray-300">
-                          {tc.input.slice(0, 70)}{tc.input.length > 70 ? "..." : ""}
-                        </code>
-                      </div>
+            </div>
+            <div className="mt-6 text-[14px] leading-[1.85] text-[#eff1f6]">
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  p({ children }) { return <p className="mb-4">{children}</p>; },
+                  strong({ children }) { return <strong className="font-bold text-white">{children}</strong>; },
+                  code({ className, children, ...props }) {
+                    const match = /language-(\w+)/.exec(className || "");
+                    const codeStr = String(children).replace(/\n$/, "");
+                    if (match || codeStr.includes("\n")) {
+                      return (
+                        <pre className="my-4 overflow-x-auto rounded-lg border border-gray-700/40 bg-[#0d1117] p-4 text-[13px] leading-[1.7]">
+                          <code className="text-[#e6edf3]" {...props}>{children}</code>
+                        </pre>
+                      );
+                    }
+                    return (
+                      <code className="rounded bg-[#343942] px-1.5 py-0.5 text-[13px] font-mono text-[#e06c75]" {...props}>
+                        {children}
+                      </code>
+                    );
+                  },
+                  ul({ children }) { return <ul className="mb-4 ml-5 list-disc space-y-1.5">{children}</ul>; },
+                  ol({ children }) { return <ol className="mb-4 ml-5 list-decimal space-y-1.5">{children}</ol>; },
+                  li({ children }) { return <li className="text-[#eff1f6]">{children}</li>; },
+                }}
+              >
+                {problem.description}
+              </ReactMarkdown>
+            </div>
+            {problem.hints && problem.hints.length > 0 && (
+              <div className="mt-6 border-t border-gray-700/40 pt-4">
+                <details>
+                  <summary className="cursor-pointer text-[13px] font-medium text-blue-400 hover:text-blue-300">
+                    Hints ({problem.hints.length})
+                  </summary>
+                  <div className="mt-3 space-y-2">
+                    {problem.hints.map((hint, i) => (
+                      <details key={i} className="rounded-lg bg-[#252525] p-3">
+                        <summary className="cursor-pointer text-[13px] text-gray-400">Hint {i + 1}</summary>
+                        <p className="mt-2 text-[13px] leading-relaxed text-gray-300">{hint}</p>
+                      </details>
                     ))}
                   </div>
-                )}
+                </details>
               </div>
             )}
           </div>
-        </MacWindow>
+        )}
+
+        {activeTab === "ai-tutor" && (
+          <div className="flex h-full flex-col">
+            {status !== "authenticated" ? (
+              <div className="flex flex-1 items-center justify-center">
+                <p className="text-gray-500">Please sign in to use AI Tutor</p>
+              </div>
+            ) : conversationId ? (
+              <ChatContainer conversationId={conversationId} initialMessages={initialMessages} />
+            ) : (
+              <div className="flex flex-1 items-center justify-center">
+                <div className="text-gray-500">Starting AI Tutor...</div>
+              </div>
+            )}
+          </div>
+        )}
+
+        {activeTab === "submissions" && (
+          <div className="p-5 text-[13px] text-gray-500">No submissions yet.</div>
+        )}
       </div>
+    </MacWindow>
+  );
+
+  // ===== Right Top: Code Editor =====
+  const codePanel = (
+    <MacWindow
+      title={`</> Code — ${LANGUAGES.find((l) => l.value === language)?.label}`}
+      titleColor="text-green-400"
+      className="h-full"
+    >
+      <div className="flex items-center bg-[#252525] px-3 py-1.5">
+        <select
+          value={language}
+          onChange={(e) => setLanguage(e.target.value as Language)}
+          className="rounded bg-[#333] px-2 py-1 text-[12px] text-white focus:outline-none"
+        >
+          {LANGUAGES.map((l) => (
+            <option key={l.value} value={l.value}>{l.label}</option>
+          ))}
+        </select>
+      </div>
+      <div className="flex-1">
+        <CodeEditor
+          language={language}
+          initialCode={starterCode}
+          onSubmit={handleSubmit}
+          onRun={handleSubmit}
+          disabled={isSubmitting}
+        />
+      </div>
+    </MacWindow>
+  );
+
+  // ===== Right Bottom: Test Result =====
+  const testPanel = (
+    <MacWindow title="Testcase" titleColor="text-green-400" className="h-full">
+      <div className="flex-1 overflow-y-auto">
+        {result ? (
+          <ExecutionResult
+            status={result.status}
+            testResults={result.testResults}
+            totalRuntime={result.totalRuntime}
+            totalMemory={result.totalMemory}
+            compileError={result.compileError}
+          />
+        ) : (
+          <div className="p-3">
+            <div className="flex gap-3 text-[12px]">
+              <span className="font-medium text-green-400">Testcase</span>
+              <span className="text-gray-600">Result</span>
+            </div>
+            {problem.testCases && problem.testCases.length > 0 && (
+              <div className="mt-2 space-y-1.5">
+                {problem.testCases.slice(0, 3).map((tc, i) => (
+                  <div key={tc.id} className="rounded bg-[#252525] px-3 py-2 text-[11px]">
+                    <span className="text-gray-500">Case {i + 1}: </span>
+                    <code className="font-mono text-gray-300">
+                      {tc.input.slice(0, 70)}{tc.input.length > 70 ? "..." : ""}
+                    </code>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
+    </MacWindow>
+  );
+
+  return (
+    <div className="h-[calc(100vh-3.5rem)] bg-[#0a0a0f] p-1.5">
+      <ResizableHorizontal
+        left={leftPanel}
+        right={
+          <ResizableVertical
+            top={codePanel}
+            bottom={testPanel}
+            defaultRatio={0.6}
+            minTopHeight={150}
+            minBottomHeight={100}
+          />
+        }
+        defaultRatio={0.45}
+        minLeftWidth={350}
+        minRightWidth={400}
+      />
     </div>
   );
 }
