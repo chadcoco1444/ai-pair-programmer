@@ -1,0 +1,88 @@
+title: Two Sum
+slug: two-sum
+difficulty: EASY
+category: ALGORITHM
+tags: [array, hash-table]
+concepts:
+  - name: Array
+    relevance: 0.8
+  - name: Hash Table
+    relevance: 1.0
+description: |
+  給定一個整數陣列 `nums` 和一個目標值 `target`，找出陣列中兩個數字的索引，使得它們的和等於 `target`。
+
+  你可以假設每個輸入恰好有一個解，且同一個元素不能使用兩次。
+
+  **範例：**
+  ```
+  輸入: nums = [2,7,11,15], target = 9
+  輸出: [0,1]
+  解釋: nums[0] + nums[1] = 2 + 7 = 9
+  ```
+
+  **限制：**
+  - 2 <= nums.length <= 10^4
+  - -10^9 <= nums[i] <= 10^9
+  - -10^9 <= target <= 10^9
+  - 只有一個有效答案
+
+hints:
+  - 最直觀的方法是什麼？時間複雜度是多少？
+  - 有沒有辦法用空間換時間？什麼資料結構可以做到 O(1) 的查詢？
+  - 如果你知道需要找 target - nums[i]，怎麼快速知道這個值是否存在？
+
+starterCode:
+  PYTHON: |
+    def two_sum(nums: list[int], target: int) -> list[int]:
+        pass
+  C: |
+    int* twoSum(int* nums, int numsSize, int target, int* returnSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        vector<int> twoSum(vector<int>& nums, int target) {
+
+        }
+    };
+  JAVASCRIPT: |
+    function twoSum(nums, target) {
+
+    }
+
+testCases:
+  - input: |
+      [2,7,11,15]
+      9
+    expected: "[0,1]"
+    isHidden: false
+    isKiller: false
+
+  - input: |
+      [3,2,4]
+      6
+    expected: "[1,2]"
+    isHidden: false
+    isKiller: false
+
+  - input: |
+      [3,3]
+      6
+    expected: "[0,1]"
+    isHidden: false
+    isKiller: false
+
+  - input: |
+      [-1,-2,-3,-4,-5]
+      -8
+    expected: "[2,4]"
+    isHidden: true
+    isKiller: false
+
+  - input: |
+      [1000000000,2,-1000000000,3]
+      -999999998
+    expected: "[1,2]"
+    isHidden: true
+    isKiller: true

@@ -1,0 +1,71 @@
+title: Valid Parentheses
+slug: valid-parentheses
+difficulty: EASY
+category: ALGORITHM
+tags: [stack, string]
+concepts:
+  - name: Stack
+    relevance: 1.0
+description: |
+  給定一個只包含 `'('`, `')'`, `'{'`, `'}'`, `'['`, `']'` 的字串 `s`，判斷字串是否有效。
+
+  有效字串必須滿足：
+  1. 左括號必須用相同類型的右括號閉合。
+  2. 左括號必須以正確的順序閉合。
+  3. 每個右括號都有一個對應的同類型左括號。
+
+  **範例：**
+  ```
+  輸入: s = "()[]{}"
+  輸出: true
+  ```
+
+  **限制：**
+  - 1 <= s.length <= 10^4
+
+hints:
+  - 當你遇到一個右括號，你需要檢查什麼？
+  - 什麼資料結構可以幫你記住「最近的未配對左括號」？
+  - 空字串是有效的嗎？字串長度是奇數時呢？
+
+starterCode:
+  PYTHON: |
+    def is_valid(s: str) -> bool:
+        pass
+  C: |
+    bool isValid(char* s) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        bool isValid(string s) {
+
+        }
+    };
+  JAVASCRIPT: |
+    function isValid(s) {
+
+    }
+
+testCases:
+  - input: "()"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "()[]{}"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "(]"
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: ""
+    expected: "true"
+    isHidden: true
+    isKiller: true
+  - input: "((("
+    expected: "false"
+    isHidden: true
+    isKiller: false

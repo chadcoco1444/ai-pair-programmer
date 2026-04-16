@@ -1,0 +1,76 @@
+title: Merge Sorted Array
+slug: merge-sorted-array
+difficulty: EASY
+category: ALGORITHM
+tags: [array, two-pointer, sorting]
+concepts:
+  - name: Array
+    relevance: 0.8
+  - name: Two Pointer
+    relevance: 1.0
+  - name: Sorting
+    relevance: 0.5
+description: |
+  給定兩個已排序的整數陣列 `nums1` 和 `nums2`，將 `nums2` 合併到 `nums1` 中，使合併後的陣列仍然有序。
+
+  `nums1` 的初始長度為 `m + n`，前 `m` 個元素是有效的，後 `n` 個元素為 0（用作佔位）。
+
+  **範例：**
+  ```
+  輸入: nums1 = [1,2,3,0,0,0], m = 3, nums2 = [2,5,6], n = 3
+  輸出: [1,2,2,3,5,6]
+  ```
+
+  **限制：**
+  - 0 <= m, n <= 200
+
+hints:
+  - 如果從前面開始合併，會遇到什麼問題？
+  - 從後面開始合併呢？哪個陣列的末尾有空間？
+  - 邊界條件：如果 nums2 的所有元素都比 nums1 小怎麼辦？
+
+starterCode:
+  PYTHON: |
+    def merge(nums1: list[int], m: int, nums2: list[int], n: int) -> None:
+        pass
+  C: |
+    void merge(int* nums1, int nums1Size, int m, int* nums2, int nums2Size, int n) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        void merge(vector<int>& nums1, int m, vector<int>& nums2, int n) {
+
+        }
+    };
+  JAVASCRIPT: |
+    function merge(nums1, m, nums2, n) {
+
+    }
+
+testCases:
+  - input: |
+      [1,2,3,0,0,0]
+      3
+      [2,5,6]
+      3
+    expected: "[1,2,2,3,5,6]"
+    isHidden: false
+    isKiller: false
+  - input: |
+      [1]
+      1
+      []
+      0
+    expected: "[1]"
+    isHidden: false
+    isKiller: false
+  - input: |
+      [0]
+      0
+      [1]
+      1
+    expected: "[1]"
+    isHidden: true
+    isKiller: true
