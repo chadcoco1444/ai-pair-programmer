@@ -237,6 +237,7 @@ export default function PracticePage() {
           ref={editorRef}
           language={language}
           initialCode={starterCode}
+          storageKey={`${slug}-${language}`}
           disabled={isSubmitting}
         />
       </div>

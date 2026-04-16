@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useImperativeHandle, forwardRef } from "react";
+import { useState, useEffect, useImperativeHandle, forwardRef, useCallback } from "react";
 import Editor from "@monaco-editor/react";
 
 const LANGUAGE_MAP: Record<string, string> = {
@@ -17,19 +17,41 @@ export interface CodeEditorHandle {
 interface CodeEditorProps {
   language: string;
   initialCode?: string;
-  onSubmit?: (code: string) => void;
-  onRun?: (code: string) => void;
+  storageKey?: string;  // e.g. "two-sum-PYTHON" — saves to localStorage
   disabled?: boolean;
-  showButtons?: boolean;
 }
 
 export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
-  function CodeEditor({ language, initialCode, onSubmit, onRun, disabled, showButtons = false }, ref) {
-    const [code, setCode] = useState(initialCode ?? "");
+  function CodeEditor({ language, initialCode, storageKey, disabled }, ref) {
+    const [code, setCode] = useState(() => {
+      // Load from localStorage on mount
+      if (storageKey && typeof window !== "undefined") {
+        const saved = localStorage.getItem(`skill-code:${storageKey}`);
+        if (saved) return saved;
+      }
+      return initialCode ?? "";
+    });
 
+    // When language/initialCode changes, check localStorage first
     useEffect(() => {
+      if (storageKey && typeof window !== "undefined") {
+        const saved = localStorage.getItem(`skill-code:${storageKey}`);
+        if (saved) {
+          setCode(saved);
+          return;
+        }
+      }
       setCode(initialCode ?? "");
-    }, [initialCode]);
+    }, [storageKey, initialCode]);
+
+    // Save to localStorage on change (debounced)
+    useEffect(() => {
+      if (!storageKey) return;
+      const timer = setTimeout(() => {
+        localStorage.setItem(`skill-code:${storageKey}`, code);
+      }, 500);
+      return () => clearTimeout(timer);
+    }, [code, storageKey]);
 
     useImperativeHandle(ref, () => ({
       getCode: () => code,
@@ -37,28 +59,6 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
 
     return (
       <div className="flex h-full flex-col">
-        {showButtons && (
-          <div className="flex items-center justify-end gap-2 bg-[#252525] px-3 py-1.5">
-            {onRun && (
-              <button
-                onClick={() => onRun(code)}
-                disabled={disabled}
-                className="flex items-center gap-1 rounded bg-gray-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-600 disabled:opacity-50"
-              >
-                ▶ Run
-              </button>
-            )}
-            {onSubmit && (
-              <button
-                onClick={() => onSubmit(code)}
-                disabled={disabled}
-                className="flex items-center gap-1 rounded bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-500 disabled:opacity-50"
-              >
-                ▶ Submit
-              </button>
-            )}
-          </div>
-        )}
         <div className="flex-1">
           <Editor
             height="100%"
