@@ -16,6 +16,7 @@ import { ProblemListPanel } from "@/components/practice/problem-list-panel";
 import { AuthButton } from "@/components/auth-button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { PricingModal } from "@/components/pricing-modal";
 import type { Language } from "@skill/shared";
 
 const LANGUAGES: { value: Language; label: string }[] = [
@@ -50,6 +51,7 @@ export default function PracticePage() {
   const [codeFolded, setCodeFolded] = useState(false);
   const [testFolded, setTestFolded] = useState(false);
   const [problemFolded, setProblemFolded] = useState(false);
+  const [showPricing, setShowPricing] = useState(false);
 
   const { data: problem, isLoading: problemLoading } =
     trpc.problem.getBySlug.useQuery({ slug });
@@ -162,9 +164,9 @@ export default function PracticePage() {
         ))}
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-hidden">
         {activeTab === "description" && (
-          <div className="p-5">
+          <div className="h-full overflow-y-auto p-5">
             <h1 className="text-[22px] font-bold leading-tight text-white">
               {problem.title}
             </h1>
@@ -228,24 +230,24 @@ export default function PracticePage() {
           </div>
         )}
 
-        {activeTab === "ai-tutor" && (
-          <div className="flex h-full flex-col">
-            {status !== "authenticated" ? (
-              <div className="flex flex-1 items-center justify-center">
-                <p className="text-gray-500">Please sign in to use AI Tutor</p>
-              </div>
-            ) : conversationId ? (
-              <ChatContainer conversationId={conversationId} initialMessages={initialMessages} />
-            ) : (
-              <div className="flex flex-1 items-center justify-center">
-                <div className="text-gray-500">Starting AI Tutor...</div>
-              </div>
-            )}
-          </div>
-        )}
+        <div className={`h-full flex-col ${activeTab === "ai-tutor" ? "flex" : "hidden"}`}>
+          {status !== "authenticated" ? (
+            <div className="flex flex-1 items-center justify-center">
+              <p className="text-gray-500">Please sign in to use AI Tutor</p>
+            </div>
+          ) : conversationId ? (
+            <ChatContainer conversationId={conversationId} initialMessages={initialMessages} />
+          ) : (
+            <div className="flex flex-1 items-center justify-center">
+              <div className="text-gray-500">Starting AI Tutor...</div>
+            </div>
+          )}
+        </div>
 
         {activeTab === "submissions" && (
-          <SubmissionHistory problemId={problem.id} />
+          <div className="h-full overflow-y-auto">
+            <SubmissionHistory problemId={problem.id} />
+          </div>
         )}
       </div>
     </MacWindow>
@@ -411,6 +413,13 @@ export default function PracticePage() {
 
         {/* Right: Nav links + Auth */}
         <div className="flex items-center gap-3">
+          <button
+            onClick={() => setShowPricing(true)}
+            className="flex items-center gap-1 rounded bg-gradient-to-r from-orange-500 to-rose-500 px-3 py-1.5 text-[12px] font-bold text-white shadow hover:opacity-90 transition-opacity"
+          >
+            ✨ Upgrade
+          </button>
+          <div className="h-4 w-px bg-gray-700 mx-1" />
           <Link href="/dashboard" className="text-[12px] text-gray-500 hover:text-gray-300">
             Dashboard
           </Link>
@@ -426,7 +435,7 @@ export default function PracticePage() {
       </div>
 
       {/* Main Content */}
-      <div className="flex-1 p-1.5">
+      <div className="flex-1 p-1.5 min-h-0 overflow-hidden">
         <ResizableHorizontal
           left={leftPanel}
           right={
@@ -451,6 +460,9 @@ export default function PracticePage() {
           onClose={() => setShowProblemList(false)}
         />
       )}
+
+      {/* Pricing Modal */}
+      {showPricing && <PricingModal onClose={() => setShowPricing(false)} />}
     </div>
   );
 }

@@ -13,6 +13,17 @@ export interface ConversationMessage {
   content: string;
 }
 
+function formatAIError(error: any): string {
+  const msg = error?.message || String(error);
+  if (msg.includes("429") || msg.includes("Quota exceeded")) {
+    return "服務呼叫次數已達上限 (Rate Limit)，請稍候大約一分鐘後再試一次。";
+  }
+  if (msg.includes("503") || msg.includes("Service Unavailable")) {
+    return "AI 模型伺服器目前較為繁忙，請稍待片刻後重試。";
+  }
+  return msg;
+}
+
 export class SKILLOrchestrator {
   constructor(private prisma: PrismaClient) {}
 
@@ -129,7 +140,7 @@ export class SKILLOrchestrator {
         const result = await model.generateContent("Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.");
         assistantMessage = result.response.text();
       } catch (error: any) {
-        assistantMessage = `⚠️ AI Tutor connection error: ${error.message}`;
+        assistantMessage = `⚠️ 系統提示：${formatAIError(error)}`;
       }
 
       // 儲存系統訊息
@@ -258,6 +269,12 @@ export class SKILLOrchestrator {
 
       // 組裝 Gemini 對話歷史（排除最後一條 user message）
       const history = this.buildGeminiHistory(params.messages.slice(0, -1));
+      
+      // Gemini API 規定 history 第一筆必須是 'user'，如果不符合則塞入一個 dummy 訊息
+      if (history.length > 0 && history[0].role === "model") {
+        history.unshift({ role: "user" as const, parts: [{ text: "Start conversation" }] });
+      }
+
       const lastMessage = params.messages[params.messages.length - 1].content;
 
       const chat = model.startChat({ history });
@@ -271,7 +288,7 @@ export class SKILLOrchestrator {
         }
       }
     } catch (error: any) {
-      const errorMsg = `\n\n---\n⚠️ AI 回應中斷：${error.message}`;
+      const errorMsg = `\n\n---\n⚠️ 系統提示：${formatAIError(error)}`;
       fullResponse += errorMsg;
       yield errorMsg;
     }

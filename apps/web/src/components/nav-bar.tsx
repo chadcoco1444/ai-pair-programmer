@@ -5,51 +5,48 @@ import { usePathname } from "next/navigation";
 import { useSession } from "next-auth/react";
 import { AuthButton } from "./auth-button";
 
-const PUBLIC_ITEMS = [
-  { href: "/practice", label: "題庫" },
-];
-
-const AUTH_ITEMS = [
-  { href: "/dashboard", label: "儀表板" },
-  { href: "/practice", label: "題庫" },
-  { href: "/profile", label: "個人檔案" },
+const NAV_ITEMS = [
+  { href: "/practice", label: "Problems" },
+  { href: "/dashboard", label: "Dashboard", auth: true },
+  { href: "/profile", label: "Profile", auth: true },
 ];
 
 export function NavBar() {
   const pathname = usePathname();
   const { status } = useSession();
-  const navItems = status === "authenticated" ? AUTH_ITEMS : PUBLIC_ITEMS;
 
   // Hide on practice problem pages (they have their own nav bar)
   if (pathname.startsWith("/practice/") && pathname !== "/practice") {
     return null;
   }
 
+  const items = NAV_ITEMS.filter((item) => !item.auth || status === "authenticated");
+
   return (
-    <header className="border-b border-gray-800 bg-gray-950">
-      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
-        <div className="flex items-center gap-6">
-          <Link href="/" className="text-lg font-bold">
-            SKILL
+    <header className="flex h-[42px] items-center justify-between border-b border-gray-800/60 bg-[#1a1a1a] px-4">
+      {/* Left: Logo + Nav */}
+      <div className="flex items-center gap-4">
+        <Link href="/" className="text-[16px] font-bold text-orange-400 hover:text-orange-300">
+          SKILL
+        </Link>
+        <div className="h-4 w-px bg-gray-700" />
+        {items.map((item) => (
+          <Link
+            key={item.href}
+            href={item.href}
+            className={`text-[13px] font-medium transition-colors ${
+              pathname === item.href
+                ? "text-white"
+                : "text-gray-500 hover:text-gray-300"
+            }`}
+          >
+            {item.label}
           </Link>
-          <div className="flex gap-4">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`text-sm transition-colors ${
-                  pathname === item.href
-                    ? "text-white"
-                    : "text-gray-400 hover:text-gray-200"
-                }`}
-              >
-                {item.label}
-              </Link>
-            ))}
-          </div>
-        </div>
-        <AuthButton />
-      </nav>
+        ))}
+      </div>
+
+      {/* Right: Auth */}
+      <AuthButton />
     </header>
   );
 }

@@ -4,8 +4,8 @@ import { NavBar } from "@/components/nav-bar";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "SKILL Platform — AI 程式解題導師",
-  description: "透過 AI 導師的蘇格拉底式引導，精進你的演算法與系統設計能力",
+  title: "SKILL Platform — AI Pair Programmer",
+  description: "Master algorithms and system design with an AI tutor using the SKILL framework",
 };
 
 export default function RootLayout({
@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="zh-TW">
-      <body className="min-h-screen bg-gray-950 text-white">
+    <html lang="en">
+      <body className="min-h-screen bg-[#0a0a0f] text-white">
         <Providers>
           <NavBar />
           {children}

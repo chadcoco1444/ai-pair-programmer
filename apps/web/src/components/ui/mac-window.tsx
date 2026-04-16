@@ -68,7 +68,7 @@ export function MacWindow({
       </div>
       {/* Content — hidden when folded */}
       {!folded && (
-        <div className="flex flex-1 flex-col overflow-auto">{children}</div>
+        <div className="flex flex-1 flex-col overflow-hidden min-h-0">{children}</div>
       )}
     </div>
   );
