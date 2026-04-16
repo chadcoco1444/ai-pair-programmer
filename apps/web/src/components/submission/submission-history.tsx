@@ -15,7 +15,7 @@ const STATUS_STYLE: Record<string, { label: string; color: string }> = {
 };
 
 const LANG_LABEL: Record<string, string> = {
-  PYTHON: "Python",
+  PYTHON: "Python 3",
   C: "C",
   CPP: "C++",
   JAVASCRIPT: "JavaScript",

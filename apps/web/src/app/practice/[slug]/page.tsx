@@ -16,7 +16,7 @@ import remarkGfm from "remark-gfm";
 import type { Language } from "@skill/shared";
 
 const LANGUAGES: { value: Language; label: string }[] = [
-  { value: "PYTHON", label: "Python" },
+  { value: "PYTHON", label: "Python 3" },
   { value: "C", label: "C" },
   { value: "CPP", label: "C++" },
   { value: "JAVASCRIPT", label: "JavaScript" },

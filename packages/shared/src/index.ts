@@ -3,7 +3,7 @@ export const LANGUAGES = ["PYTHON", "C", "CPP", "JAVASCRIPT"] as const;
 export type Language = (typeof LANGUAGES)[number];
 
 export const LANGUAGE_DISPLAY: Record<Language, string> = {
-  PYTHON: "Python",
+  PYTHON: "Python 3",
   C: "C",
   CPP: "C++",
   JAVASCRIPT: "JavaScript",
