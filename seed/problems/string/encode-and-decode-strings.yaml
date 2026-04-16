@@ -7,41 +7,41 @@ concepts:
   - name: Array
     relevance: 0.6
 description: |
-  请设计一个算法，将字符串列表**编码**为单个字符串，并能将编码后的字符串**解码**还原为原始字符串列表。
+  Design an algorithm to **encode** a list of strings into a single string, and **decode** the encoded string back into the original list of strings.
 
-  编码和解码的算法需要满足：在网络传输中，机器 A 将字符串列表编码为单个字符串后发送，机器 B 接收该字符串后能够正确解码还原原始列表。
+  The codec must satisfy: machine A encodes a list of strings into a single string and sends it over the network; machine B receives the string and can correctly decode it to restore the original list.
 
-  编解码方案不能依赖任何外部库或序列化机制。
+  The encode/decode scheme may not rely on any external library or serialization mechanism.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：strs = ["Hello","World"]
-  编码后：（某种中间格式）
-  解码后：["Hello","World"]
-  输出：["Hello","World"]
-  ```
-
-  **示例 2：**
-  ```
-  输入：strs = [""]
-  输出：[""]
+  Input: strs = ["Hello","World"]
+  Encoded: (some intermediate format)
+  Decoded: ["Hello","World"]
+  Output: ["Hello","World"]
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：strs = ["Hello","#World","#"]
-  输出：["Hello","#World","#"]
-  解释：方案需要处理字符串中包含特殊字符的情况。
+  Input: strs = [""]
+  Output: [""]
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: strs = ["Hello","#World","#"]
+  Output: ["Hello","#World","#"]
+  Explanation: The scheme must handle strings that contain special characters.
+  ```
+
+  **Constraints:**
   - `1 <= strs.length <= 200`
   - `0 <= strs[i].length <= 200`
-  - `strs[i]` 包含除 `','` 以外的任意 256 个 ASCII 字符
+  - `strs[i]` contains any of the 256 ASCII characters except `','`
 hints:
-  - 简单地用某个分隔符连接字符串是不够的，因为字符串本身可能包含该分隔符。一种可靠的方法是"长度前缀编码"：将每个字符串编码为 "<长度>#<字符串内容>" 的格式。
-  - 编码时，对每个字符串 s，将 str(len(s)) + '#' + s 追加到结果字符串中；解码时，读取 '#' 之前的数字得到字符串长度，然后截取对应长度的内容。
-  - 解码时维护一个指针 i，首先找到下一个 '#' 的位置，取其之前的数字为长度 L，然后从 '#' 后面读取 L 个字符作为原始字符串，重复直到处理完整个编码字符串。
+  - Simply joining strings with a delimiter is insufficient because strings may contain that delimiter. A robust approach is "length-prefix encoding": encode each string as `"<length>#<string content>"`.
+  - To encode: for each string `s`, append `str(len(s)) + '#' + s` to the result. To decode: read the number before `'#'` to get the length, then extract that many characters following it.
+  - When decoding, maintain a pointer `i`. Find the next `'#'`, parse the number before it as length `L`, then read `L` characters after `'#'` as the original string. Repeat until the entire encoded string is consumed.
 starterCode:
   PYTHON: |
     from typing import List

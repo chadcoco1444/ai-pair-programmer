@@ -11,32 +11,32 @@ concepts:
   - name: Heap
     relevance: 1.0
 description: |
-  給定一個整數陣列 `nums` 和一個整數 `k`，請回傳其中出現頻率前 `k` 高的元素。你可以以**任意順序**回傳答案。
+  Given an integer array `nums` and an integer `k`, return the `k` most frequent elements. You may return the answer in **any order**.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [1,1,1,2,2,3], k = 2
-  輸出：[1,2]
-  解釋：元素 1 出現 3 次，元素 2 出現 2 次，元素 3 出現 1 次。頻率前 2 高的元素為 1 和 2。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [1], k = 1
-  輸出：[1]
+  Input: nums = [1,1,1,2,2,3], k = 2
+  Output: [1,2]
+  Explanation: Element 1 appears 3 times, element 2 appears 2 times, element 3 appears 1 time. The top 2 most frequent elements are 1 and 2.
   ```
 
-  **限制條件：**
+  **Example 2:**
+  ```
+  Input: nums = [1], k = 1
+  Output: [1]
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 10^5`
   - `-10^4 <= nums[i] <= 10^4`
-  - `k` 的值域在 `[1, 陣列中不同元素的數量]` 範圍內
-  - 題目保證答案是唯一的，換句話說，陣列中前 k 個高頻元素的集合是唯一的
+  - `k` is in the range `[1, the number of unique elements in the array]`
+  - It is guaranteed that the answer is unique — in other words, the set of the top k frequent elements is unique
 
-  **進階：** 你的算法的時間複雜度必須優於 O(n log n)。
+  **Follow-up:** Your algorithm's time complexity must be better than O(n log n).
 hints:
-  - 第一步：使用 Hash Table 統計每個元素的出現頻率，時間複雜度 O(n)。
-  - 第二步：使用**大小為 k 的最小堆（Min-Heap）**維護頻率最高的 k 個元素。遍歷 Hash Table，若堆的大小小於 k 直接加入；若堆已滿且當前元素頻率大於堆頂（最小頻率），則彈出堆頂並加入當前元素，最終堆中就是答案。
-  - 另一種 O(n) 方法是**桶排序（Bucket Sort）**：建立長度為 n+1 的桶陣列，索引表示頻率，將每個元素放入對應頻率的桶中，最後從高頻率桶向低頻率桶取元素，直到取滿 k 個。
+  - Step 1: use a Hash Table to count the frequency of each element, with time complexity O(n).
+  - Step 2: use a **Min-Heap of size k** to maintain the k most frequent elements. Iterate through the Hash Table — if the heap size is less than k, add directly; if the heap is full and the current element's frequency is greater than the heap top (minimum frequency), pop the top and add the current element. At the end, the heap contains the answer.
+  - An alternative O(n) method is **Bucket Sort**: create a bucket array of length n+1, where the index represents frequency. Place each element into the bucket matching its frequency, then collect elements from high-frequency to low-frequency buckets until k elements are gathered.
 starterCode:
   PYTHON: |
     class Solution:

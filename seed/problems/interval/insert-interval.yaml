@@ -7,41 +7,43 @@ concepts:
   - name: Array
     relevance: 1.0
 description: |
-  給定一個**已排序且不重疊**的區間列表 `intervals`，其中 `intervals[i] = [starti, endi]`，以及一個新的區間 `newInterval = [start, end]`。
+  You are given an array of non-overlapping intervals `intervals` where `intervals[i] = [starti, endi]` represents the start and end of the `i`th interval, and `intervals` is sorted in ascending order by `starti`. You are also given an interval `newInterval = [start, end]` that represents the start and end of another interval.
 
-  請將 `newInterval` 插入 `intervals` 中，並在必要時合併重疊的區間，確保回傳的區間列表仍然**有序且不重疊**。
+  Insert `newInterval` into `intervals` such that `intervals` is still sorted in ascending order by `starti` and `intervals` still does not have any overlapping intervals (merge overlapping intervals if necessary).
 
-  **範例 1：**
-  ```
-  輸入：intervals = [[1,3],[6,9]], newInterval = [2,5]
-  輸出：[[1,5],[6,9]]
-  解釋：新區間 [2,5] 與 [1,3] 重疊，合併後得到 [1,5]。
-  ```
+  Return `intervals` after the insertion.
 
-  **範例 2：**
+  **Example 1:**
   ```
-  輸入：intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
-  輸出：[[1,2],[3,10],[12,16]]
-  解釋：新區間 [4,8] 與 [3,5],[6,7],[8,10] 重疊，合併後得到 [3,10]。
+  Input: intervals = [[1,3],[6,9]], newInterval = [2,5]
+  Output: [[1,5],[6,9]]
+  Explanation: The new interval [2,5] overlaps with [1,3], so they are merged into [1,5].
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：intervals = [], newInterval = [5,7]
-  輸出：[[5,7]]
+  Input: intervals = [[1,2],[3,5],[6,7],[8,10],[12,16]], newInterval = [4,8]
+  Output: [[1,2],[3,10],[12,16]]
+  Explanation: The new interval [4,8] overlaps with [3,5],[6,7],[8,10], merging them into [3,10].
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: intervals = [], newInterval = [5,7]
+  Output: [[5,7]]
+  ```
+
+  **Constraints:**
   - `0 <= intervals.length <= 10^4`
   - `intervals[i].length == 2`
   - `0 <= starti <= endi <= 10^5`
-  - `intervals` 已按 `starti` 升序排序且互不重疊
+  - `intervals` is sorted by `starti` in ascending order with no overlapping intervals
   - `newInterval.length == 2`
   - `0 <= start <= end <= 10^5`
 hints:
-  - 將問題分為三個部分處理：① 所有在 `newInterval` 左側且不重疊的區間直接加入結果；② 所有與 `newInterval` 重疊的區間逐一與其合併；③ 剩下在右側不重疊的區間直接加入結果。
-  - 判斷重疊的條件：區間 `[a,b]` 和 `[c,d]` 重疊，當且僅當 `a <= d` 且 `c <= b`。合併後的區間為 `[min(a,c), max(b,d)]`。
-  - 線性遍歷一次即可完成，時間複雜度 O(n)。也可以用二分搜尋找到插入位置，進一步優化常數。
+  - Split the problem into three parts: (1) all intervals strictly to the left of `newInterval` (no overlap) are added to the result as-is; (2) all intervals that overlap with `newInterval` are merged into it one by one; (3) all remaining intervals to the right are added as-is.
+  - Two intervals `[a,b]` and `[c,d]` overlap if and only if `a <= d` and `c <= b`. The merged interval is `[min(a,c), max(b,d)]`.
+  - A single linear pass suffices, giving O(n) time complexity. You can also use binary search to find the insertion point for a small constant-factor improvement.
 starterCode:
   PYTHON: |
     class Solution:

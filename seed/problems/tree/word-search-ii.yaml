@@ -9,13 +9,13 @@ concepts:
   - name: Backtracking
     relevance: 1.0
 description: |
-  給定一個 `m x n` 的字元矩陣 `board` 和一個字串列表 `words`，請回傳所有在矩陣中能找到的單字。
+  Given an `m x n` character matrix `board` and a list of strings `words`, return all words that can be found in the matrix.
 
-  單字必須由矩陣中相鄰的格子組成，其中「相鄰」是指水平或垂直方向相鄰的格子。**同一個格子中的字母在一個單字中不能重複使用。**
+  A word must be constructed from letters of sequentially adjacent cells, where "adjacent" means horizontally or vertically adjacent. **The same cell may not be used more than once in a single word.**
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：
+  Input:
   board = [
     ["o","a","a","n"],
     ["e","t","a","e"],
@@ -23,30 +23,30 @@ description: |
     ["i","f","l","v"]
   ]
   words = ["oath","pea","eat","rain"]
-  輸出：["eat","oath"]
+  Output: ["eat","oath"]
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：
+  Input:
   board = [["a","b"],["c","d"]], words = ["abcb"]
-  輸出：[]
-  解釋：無法在不重複使用格子的情況下組成 "abcb"。
+  Output: []
+  Explanation: "abcb" cannot be formed without reusing a cell.
   ```
 
-  **限制條件：**
+  **Constraints:**
   - `m == board.length`
   - `n == board[i].length`
   - `1 <= m, n <= 12`
-  - `board[i][j]` 是大寫或小寫英文字母
+  - `board[i][j]` is an uppercase or lowercase English letter
   - `1 <= words.length <= 3 * 10^4`
   - `1 <= words[i].length <= 10`
-  - `words[i]` 只包含小寫英文字母
-  - `words` 中的所有字串均不重複
+  - `words[i]` consists only of lowercase English letters
+  - All strings in `words` are unique
 hints:
-  - 不要對每個單字分別做 DFS 搜索（效率太低）。先將所有單字插入 Trie，然後從矩陣的每個格子出發做一次 DFS，同時在 Trie 中導航，如此可以同時搜索所有單字。
-  - DFS 回溯時，需要用特殊字元（如 '#'）標記已訪問的格子，退出遞迴後恢復原值，避免在同一個單字路徑中重複使用同一格子。
-  - 重要優化：當 Trie 中某個節點的所有子樹都已找到對應單字後，可以從 Trie 中刪除該節點（剪枝），避免對已找到的單字進行重複搜索，大幅提升效率。
+  - Do not run a separate DFS for each word (too slow). Instead, insert all words into a Trie, then start a single DFS from every cell in the matrix while simultaneously navigating the Trie — this allows searching for all words at once.
+  - During DFS backtracking, mark visited cells with a special character (e.g., '#') and restore the original value when unwinding, to prevent reusing the same cell within a single word path.
+  - Important optimization: once all words under a Trie node's subtree have been found, remove that node from the Trie (pruning). This avoids redundant searches for already-found words and significantly improves performance.
 starterCode:
   PYTHON: |
     class Solution:

@@ -9,23 +9,23 @@ concepts:
   - name: Array
     relevance: 0.5
 description: |
-  给你一个整数 `n`，对于 `0 <= i <= n` 中的每个 `i`，计算其二进制表示中 **`1` 的个数**，返回一个长度为 `n + 1` 的数组 `ans` 作为答案。
+  Given an integer `n`, return an array `ans` of length `n + 1` such that for each `i` (`0 <= i <= n`), `ans[i]` is the **number of 1's** in the binary representation of `i`.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：n = 2
-  输出：[0,1,1]
-  解释：
+  Input: n = 2
+  Output: [0,1,1]
+  Explanation:
   0 --> 0
   1 --> 1
   2 --> 10
   ```
 
-  **示例 2：**
+  **Example 2:**
   ```
-  输入：n = 5
-  输出：[0,1,1,2,1,2]
-  解释：
+  Input: n = 5
+  Output: [0,1,1,2,1,2]
+  Explanation:
   0 --> 0
   1 --> 1
   2 --> 10
@@ -34,17 +34,17 @@ description: |
   5 --> 101
   ```
 
-  **约束条件：**
+  **Constraints:**
   - `0 <= n <= 10^5`
 
-  **进阶：**
-  - 很容易就能实现时间复杂度为 `O(n log n)` 的解决方案，你可以在线性时间 `O(n)` 内用一趟扫描解决此问题吗？
-  - 你能不使用任何内置函数解决此问题吗？
+  **Follow up:**
+  - It is very easy to come up with a solution with a runtime of `O(n log n)`. Can you do it in linear time `O(n)` using a single pass?
+  - Can you do it without using any built-in function?
 
 hints:
-  - 利用动态规划思路：`dp[i]` 表示数字 i 中 1 的个数，注意观察偶数和奇数之间的规律。
-  - 对于偶数 i：`dp[i] = dp[i >> 1]`，因为右移一位不改变 1 的个数；对于奇数 i：`dp[i] = dp[i >> 1] + 1`。
-  - 也可以使用 `dp[i] = dp[i & (i-1)] + 1`，其中 `i & (i-1)` 会清除最低位的 1。
+  - Use dynamic programming: `dp[i]` represents the number of 1's in `i`. Observe the pattern between even and odd numbers.
+  - For even `i`: `dp[i] = dp[i >> 1]`, because right-shifting by one does not change the count of 1's; for odd `i`: `dp[i] = dp[i >> 1] + 1`.
+  - You can also use `dp[i] = dp[i & (i-1)] + 1`, where `i & (i-1)` clears the lowest set bit.
 
 starterCode:
   PYTHON: |
@@ -52,14 +52,14 @@ starterCode:
 
     class Solution:
         def countBits(self, n: int) -> List[int]:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     /**
      * Note: The returned array must be malloced, assume caller calls free().
      */
     int* countBits(int n, int* returnSize) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     #include <vector>
@@ -68,7 +68,7 @@ starterCode:
     class Solution {
     public:
         vector<int> countBits(int n) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -77,7 +77,7 @@ starterCode:
      * @return {number[]}
      */
     var countBits = function(n) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

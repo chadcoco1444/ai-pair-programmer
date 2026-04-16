@@ -9,34 +9,34 @@ concepts:
   - name: Dynamic Programming
     relevance: 0.5
 description: |
-  給定一個陣列 `prices`，其中 `prices[i]` 代表第 `i` 天的股票價格。
+  You are given an array `prices` where `prices[i]` is the price of a given stock on the `i`th day.
 
-  你只能選擇**某一天**買入股票，並在**未來的某一天**賣出，以獲取最大利潤。
+  You want to maximize your profit by choosing a **single day** to buy one stock and choosing a **different day in the future** to sell that stock.
 
-  回傳你能獲得的最大利潤。如果無法獲利，回傳 `0`。
+  Return the maximum profit you can achieve from this transaction. If you cannot achieve any profit, return `0`.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：prices = [7,1,5,3,6,4]
-  輸出：5
-  解釋：在第 2 天（價格 = 1）買入，在第 5 天（價格 = 6）賣出，利潤 = 6 - 1 = 5。
-       注意不能在第 2 天買入後在第 1 天賣出，因為買入必須在賣出之前。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：prices = [7,6,4,3,1]
-  輸出：0
-  解釋：價格持續下跌，無法獲利，回傳 0。
+  Input: prices = [7,1,5,3,6,4]
+  Output: 5
+  Explanation: Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6 - 1 = 5.
+               Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
   ```
 
-  **限制條件：**
+  **Example 2:**
+  ```
+  Input: prices = [7,6,4,3,1]
+  Output: 0
+  Explanation: In this case, no transactions are done and the max profit = 0.
+  ```
+
+  **Constraints:**
   - `1 <= prices.length <= 10^5`
   - `0 <= prices[i] <= 10^4`
 hints:
-  - 試想一個簡單問題：若你在第 i 天賣出，要獲得最大利潤，你應該在哪一天買入？
-  - 從左到右遍歷，維護一個「目前見過的最低價格」變數。對於每一天，計算若在當天賣出能獲得的利潤。
-  - 用一個變數 `minPrice` 記錄當前最低買入價，用 `maxProfit` 記錄最大利潤。每天更新這兩個變數即可在 O(n) 時間解決問題。
+  - Think about a simpler question: if you sell on day i, which day should you have bought to maximize profit?
+  - Traverse from left to right while maintaining a variable tracking the "lowest price seen so far." For each day, calculate the profit if you sell on that day.
+  - Use a variable `minPrice` to track the current minimum buy price, and `maxProfit` to track the maximum profit. Update both variables each day to solve the problem in O(n) time.
 starterCode:
   PYTHON: |
     class Solution:

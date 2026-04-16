@@ -9,7 +9,7 @@ concepts:
   - name: Array
     relevance: 0.3
 description: |
-  一条包含字母 `A-Z` 的消息通过以下映射进行了**编码**：
+  A message containing letters from `A-Z` can be **encoded** into numbers using the following mapping:
   ```
   'A' -> "1"
   'B' -> "2"
@@ -17,55 +17,55 @@ description: |
   'Z' -> "26"
   ```
 
-  要**解码**已编码的消息，所有数字必须基于上述映射的方法，反转映射回字母（可能有多种方法）。例如，`"11106"` 可以映射为：
-  - `"AAJF"` ，将消息分组为 `(1 1 10 6)`
-  - `"KJF"` ，将消息分组为 `(11 10 6)`
+  To **decode** an encoded message, all the digits must be grouped and then mapped back into letters using the reverse of the mapping above (there may be multiple ways). For example, `"11106"` can be mapped into:
+  - `"AAJF"` with the grouping `(1 1 10 6)`
+  - `"KJF"` with the grouping `(11 10 6)`
 
-  注意，消息不能分组为 `(1 11 06)`，因为 `"06"` 不能映射为 `"F"` ，这是由于 `"06"` 和 `"6"` 是不同的。
+  Note that the grouping `(1 11 06)` is invalid because `"06"` cannot be mapped into `'F'` since `"06"` is different from `"6"`.
 
-  给你一个只含数字的**非空**字符串 `s`，请计算并返回**解码**方法的**总数**。
+  Given a string `s` containing only digits, return the **number of ways** to **decode** it.
 
-  题目数据保证答案肯定是一个**32 位**的整数。
+  The test cases are generated so that the answer fits in a **32-bit** integer.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：s = "12"
-  输出：2
-  解释：它可以解码为 "AB"（1 2）或者 "L"（12）。
-  ```
-
-  **示例 2：**
-  ```
-  输入：s = "226"
-  输出：3
-  解释：它可以解码为 "BZ" (2 26), "VF" (22 6), 或者 "BBF" (2 2 6)。
+  Input: s = "12"
+  Output: 2
+  Explanation: "12" could be decoded as "AB" (1 2) or "L" (12).
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：s = "06"
-  输出：0
-  解释："06" 无法映射到 "F" ，因为存在前导零（"6" 和 "06" 在映射中并不等价）。
+  Input: s = "226"
+  Output: 3
+  Explanation: "226" could be decoded as "BZ" (2 26), "VF" (22 6), or "BBF" (2 2 6).
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: s = "06"
+  Output: 0
+  Explanation: "06" cannot be mapped to "F" because of the leading zero ("6" is different from "06").
+  ```
+
+  **Constraints:**
   - `1 <= s.length <= 100`
-  - `s` 只包含数字，并且可能包含前导零。
+  - `s` contains only digits and may contain leading zeros.
 
 hints:
-  - 定义 `dp[i]` 为字符串 `s[0..i-1]` 的解码方法数，初始化 `dp[0] = 1`（空字符串有一种解码方式）。
-  - 如果 `s[i-1]` 不是 '0'，则 `dp[i] += dp[i-1]`（当前字符单独解码）；如果 `s[i-2:i]` 是 "10" 到 "26" 之间的数，则 `dp[i] += dp[i-2]`（当前两个字符组合解码）。
-  - 注意边界情况：若字符串以 '0' 开头或包含 "00" 则无解；'0' 只能与前一个 '1' 或 '2' 配对，不能单独使用。
+  - Define `dp[i]` as the number of ways to decode `s[0..i-1]`. Initialize `dp[0] = 1` (an empty string has one way to be decoded).
+  - If `s[i-1]` is not '0', then `dp[i] += dp[i-1]` (decode the current character alone). If `s[i-2:i]` forms a number between "10" and "26", then `dp[i] += dp[i-2]` (decode the last two characters together).
+  - Watch out for edge cases: a string starting with '0' or containing "00" has no valid decoding; '0' can only be paired with a preceding '1' or '2', never decoded alone.
 
 starterCode:
   PYTHON: |
     class Solution:
         def numDecodings(self, s: str) -> int:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     int numDecodings(char* s) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     #include <string>
@@ -74,7 +74,7 @@ starterCode:
     class Solution {
     public:
         int numDecodings(string s) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -83,7 +83,7 @@ starterCode:
      * @return {number}
      */
     var numDecodings = function(s) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

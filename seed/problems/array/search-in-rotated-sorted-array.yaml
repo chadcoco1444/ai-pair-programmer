@@ -9,40 +9,40 @@ concepts:
   - name: Binary Search
     relevance: 1.0
 description: |
-  有一個整數陣列 `nums`，按升序排列，但在某個未知 pivot 點被旋轉（例如 `[0,1,2,4,5,6,7]` 變成 `[4,5,6,7,0,1,2]`）。
+  There is an integer array `nums` sorted in ascending order (with **distinct** values), which is possibly rotated at an unknown pivot index (e.g., `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`).
 
-  給定旋轉後的陣列 `nums` 和一個整數 `target`，如果 `target` 存在於陣列中，回傳其 index；否則回傳 `-1`。
+  Given the rotated array `nums` and an integer `target`, return the index of `target` if it is in `nums`, or `-1` if it is not.
 
-  你必須在 **O(log n)** 時間複雜度內完成。
+  You must write an algorithm with **O(log n)** runtime complexity.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [4,5,6,7,0,1,2], target = 0
-  輸出：4
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [4,5,6,7,0,1,2], target = 3
-  輸出：-1
+  Input: nums = [4,5,6,7,0,1,2], target = 0
+  Output: 4
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：nums = [1], target = 0
-  輸出：-1
+  Input: nums = [4,5,6,7,0,1,2], target = 3
+  Output: -1
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [1], target = 0
+  Output: -1
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 5000`
   - `-10^4 <= nums[i] <= 10^4`
-  - 陣列中所有元素**互不相同**
-  - `nums` 是一個旋轉過的升序陣列
+  - All values of `nums` are **unique**
+  - `nums` is an ascending array that is possibly rotated
   - `-10^4 <= target <= 10^4`
 hints:
-  - 雖然陣列被旋轉，但每次取 `mid` 後，左半段和右半段至少有一段是**有序**的。可以利用這個特性判斷 target 在哪一側。
-  - 若 `nums[left] <= nums[mid]`，左半段有序。判斷 target 是否在 `[nums[left], nums[mid]]` 範圍內，若是則搜尋左半段，否則搜尋右半段。
-  - 若左半段無序，則右半段一定有序。判斷 target 是否在 `[nums[mid], nums[right]]` 範圍內，若是則搜尋右半段，否則搜尋左半段。每次都能縮小一半搜尋範圍，達到 O(log n)。
+  - Even though the array is rotated, after picking `mid`, at least one of the two halves is always **sorted**. Use this property to determine which side the target is on.
+  - If `nums[left] <= nums[mid]`, the left half is sorted. Check if target falls within `[nums[left], nums[mid]]` — if so, search left; otherwise search right.
+  - If the left half is not sorted, the right half must be sorted. Check if target falls within `[nums[mid], nums[right]]` — if so, search right; otherwise search left. Each step eliminates half the search space, achieving O(log n).
 starterCode:
   PYTHON: |
     class Solution:

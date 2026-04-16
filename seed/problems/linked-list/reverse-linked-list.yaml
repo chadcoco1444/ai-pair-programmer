@@ -7,35 +7,35 @@ concepts:
   - name: Linked List
     relevance: 1.0
 description: |
-  給定一個單向鏈結串列的頭節點 `head`，請將整個鏈結串列反轉並回傳反轉後的頭節點。
+  Given the head node `head` of a singly linked list, reverse the list and return the reversed list's head node.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：head = [1,2,3,4,5]
-  輸出：[5,4,3,2,1]
-  ```
-
-  **範例 2：**
-  ```
-  輸入：head = [1,2]
-  輸出：[2,1]
+  Input: head = [1,2,3,4,5]
+  Output: [5,4,3,2,1]
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：head = []
-  輸出：[]
+  Input: head = [1,2]
+  Output: [2,1]
   ```
 
-  **限制條件：**
-  - 節點數量範圍為 `[0, 5000]`
+  **Example 3:**
+  ```
+  Input: head = []
+  Output: []
+  ```
+
+  **Constraints:**
+  - The number of nodes in the list is in the range `[0, 5000]`
   - `-5000 <= Node.val <= 5000`
 
-  **進階：** 你能同時以迭代（Iterative）和遞迴（Recursive）兩種方式實作嗎？
+  **Follow-up:** Can you implement it both iteratively and recursively?
 hints:
-  - 迭代方法：使用三個指標 `prev`、`curr`、`next`。每次將 `curr.next` 指向 `prev`，然後三個指標同步向前移動，直到 `curr` 為 null。
-  - 遞迴方法：先遞迴反轉除了頭節點以外的剩餘部分，取得新的頭節點，然後將原本頭節點的下一個節點的 `next` 指回頭節點，並將頭節點的 `next` 設為 null。
-  - 注意邊界情況：當鏈結串列為空（`head == null`）或只有一個節點時，直接回傳 `head`，不需要進行任何操作。
+  - Iterative approach: use three pointers `prev`, `curr`, and `next`. At each step, point `curr.next` to `prev`, then advance all three pointers forward, until `curr` is null.
+  - Recursive approach: recursively reverse the remainder of the list (excluding the head), obtain the new head, then make the original head's next node point back to the head, and set the head's `next` to null.
+  - Watch for edge cases: if the list is empty (`head == null`) or has only one node, return `head` immediately without any modification.
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

@@ -9,39 +9,39 @@ concepts:
   - name: Hash Table
     relevance: 0.8
 description: |
-  請實作一個 **Trie（字典樹／前綴樹）** 類別，它需要支援以下操作：
+  Implement a **Trie (prefix tree)** class that supports the following operations:
 
-  - `Trie()` 初始化 Trie 物件。
-  - `void insert(String word)` 向 Trie 中插入字串 `word`。
-  - `boolean search(String word)` 若字串 `word` 在 Trie 中（即先前已插入），回傳 `true`，否則回傳 `false`。
-  - `boolean startsWith(String prefix)` 若先前插入的某個字串的前綴為 `prefix`，回傳 `true`，否則回傳 `false`。
+  - `Trie()` Initializes the Trie object.
+  - `void insert(String word)` Inserts the string `word` into the Trie.
+  - `boolean search(String word)` Returns `true` if the string `word` is in the Trie (i.e., was previously inserted), and `false` otherwise.
+  - `boolean startsWith(String prefix)` Returns `true` if there is a previously inserted string that has the prefix `prefix`, and `false` otherwise.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：
+  Input:
   ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
   [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
-  輸出：
+  Output:
   [null, null, true, false, true, null, true]
 
-  解釋：
+  Explanation:
   Trie trie = new Trie();
-  trie.insert("apple");    // 插入 "apple"
-  trie.search("apple");    // 回傳 true
-  trie.search("app");      // 回傳 false（"app" 未被插入）
-  trie.startsWith("app");  // 回傳 true（"apple" 以 "app" 開頭）
-  trie.insert("app");      // 插入 "app"
-  trie.search("app");      // 回傳 true
+  trie.insert("apple");    // insert "apple"
+  trie.search("apple");    // return true
+  trie.search("app");      // return false ("app" was not inserted)
+  trie.startsWith("app");  // return true ("apple" starts with "app")
+  trie.insert("app");      // insert "app"
+  trie.search("app");      // return true
   ```
 
-  **限制條件：**
+  **Constraints:**
   - `1 <= word.length, prefix.length <= 2000`
-  - `word` 和 `prefix` 只包含小寫英文字母
-  - insert、search 和 startsWith 的呼叫次數總和不超過 3 * 10^4
+  - `word` and `prefix` consist only of lowercase English letters
+  - The total number of calls to insert, search, and startsWith will not exceed 3 * 10^4
 hints:
-  - Trie 的節點需要兩個屬性：一個包含 26 個子節點的陣列（或 Hash Map），以及一個布林值標記該節點是否是某個單字的結尾。
-  - insert 操作：從根節點開始，對字串中每個字元，若對應的子節點不存在則建立新節點，然後移動到子節點，最後在末尾節點標記 is_end = true。
-  - search 和 startsWith 的邏輯相似：都是從根節點沿字元路徑走到底。不同之處在於 search 最終需要檢查末尾節點是否有 is_end 標記，而 startsWith 只需確認路徑存在即可。
+  - A Trie node needs two attributes: an array (or Hash Map) of 26 child nodes, and a boolean flag indicating whether the node marks the end of a word.
+  - Insert operation: starting from the root, for each character in the string, create a new node if the corresponding child does not exist, then move to that child. Mark the final node with is_end = true.
+  - The logic for search and startsWith is similar: both traverse the character path from the root to the end. The difference is that search must check whether the final node has the is_end flag, while startsWith only needs to confirm that the path exists.
 starterCode:
   PYTHON: |
     class Trie:

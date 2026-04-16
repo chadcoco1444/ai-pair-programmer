@@ -9,36 +9,36 @@ concepts:
   - name: Dynamic Programming
     relevance: 1.0
 description: |
-  給定一個整數陣列 `nums`，請找到一個具有最大乘積的**連續子陣列**（子陣列至少包含一個元素），並回傳其最大乘積。
+  Given an integer array `nums`, find a **contiguous subarray** (containing at least one number) which has the largest product, and return the product.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [2,3,-2,4]
-  輸出：6
-  解釋：子陣列 [2,3] 的乘積最大，為 6。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [-2,0,-1]
-  輸出：0
-  解釋：結果不能是 2，因為 [-2,-1] 不是子陣列（中間有 0 間隔）。
+  Input: nums = [2,3,-2,4]
+  Output: 6
+  Explanation: [2,3] has the largest product, which is 6.
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：nums = [-2,3,-4]
-  輸出：24
+  Input: nums = [-2,0,-1]
+  Output: 0
+  Explanation: The result cannot be 2, because [-2,-1] is not a subarray (there is a 0 in between).
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [-2,3,-4]
+  Output: 24
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 2 * 10^4`
   - `-10 <= nums[i] <= 10`
-  - 任何前綴子陣列的乘積都保證在 **32 位元整數**範圍內
+  - The product of any subarray of `nums` is guaranteed to fit in a **32-bit integer**
 hints:
-  - 這題比最大子陣列和更複雜，因為負數乘以負數會變成正數。所以不僅要追蹤當前最大值，也要追蹤當前最小值。
-  - 維護 `maxProd`（當前子陣列的最大乘積）和 `minProd`（當前子陣列的最小乘積）。遇到每個新元素時，新的最大值可能是：`nums[i]`、`maxProd * nums[i]`、`minProd * nums[i]` 三者之一。
-  - 遇到 0 時，當前乘積會歸零，等同於從下一個元素重新開始。遇到負數時，最大值與最小值會互換，要特別注意更新順序（先暫存舊的 maxProd 再更新）。
+  - This problem is more complex than Maximum Subarray because a negative times a negative becomes positive. So you need to track not only the current maximum but also the current minimum.
+  - Maintain `maxProd` (the maximum product of the current subarray) and `minProd` (the minimum product of the current subarray). For each new element, the new maximum could be one of: `nums[i]`, `maxProd * nums[i]`, or `minProd * nums[i]`.
+  - When you encounter 0, the current product resets to zero, effectively starting fresh from the next element. When you encounter a negative number, the max and min swap — be careful about the update order (save the old `maxProd` before updating).
 starterCode:
   PYTHON: |
     class Solution:

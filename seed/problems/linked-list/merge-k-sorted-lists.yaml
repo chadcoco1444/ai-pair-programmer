@@ -9,42 +9,42 @@ concepts:
   - name: Heap
     relevance: 0.9
 description: |
-  給定一個包含 `k` 個已排序鏈結串列的陣列 `lists`，請將所有串列合併成一個升序排列的鏈結串列並回傳。
+  Given an array `lists` of `k` sorted linked lists, merge all the lists into one sorted linked list and return it.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：lists = [[1,4,5],[1,3,4],[2,6]]
-  輸出：[1,1,2,3,4,4,5,6]
-  解釋：三個鏈結串列分別為：
+  Input: lists = [[1,4,5],[1,3,4],[2,6]]
+  Output: [1,1,2,3,4,4,5,6]
+  Explanation: The three linked lists are:
   1->4->5
   1->3->4
   2->6
-  合併後得到：1->1->2->3->4->4->5->6
+  Merging them gives: 1->1->2->3->4->4->5->6
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：lists = []
-  輸出：[]
-  ```
-
-  **範例 3：**
-  ```
-  輸入：lists = [[]]
-  輸出：[]
+  Input: lists = []
+  Output: []
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: lists = [[]]
+  Output: []
+  ```
+
+  **Constraints:**
   - `k == lists.length`
   - `0 <= k <= 10^4`
   - `0 <= lists[i].length <= 500`
   - `-10^4 <= lists[i][j] <= 10^4`
-  - `lists[i]` 以升序排列
-  - `lists[i].length` 的總和不超過 `10^4`
+  - `lists[i]` is sorted in ascending order
+  - The total number of nodes across all lists does not exceed `10^4`
 hints:
-  - 暴力做法是將所有節點值收集到陣列後排序再重建串列，時間複雜度為 O(N log N)。但可以利用串列已排序的特性做得更好。
-  - 最小堆（Min Heap）方法：維護一個大小為 k 的最小堆，每次從堆中取出最小值的節點，加入該節點後將其下一個節點加回堆中，時間複雜度為 O(N log k)。
-  - 分治法（Divide and Conquer）：兩兩合併串列，每輪將 k 個串列變成 k/2 個，共需 log k 輪，每輪合併的總節點數為 N，總時間複雜度為 O(N log k)，且不需要額外的堆空間。
+  - The brute-force approach collects all node values into an array, sorts it, and rebuilds the list. Time complexity is O(N log N). However, you can do better by leveraging the fact that the lists are already sorted.
+  - Min Heap approach: maintain a min heap of size k. Each time, extract the node with the minimum value, then push its next node back into the heap. Time complexity is O(N log k).
+  - Divide and Conquer: merge lists in pairs — each round reduces k lists to k/2. After log k rounds, with N total nodes per round, the overall time complexity is O(N log k) without needing extra heap space.
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

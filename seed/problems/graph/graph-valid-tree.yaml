@@ -9,45 +9,43 @@ concepts:
   - name: Queue
     relevance: 0.5
 description: |
-  給定 `n` 個節點（編號為 `0` 到 `n-1`）以及一個邊的列表 `edges`，其中 `edges[i] = [ai, bi]` 表示節點 `ai` 和 `bi` 之間有一條無向邊。
+  Given `n` nodes labeled from `0` to `n - 1` and a list of undirected edges (each edge is a pair of nodes), write a function to check whether these edges make up a valid tree.
 
-  請判斷這些節點和邊是否構成一棵**有效的樹**。
+  **Hint:** A valid tree must satisfy two conditions:
+  1. The graph is connected (all nodes are reachable from each other)
+  2. The graph contains no cycle
 
-  **提示：** 有效的樹需要滿足兩個條件：
-  1. 圖是連通的（所有節點相互可達）
-  2. 圖中不存在環
-
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]
-  輸出：true
+  Input: n = 5, edges = [[0,1],[0,2],[0,3],[1,4]]
+  Output: true
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]
-  輸出：false
-  解釋：邊 [1,2],[2,3],[1,3] 形成了一個環。
-  ```
-
-  **範例 3：**
-  ```
-  輸入：n = 4, edges = [[0,1],[2,3]]
-  輸出：false
-  解釋：圖不是連通的，節點 {0,1} 和 {2,3} 是兩個獨立的群組。
+  Input: n = 5, edges = [[0,1],[1,2],[2,3],[1,3],[1,4]]
+  Output: false
+  Explanation: Edges [1,2],[2,3],[1,3] form a cycle.
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: n = 4, edges = [[0,1],[2,3]]
+  Output: false
+  Explanation: The graph is not connected — nodes {0,1} and {2,3} are two separate groups.
+  ```
+
+  **Constraints:**
   - `1 <= n <= 2000`
   - `0 <= edges.length <= 5000`
   - `edges[i].length == 2`
   - `0 <= ai, bi < n`
   - `ai != bi`
-  - 沒有重複的邊
+  - There are no repeated edges
 hints:
-  - 一棵有 `n` 個節點的樹必定恰好有 `n-1` 條邊。因此，首先可以快速檢查：若 `edges.length != n-1`，直接回傳 `false`。
-  - 滿足 `n-1` 條邊後，只需再確認圖是連通的即可。使用 DFS 或 BFS 從任意節點出發，看是否能訪問到所有 `n` 個節點。
-  - 另一種方法是**聯合查找（Union-Find）**：對每條邊執行合併操作，若兩個節點已在同一集合（即找到的根相同），說明存在環，回傳 `false`；最後確認所有節點是否在同一集合中。
+  - A tree with `n` nodes must have exactly `n-1` edges. As a quick first check: if `edges.length != n-1`, return `false` immediately.
+  - Once the edge count is `n-1`, you only need to confirm the graph is connected. Use DFS or BFS from any node and check whether all `n` nodes are reachable.
+  - An alternative is **Union-Find**: for each edge, perform a union operation; if the two nodes are already in the same set (same root), a cycle exists — return `false`. Finally confirm all nodes belong to one set.
 starterCode:
   PYTHON: |
     class Solution:

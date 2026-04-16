@@ -9,36 +9,36 @@ concepts:
   - name: Two Pointer
     relevance: 1.0
 description: |
-  給定一個長度為 `n` 的整數陣列 `height`，有 `n` 條垂直線，第 `i` 條線的兩端點為 `(i, 0)` 和 `(i, height[i])`。
+  You are given an integer array `height` of length `n`. There are `n` vertical lines drawn such that the two endpoints of the `i`th line are `(i, 0)` and `(i, height[i])`.
 
-  找出兩條線，使它們與 x 軸共同構成的容器能夠容納最多的水。
+  Find two lines that together with the x-axis form a container that holds the most water.
 
-  回傳容器能夠儲存的最大水量。
+  Return the maximum amount of water a container can store.
 
-  **注意：容器不能傾斜。**
+  **Notice that you may not slant the container.**
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：height = [1,8,6,2,5,4,8,3,7]
-  輸出：49
-  解釋：選擇 index 1（高度 8）和 index 8（高度 7），寬度為 7，
-       容量 = min(8,7) * 7 = 49。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：height = [1,1]
-  輸出：1
+  Input: height = [1,8,6,2,5,4,8,3,7]
+  Output: 49
+  Explanation: Choose index 1 (height 8) and index 8 (height 7), width = 7,
+               area = min(8,7) * 7 = 49.
   ```
 
-  **限制條件：**
+  **Example 2:**
+  ```
+  Input: height = [1,1]
+  Output: 1
+  ```
+
+  **Constraints:**
   - `n == height.length`
   - `2 <= n <= 10^5`
   - `0 <= height[i] <= 10^4`
 hints:
-  - 暴力解法是枚舉所有 (i, j) 組合，時間複雜度為 O(n²)。思考：面積由兩邊的較小高度和兩者間距共同決定，能否用雙指針優化？
-  - 設 `left = 0`，`right = n - 1`，計算當前容量 `min(height[left], height[right]) * (right - left)`，然後移動指針。移動哪一個？移動較高的那條線無法增加容量，因為面積瓶頸在較矮的那條。
-  - 每次移動**較矮**那一側的指針（向內收縮），因為只有這樣才有可能找到更大的面積。持續更新最大值，直到 `left == right` 為止。
+  - The brute-force approach enumerates all (i, j) pairs with O(n²) complexity. Consider that the area is determined by the shorter of the two heights and the distance between them — can you optimize using two pointers?
+  - Set `left = 0` and `right = n - 1`, compute the current area as `min(height[left], height[right]) * (right - left)`, then move a pointer. Which one? Moving the taller line cannot increase the area since the bottleneck is the shorter line.
+  - Each time, move the pointer on the **shorter** side (shrink inward), as only that can potentially find a larger area. Keep updating the maximum until `left == right`.
 starterCode:
   PYTHON: |
     class Solution:

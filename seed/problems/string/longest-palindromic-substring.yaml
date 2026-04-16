@@ -9,36 +9,36 @@ concepts:
   - name: Two Pointer
     relevance: 0.8
 description: |
-  给定一个字符串 `s`，返回其中**最长的回文子串**。
+  Given a string `s`, return the **longest palindromic substring** in `s`.
 
-  **回文串**是指正着读和反着读都相同的字符串。
+  A **palindrome** is a string that reads the same forward and backward.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：s = "babad"
-  输出："bab"
-  解释："aba" 同样是符合题意的答案。
-  ```
-
-  **示例 2：**
-  ```
-  输入：s = "cbbd"
-  输出："bb"
+  Input: s = "babad"
+  Output: "bab"
+  Explanation: "aba" is also a valid answer.
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：s = "a"
-  输出："a"
+  Input: s = "cbbd"
+  Output: "bb"
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: s = "a"
+  Output: "a"
+  ```
+
+  **Constraints:**
   - `1 <= s.length <= 1000`
-  - `s` 仅由数字和英文字母组成
+  - `s` consists of only digits and English letters
 hints:
-  - 使用"中心扩展法"：以每个字符（以及每两个相邻字符之间的间隙）为中心向两边扩展，检查是否构成回文串，时间复杂度 O(n²)。
-  - 对于奇数长度的回文串，中心是单个字符；对于偶数长度的回文串，中心是两个相同的相邻字符。共有 2n-1 个可能的中心需要检查。
-  - 也可以使用动态规划，dp[i][j] 表示 s[i..j] 是否为回文串，状态转移方程为：dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]，记录最长回文子串的起止位置。
+  - Use the "expand around center" technique: for each character (and each gap between adjacent characters), expand outward from the center to check if a palindrome forms. Time complexity is O(n²).
+  - For odd-length palindromes, the center is a single character; for even-length palindromes, the center is two identical adjacent characters. There are 2n-1 possible centers to check in total.
+  - You can also use dynamic programming: let dp[i][j] indicate whether s[i..j] is a palindrome. The recurrence is dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]. Track the start and end indices of the longest palindrome found.
 starterCode:
   PYTHON: |
     class Solution:

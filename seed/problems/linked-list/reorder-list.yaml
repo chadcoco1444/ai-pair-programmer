@@ -11,31 +11,31 @@ concepts:
   - name: Stack
     relevance: 0.6
 description: |
-  給定一個單向鏈結串列 `L`，其形式為：L0 → L1 → … → Ln-1 → Ln
+  Given a singly linked list `L` in the form: L0 → L1 → … → Ln-1 → Ln
 
-  請將其重新排列成：L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …
+  Reorder it to: L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …
 
-  不能修改節點中的值，只能修改節點本身，且**必須原地（in-place）**修改串列。
+  You may not modify the values in the list's nodes. Only node pointers may be changed. The modification must be done **in-place**.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：head = [1,2,3,4]
-  輸出：[1,4,2,3]
-  ```
-
-  **範例 2：**
-  ```
-  輸入：head = [1,2,3,4,5]
-  輸出：[1,5,2,4,3]
+  Input: head = [1,2,3,4]
+  Output: [1,4,2,3]
   ```
 
-  **限制條件：**
-  - 鏈結串列中的節點數量範圍為 `[1, 5 * 10^4]`
+  **Example 2:**
+  ```
+  Input: head = [1,2,3,4,5]
+  Output: [1,5,2,4,3]
+  ```
+
+  **Constraints:**
+  - The number of nodes in the list is in the range `[1, 5 * 10^4]`
   - `1 <= Node.val <= 1000`
 hints:
-  - 這道題可以拆解成三個步驟：① 找到鏈結串列的中間節點；② 反轉後半部分串列；③ 交叉合併前半部分和反轉後的後半部分。
-  - 找中間節點使用快慢指標：慢指標每次走一步，快指標每次走兩步，當快指標到達末尾時，慢指標恰好在中間。然後從中間節點斷開，得到前後兩段串列。
-  - 反轉後半部分後，用兩個指標分別從前半段頭部和後半段頭部開始，交替將後半段節點插入前半段，注意在每次操作前保存 `next` 指標避免丟失引用。
+  - This problem can be broken into three steps: (1) find the middle node of the linked list; (2) reverse the second half; (3) interleave the first half with the reversed second half.
+  - To find the middle node, use a slow and fast pointer: the slow pointer moves one step at a time, the fast pointer moves two steps. When the fast pointer reaches the end, the slow pointer is at the middle. Then split the list into two halves at the middle node.
+  - After reversing the second half, use two pointers starting from the heads of each half. Alternately insert nodes from the second half into the first half. Remember to save `next` pointers before each operation to avoid losing references.
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

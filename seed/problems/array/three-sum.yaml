@@ -11,40 +11,40 @@ concepts:
   - name: Sorting
     relevance: 0.6
 description: |
-  給定一個整數陣列 `nums`，回傳所有和為 `0` 的三元組 `[nums[i], nums[j], nums[k]]`，其中 `i != j`、`i != k`、`j != k`。
+  Given an integer array `nums`, return all the triplets `[nums[i], nums[j], nums[k]]` such that `i != j`, `i != k`, `j != k`, and `nums[i] + nums[j] + nums[k] == 0`.
 
-  **注意：答案中不能包含重複的三元組。**
+  **Notice that the solution set must not contain duplicate triplets.**
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [-1,0,1,2,-1,-4]
-  輸出：[[-1,-1,2],[-1,0,1]]
-  解釋：
+  Input: nums = [-1,0,1,2,-1,-4]
+  Output: [[-1,-1,2],[-1,0,1]]
+  Explanation:
   nums[0] + nums[1] + nums[2] = (-1) + 0 + 1 = 0
   nums[1] + nums[2] + nums[4] = 0 + 1 + (-1) = 0
   nums[0] + nums[3] + nums[4] = (-1) + 2 + (-1) = 0
-  不同的三元組為 [-1,0,1] 和 [-1,-1,2]。
+  The distinct triplets are [-1,0,1] and [-1,-1,2].
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：nums = [0,1,1]
-  輸出：[]
-  ```
-
-  **範例 3：**
-  ```
-  輸入：nums = [0,0,0]
-  輸出：[[0,0,0]]
+  Input: nums = [0,1,1]
+  Output: []
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [0,0,0]
+  Output: [[0,0,0]]
+  ```
+
+  **Constraints:**
   - `3 <= nums.length <= 3000`
   - `-10^5 <= nums[i] <= 10^5`
 hints:
-  - 先對陣列排序。排序後，對每個元素 `nums[i]`，問題轉化為在其右側的子陣列中找兩個數使其和為 `-nums[i]`（即 Two Sum 問題）。
-  - 使用雙指針解決 Two Sum 部分：設 `left = i + 1`，`right = n - 1`。若 `nums[left] + nums[right] + nums[i] < 0`，移動 `left` 右移；若 `> 0`，移動 `right` 左移；若 `= 0`，記錄答案。
-  - 跳過重複元素是關鍵：外層迴圈若 `nums[i] == nums[i-1]` 則跳過；找到一個有效三元組後，移動指針時也要跳過相同的值（`while left < right and nums[left] == nums[left-1]`），避免重複答案。
+  - Sort the array first. After sorting, for each element `nums[i]`, the problem reduces to finding two numbers in the subarray to its right that sum to `-nums[i]` (i.e., the Two Sum problem).
+  - Use two pointers for the Two Sum part: set `left = i + 1` and `right = n - 1`. If `nums[left] + nums[right] + nums[i] < 0`, move `left` right; if `> 0`, move `right` left; if `= 0`, record the answer.
+  - Skipping duplicates is key: in the outer loop, skip if `nums[i] == nums[i-1]`; after finding a valid triplet, also skip duplicate values when moving the pointers (e.g., `while left < right and nums[left] == nums[left-1]`) to avoid duplicate answers.
 starterCode:
   PYTHON: |
     class Solution:

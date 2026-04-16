@@ -9,38 +9,38 @@ concepts:
   - name: Backtracking
     relevance: 1.0
 description: |
-  給定一個 `m x n` 的字符網格 `board` 和一個字串 `word`，請判斷 `word` 是否存在於網格中。
+  Given an `m x n` grid of characters `board` and a string `word`, return `true` if `word` exists in the grid.
 
-  單詞必須由相鄰格子中的字母按順序構成，其中「相鄰」格子是指水平或垂直方向相鄰的格子。同一個格子中的字母**不允許被重複使用**。
+  The word must be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same cell **may not be used more than once**.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
-  輸出：true
-  ```
-
-  **範例 2：**
-  ```
-  輸入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
-  輸出：true
+  Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCCED"
+  Output: true
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
-  輸出：false
+  Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "SEE"
+  Output: true
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: board = [["A","B","C","E"],["S","F","C","S"],["A","D","E","E"]], word = "ABCB"
+  Output: false
+  ```
+
+  **Constraints:**
   - `m == board.length`
   - `n == board[i].length`
   - `1 <= m, n <= 6`
   - `1 <= word.length <= 15`
-  - `board` 和 `word` 只包含大寫和小寫英文字母
+  - `board` and `word` consist of only uppercase and lowercase English letters
 hints:
-  - 使用深度優先搜尋（DFS）配合回溯（Backtracking）：對網格中每個與 `word[0]` 相符的格子都嘗試作為起始點，然後向四個方向遞迴探索。
-  - 在 DFS 過程中，為了標記已訪問的格子，可以將當前格子的值暫時替換為一個特殊字符（例如 `'#'`），遞迴返回後再恢復原值，這樣可以不使用額外的 visited 陣列。
-  - 剪枝優化：若當前字符與 `word` 中對應位置的字符不符，立即返回 false；若索引等於 `word.length`，表示已成功匹配所有字符，返回 true。注意邊界條件：行列索引需在有效範圍內。
+  - Use Depth-First Search (DFS) with Backtracking: try every cell that matches `word[0]` as a starting point, then recursively explore all four directions.
+  - During DFS, to mark a cell as visited, temporarily replace its value with a special character (e.g., `'#'`), and restore the original value after recursion returns. This avoids the need for a separate visited array.
+  - Pruning: if the current character does not match the corresponding character in `word`, return false immediately. If the index equals `word.length`, all characters have been matched — return true. Always check that row and column indices are within bounds.
 starterCode:
   PYTHON: |
     class Solution:

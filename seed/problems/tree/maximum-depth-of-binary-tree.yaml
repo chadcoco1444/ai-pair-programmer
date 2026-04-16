@@ -9,42 +9,42 @@ concepts:
   - name: Queue
     relevance: 0.6
 description: |
-  給定一棵二元樹的根節點 `root`，請回傳其**最大深度**。
+  Given the root node `root` of a binary tree, return its **maximum depth**.
 
-  二元樹的最大深度是指從根節點到最遠葉節點的最長路徑上的節點數量。
+  The maximum depth of a binary tree is the number of nodes along the longest path from the root node down to the farthest leaf node.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：root = [3,9,20,null,null,15,7]
-  輸出：3
-  解釋：
+  Input: root = [3,9,20,null,null,15,7]
+  Output: 3
+  Explanation:
       3
      / \
     9  20
        / \
       15   7
-  最長路徑為 3 → 20 → 15（或 3 → 20 → 7），深度為 3。
+  The longest path is 3 → 20 → 15 (or 3 → 20 → 7), with depth 3.
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：root = [1,null,2]
-  輸出：2
-  ```
-
-  **範例 3：**
-  ```
-  輸入：root = []
-  輸出：0
+  Input: root = [1,null,2]
+  Output: 2
   ```
 
-  **限制條件：**
-  - 樹中節點數量範圍為 `[0, 10^4]`
+  **Example 3:**
+  ```
+  Input: root = []
+  Output: 0
+  ```
+
+  **Constraints:**
+  - The number of nodes in the tree is in the range `[0, 10^4]`
   - `-100 <= Node.val <= 100`
 hints:
-  - 思考遞迴的定義：一棵樹的最大深度等於左子樹最大深度和右子樹最大深度中的較大值，再加上 1（根節點本身）。
-  - 遞迴基底情形（base case）：當節點為 null 時，深度為 0。對每個節點呼叫 max(left_depth, right_depth) + 1。
-  - 也可以使用 BFS（層序遍歷）：用一個佇列逐層處理節點，每處理完一層就將深度計數加 1，最終回傳總層數。
+  - Think about the recursive definition: the maximum depth of a tree equals the larger of the maximum depths of the left and right subtrees, plus 1 (for the root node itself).
+  - Recursive base case: when the node is null, the depth is 0. For each node, call max(left_depth, right_depth) + 1.
+  - You can also use BFS (level order traversal): use a queue to process nodes level by level, incrementing the depth counter after each level is fully processed, and return the total count of levels at the end.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

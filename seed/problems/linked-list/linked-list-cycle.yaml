@@ -9,41 +9,41 @@ concepts:
   - name: Two Pointer
     relevance: 0.9
 description: |
-  給定一個鏈結串列的頭節點 `head`，請判斷這個鏈結串列中是否存在環。
+  Given the head node `head` of a linked list, determine whether the linked list contains a cycle.
 
-  如果鏈結串列中某個節點可以被不斷追蹤 `next` 指標再次到達，則表示鏈結串列中存在環。
+  A cycle exists in a linked list if some node can be reached again by continuously following the `next` pointer.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：head = [3,2,0,-4], pos = 1
-  輸出：true
-  解釋：鏈結串列中存在環，尾節點連接到索引為 1 的節點。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：head = [1,2], pos = 0
-  輸出：true
-  解釋：鏈結串列中存在環，尾節點連接到索引為 0 的節點。
+  Input: head = [3,2,0,-4], pos = 1
+  Output: true
+  Explanation: There is a cycle in the linked list, where the tail connects to the node at index 1.
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：head = [1], pos = -1
-  輸出：false
-  解釋：鏈結串列中不存在環。
+  Input: head = [1,2], pos = 0
+  Output: true
+  Explanation: There is a cycle in the linked list, where the tail connects to the node at index 0.
   ```
 
-  **限制條件：**
-  - 鏈結串列中的節點數量範圍為 `[0, 10^4]`
+  **Example 3:**
+  ```
+  Input: head = [1], pos = -1
+  Output: false
+  Explanation: There is no cycle in the linked list.
+  ```
+
+  **Constraints:**
+  - The number of nodes in the list is in the range `[0, 10^4]`
   - `-10^5 <= Node.val <= 10^5`
-  - `pos` 為 `-1` 或鏈結串列中的某個有效索引
+  - `pos` is `-1` or a valid index in the linked list
 
-  **進階：** 你能用 O(1) 的記憶體空間解決這個問題嗎？
+  **Follow-up:** Can you solve it using O(1) memory?
 hints:
-  - 最直觀的做法是使用 Hash Set 記錄所有已訪問過的節點，若遇到重複的節點則表示有環。但這需要 O(n) 的額外空間。
-  - 進階做法是使用 Floyd's Cycle Detection（龜兔賽跑）演算法：設定一個慢指標（每次走一步）和一個快指標（每次走兩步），如果存在環，快慢指標最終一定會相遇。
-  - 若快指標到達 null 或快指標的 next 為 null，則表示鏈結串列無環，直接回傳 false。
+  - The most straightforward approach is to use a Hash Set to record all visited nodes. If a node is encountered again, there is a cycle. However, this requires O(n) extra space.
+  - The advanced approach uses Floyd's Cycle Detection (tortoise and hare) algorithm: set a slow pointer (moves one step at a time) and a fast pointer (moves two steps at a time). If a cycle exists, the two pointers will eventually meet.
+  - If the fast pointer reaches null or the fast pointer's next is null, the linked list has no cycle — return false.
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

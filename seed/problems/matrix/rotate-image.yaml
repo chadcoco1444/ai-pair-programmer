@@ -7,30 +7,30 @@ concepts:
   - name: Array
     relevance: 0.9
 description: |
-  給定一個 `n x n` 的二維矩陣 `matrix` 代表一張圖片，請**原地（in-place）**將圖片順時針旋轉 90 度。
+  Given an `n x n` 2D matrix `matrix` representing an image, rotate the image **in-place** by 90 degrees clockwise.
 
-  注意：你**不能**使用額外的矩陣空間。
+  Note: You **must not** use any extra matrix space.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
-  輸出：[[7,4,1],[8,5,2],[9,6,3]]
-  ```
-
-  **範例 2：**
-  ```
-  輸入：matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
-  輸出：[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
+  Input: matrix = [[1,2,3],[4,5,6],[7,8,9]]
+  Output: [[7,4,1],[8,5,2],[9,6,3]]
   ```
 
-  **限制條件：**
+  **Example 2:**
+  ```
+  Input: matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+  Output: [[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
+  ```
+
+  **Constraints:**
   - `n == matrix.length == matrix[i].length`
   - `1 <= n <= 20`
   - `-1000 <= matrix[i][j] <= 1000`
 hints:
-  - 順時針旋轉 90 度可以分解為兩步操作：① 對矩陣進行**轉置（Transpose）**，即 `matrix[i][j]` 與 `matrix[j][i]` 互換；② 對每一行進行**水平翻轉（Reverse）**，即將每行反轉。
-  - 轉置時只需遍歷矩陣的上三角部分（`j > i`），避免重複交換。翻轉時使用雙指標從兩端向中間交換即可。
-  - 也可以使用四格同時旋轉的方式：每次同時旋轉矩陣四個對應位置的元素（從外圈到內圈逐層旋轉），但轉置+翻轉的方式更直觀易記。
+  - A 90-degree clockwise rotation can be decomposed into two steps: (1) **Transpose** the matrix — swap `matrix[i][j]` with `matrix[j][i]`; (2) **Reverse** each row horizontally.
+  - When transposing, only iterate over the upper triangle (`j > i`) to avoid swapping twice. When reversing, use two pointers moving inward from both ends of each row.
+  - Alternatively, rotate four corresponding elements simultaneously (layer by layer from outside in), but the transpose + reverse approach is more intuitive and easier to remember.
 starterCode:
   PYTHON: |
     class Solution:

@@ -9,52 +9,52 @@ concepts:
   - name: Greedy
     relevance: 0.2
 description: |
-  假设你正在爬楼梯。需要 `n` 阶你才能到达楼顶。
+  You are climbing a staircase. It takes `n` steps to reach the top.
 
-  每次你可以爬 `1` 或 `2` 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+  Each time you can either climb `1` or `2` steps. In how many distinct ways can you climb to the top?
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：n = 2
-  输出：2
-  解释：有两种方法可以爬到楼顶。
-  1. 1 阶 + 1 阶
-  2. 2 阶
-  ```
-
-  **示例 2：**
-  ```
-  输入：n = 3
-  输出：3
-  解释：有三种方法可以爬到楼顶。
-  1. 1 阶 + 1 阶 + 1 阶
-  2. 1 阶 + 2 阶
-  3. 2 阶 + 1 阶
+  Input: n = 2
+  Output: 2
+  Explanation: There are two ways to climb to the top.
+  1. 1 step + 1 step
+  2. 2 steps
   ```
 
-  **约束条件：**
+  **Example 2:**
+  ```
+  Input: n = 3
+  Output: 3
+  Explanation: There are three ways to climb to the top.
+  1. 1 step + 1 step + 1 step
+  2. 1 step + 2 steps
+  3. 2 steps + 1 step
+  ```
+
+  **Constraints:**
   - `1 <= n <= 45`
 
 hints:
-  - 思考递推关系：到达第 n 阶的方法数等于到达第 n-1 阶的方法数加上到达第 n-2 阶的方法数，因为你可以从第 n-1 阶跨 1 步，或从第 n-2 阶跨 2 步到达第 n 阶。
-  - 这个递推关系就是斐波那契数列！初始条件为 `dp[1] = 1`，`dp[2] = 2`，从 3 开始递推即可。
-  - 可以只用两个变量来优化空间，不需要存储整个 dp 数组。
+  - Think about the recurrence relation: the number of ways to reach step n equals the number of ways to reach step n-1 plus the number of ways to reach step n-2, because you can arrive at step n from step n-1 with a 1-step jump, or from step n-2 with a 2-step jump.
+  - This recurrence is exactly the Fibonacci sequence! The base cases are `dp[1] = 1` and `dp[2] = 2`; iterate from 3 onward.
+  - You can optimize space by using just two variables instead of storing the entire dp array.
 
 starterCode:
   PYTHON: |
     class Solution:
         def climbStairs(self, n: int) -> int:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     int climbStairs(int n) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     class Solution {
     public:
         int climbStairs(int n) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -63,7 +63,7 @@ starterCode:
      * @return {number}
      */
     var climbStairs = function(n) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

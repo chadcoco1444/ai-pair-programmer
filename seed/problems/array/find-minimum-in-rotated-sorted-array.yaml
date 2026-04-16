@@ -9,41 +9,41 @@ concepts:
   - name: Binary Search
     relevance: 1.0
 description: |
-  假設一個按升序排列的陣列在某個未知的 pivot 點被旋轉（例如 `[0,1,2,4,5,6,7]` 可能變成 `[4,5,6,7,0,1,2]`）。
+  Suppose an array of length `n` sorted in ascending order is **rotated** between `1` and `n` times (e.g., `[0,1,2,4,5,6,7]` might become `[4,5,6,7,0,1,2]`).
 
-  給定這個旋轉後的陣列 `nums`，且陣列中**沒有重複元素**，請找出其中的最小值。
+  Given the rotated array `nums` with **no duplicate elements**, find the minimum element.
 
-  你必須在 **O(log n)** 時間複雜度內完成。
+  You must write an algorithm that runs in **O(log n)** time.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [3,4,5,1,2]
-  輸出：1
-  解釋：原始陣列為 [1,2,3,4,5]，在 index 3 處旋轉。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [4,5,6,7,0,1,2]
-  輸出：0
+  Input: nums = [3,4,5,1,2]
+  Output: 1
+  Explanation: The original array was [1,2,3,4,5] rotated at index 3.
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：nums = [11,13,15,17]
-  輸出：11
-  解釋：陣列沒有旋轉，最小值就是第一個元素。
+  Input: nums = [4,5,6,7,0,1,2]
+  Output: 0
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [11,13,15,17]
+  Output: 11
+  Explanation: The array was not rotated; the minimum is the first element.
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 5000`
   - `-5000 <= nums[i] <= 5000`
-  - 陣列中所有元素**互不相同**
-  - `nums` 是經過旋轉的升序陣列（旋轉次數在 `[1, n]` 之間）
+  - All integers in `nums` are **unique**
+  - `nums` is a sorted array rotated between `1` and `n` times
 hints:
-  - 題目要求 O(log n)，應使用 Binary Search。對於中間元素 `mid`，它不是在左半段有序的部分，就是在右半段有序的部分。
-  - 比較 `nums[mid]` 和 `nums[right]`：若 `nums[mid] > nums[right]`，表示旋轉點（最小值）在右半段，移動 `left = mid + 1`；否則最小值在左半段（包含 mid），移動 `right = mid`。
-  - 當 `left == right` 時，`nums[left]` 就是最小值。注意：若陣列完全有序（無旋轉），`nums[0]` 就是最小值，此演算法也能正確處理。
+  - The problem requires O(log n), so use Binary Search. For the middle element `mid`, it is either in the sorted left half or the sorted right half.
+  - Compare `nums[mid]` with `nums[right]`: if `nums[mid] > nums[right]`, the rotation point (minimum) is in the right half, so move `left = mid + 1`; otherwise the minimum is in the left half (including mid), so move `right = mid`.
+  - When `left == right`, `nums[left]` is the minimum. Note: if the array is fully sorted (no rotation), `nums[0]` is the minimum, and this algorithm handles that correctly.
 starterCode:
   PYTHON: |
     class Solution:

@@ -7,42 +7,42 @@ concepts:
   - name: Tree
     relevance: 1.0
 description: |
-  給定兩棵二元樹的根節點 `p` 和 `q`，請判斷這兩棵樹是否**完全相同**。
+  Given the root nodes `p` and `q` of two binary trees, determine whether the two trees are **identical**.
 
-  如果兩棵樹在結構上完全相同，且每個對應節點的值也相同，則認為它們是相同的。
+  Two trees are considered identical if they have the same structure and every corresponding node has the same value.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：p = [1,2,3], q = [1,2,3]
-  輸出：true
-  解釋：
+  Input: p = [1,2,3], q = [1,2,3]
+  Output: true
+  Explanation:
     1       1
    / \     / \
   2   3   2   3
-  兩棵樹結構和值均相同。
+  Both trees have identical structure and values.
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：p = [1,2], q = [1,null,2]
-  輸出：false
-  解釋：兩棵樹結構不同。
-  ```
-
-  **範例 3：**
-  ```
-  輸入：p = [1,2,1], q = [1,1,2]
-  輸出：false
-  解釋：兩棵樹結構相同，但節點值不同。
+  Input: p = [1,2], q = [1,null,2]
+  Output: false
+  Explanation: The two trees have different structures.
   ```
 
-  **限制條件：**
-  - 兩棵樹的節點數量範圍均為 `[0, 100]`
+  **Example 3:**
+  ```
+  Input: p = [1,2,1], q = [1,1,2]
+  Output: false
+  Explanation: The two trees have the same structure, but different node values.
+  ```
+
+  **Constraints:**
+  - The number of nodes in both trees is in the range `[0, 100]`
   - `-10^4 <= Node.val <= 10^4`
 hints:
-  - 使用遞迴思考：兩棵樹相同，當且僅當（1）當前根節點值相同，（2）左子樹相同，且（3）右子樹相同。
-  - 基底情形：若兩個節點都是 null，回傳 true；若只有一個是 null，回傳 false；若兩者值不相等，回傳 false。
-  - 也可以使用迭代方式，利用堆疊（Stack）同時遍歷兩棵樹，逐一比較對應節點。
+  - Use recursive thinking: two trees are identical if and only if (1) the current root values are equal, (2) the left subtrees are identical, and (3) the right subtrees are identical.
+  - Base cases: if both nodes are null, return true; if only one is null, return false; if their values are not equal, return false.
+  - You can also use an iterative approach with a stack to traverse both trees simultaneously and compare corresponding nodes one by one.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

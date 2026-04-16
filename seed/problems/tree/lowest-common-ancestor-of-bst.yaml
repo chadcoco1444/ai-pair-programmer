@@ -7,39 +7,39 @@ concepts:
   - name: Tree
     relevance: 1.0
 description: |
-  給定一棵二元搜索樹（BST），找到其中兩個指定節點 `p` 和 `q` 的**最近公共祖先（LCA）**。
+  Given a binary search tree (BST), find the **lowest common ancestor (LCA)** of two specified nodes `p` and `q`.
 
-  最近公共祖先的定義為：對於兩個節點 p 和 q，在樹中最深的節點 x，使得 x 同時是 p 和 q 的祖先（節點也可以是自身的祖先）。
+  The lowest common ancestor is defined as: for two nodes p and q, the deepest node x in the tree such that x is an ancestor of both p and q (a node can be an ancestor of itself).
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
-  輸出：6
-  解釋：節點 2 和節點 8 的最近公共祖先是根節點 6。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
-  輸出：2
-  解釋：節點 2 和節點 4 的最近公共祖先是節點 2 本身（節點可以是自身的祖先）。
+  Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+  Output: 6
+  Explanation: The lowest common ancestor of nodes 2 and 8 is the root node 6.
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：root = [2,1], p = 2, q = 1
-  輸出：2
+  Input: root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+  Output: 2
+  Explanation: The lowest common ancestor of nodes 2 and 4 is node 2 itself (a node can be an ancestor of itself).
   ```
 
-  **限制條件：**
-  - 樹中節點數量範圍為 `[2, 10^5]`
+  **Example 3:**
+  ```
+  Input: root = [2,1], p = 2, q = 1
+  Output: 2
+  ```
+
+  **Constraints:**
+  - The number of nodes in the tree is in the range `[2, 10^5]`
   - `-10^9 <= Node.val <= 10^9`
-  - 所有節點值均唯一
-  - p 和 q 均存在於 BST 中，且 p != q
+  - All node values are unique
+  - Both p and q exist in the BST, and p != q
 hints:
-  - 充分利用 BST 的特性：若 p 和 q 的值都小於當前節點，LCA 必定在左子樹中；若都大於當前節點，LCA 必定在右子樹中。
-  - 若 p 的值小於等於當前節點，且 q 的值大於等於當前節點（或反之），則當前節點就是 LCA，因為 p 和 q 分布在當前節點的兩側（或其中一個就是當前節點）。
-  - 這個問題可以迭代解決，不需要遞迴：從根節點開始，根據 p 和 q 的值與當前節點的大小關係，決定向左走、向右走或停止。
+  - Make full use of BST properties: if both p and q are less than the current node, the LCA must be in the left subtree; if both are greater, the LCA must be in the right subtree.
+  - If p's value is less than or equal to the current node and q's value is greater than or equal to the current node (or vice versa), then the current node is the LCA, because p and q are on opposite sides of it (or one of them is the current node itself).
+  - This problem can be solved iteratively without recursion: starting from the root, decide to go left, go right, or stop based on how p's and q's values compare to the current node.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

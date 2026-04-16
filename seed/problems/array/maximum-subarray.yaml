@@ -9,36 +9,36 @@ concepts:
   - name: Dynamic Programming
     relevance: 0.9
 description: |
-  給定一個整數陣列 `nums`，請找到一個具有最大和的**連續子陣列**（子陣列至少包含一個元素），並回傳其最大和。
+  Given an integer array `nums`, find the **contiguous subarray** (containing at least one number) which has the largest sum and return its sum.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [-2,1,-3,4,-1,2,1,-5,4]
-  輸出：6
-  解釋：連續子陣列 [4,-1,2,1] 的和最大，為 6。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [1]
-  輸出：1
+  Input: nums = [-2,1,-3,4,-1,2,1,-5,4]
+  Output: 6
+  Explanation: The contiguous subarray [4,-1,2,1] has the largest sum = 6.
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：nums = [5,4,-1,7,8]
-  輸出：23
+  Input: nums = [1]
+  Output: 1
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [5,4,-1,7,8]
+  Output: 23
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 10^5`
   - `-10^4 <= nums[i] <= 10^4`
 
-  **進階：** 如果你已實現 O(n) 解法，嘗試使用分治法（Divide and Conquer）在 O(n log n) 時間內解決。
+  **Follow up:** If you have figured out the O(n) solution, try coding another solution using the divide and conquer approach, which is more subtle.
 hints:
-  - 思考 Kadane's Algorithm：當你在第 i 個元素時，你有兩個選擇——要麼把它加入前面的子陣列，要麼從它重新開始一個子陣列。
-  - 維護兩個變數：`currentSum`（當前子陣列的和）和 `maxSum`（目前見過的最大和）。對每個元素，`currentSum = max(nums[i], currentSum + nums[i])`。
-  - 若 `currentSum` 變成負數，繼續延伸只會讓總和更小，所以重置 `currentSum = nums[i]`，從當前元素重新開始。每步都更新 `maxSum`。
+  - Think about Kadane's Algorithm: at each element i, you have two choices — either extend the previous subarray by adding it, or start a new subarray beginning at this element.
+  - Maintain two variables: `currentSum` (the sum of the current subarray) and `maxSum` (the largest sum seen so far). For each element, `currentSum = max(nums[i], currentSum + nums[i])`.
+  - If `currentSum` becomes negative, extending it will only make the total smaller, so reset `currentSum = nums[i]` and start fresh from the current element. Update `maxSum` at every step.
 starterCode:
   PYTHON: |
     class Solution:

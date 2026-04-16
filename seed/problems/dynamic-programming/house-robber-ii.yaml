@@ -9,39 +9,39 @@ concepts:
   - name: Array
     relevance: 0.6
 description: |
-  你是一个专业的小偷，计划偷窃沿街的房屋，每间房内都藏有一定的现金。这个地方所有的房屋都**围成一圈**，这意味着第一个房屋和最后一个房屋紧挨着。同时，相邻的房屋装有相互连通的防盗系统，**如果两间相邻的房屋在同一晚上被小偷闯入，系统会自动报警**。
+  You are a professional robber planning to rob houses along a street. Each house has a certain amount of money stashed. All houses at this place are **arranged in a circle**, meaning the first house is the neighbor of the last one. Meanwhile, adjacent houses have a security system connected, and **it will automatically contact the police if two adjacent houses were broken into on the same night**.
 
-  给定一个代表每个房屋存放金额的非负整数数组 `nums`，计算你**在不触动警报装置的情况下**，今晚能够偷窃到的最高金额。
+  Given an integer array `nums` representing the amount of money at each house, return the maximum amount of money you can rob tonight **without alerting the police**.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：nums = [2,3,2]
-  输出：3
-  解释：你不能先偷窃 1 号房屋（金额 = 2），然后偷窃 3 号房屋（金额 = 2），因为他们是相邻的。
-  ```
-
-  **示例 2：**
-  ```
-  输入：nums = [1,2,3,1]
-  输出：4
-  解释：你可以先偷窃 1 号房屋（金额 = 1），然后偷窃 3 号房屋（金额 = 3）。
-       偷窃到的最高金额 = 1 + 3 = 4。
+  Input: nums = [2,3,2]
+  Output: 3
+  Explanation: You cannot rob house 1 (money = 2) and then rob house 3 (money = 2), because they are adjacent houses.
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：nums = [1,2,3]
-  输出：3
+  Input: nums = [1,2,3,1]
+  Output: 4
+  Explanation: Rob house 1 (money = 1) and then rob house 3 (money = 3).
+               Total amount you can rob = 1 + 3 = 4.
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: nums = [1,2,3]
+  Output: 3
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 100`
   - `0 <= nums[i] <= 1000`
 
 hints:
-  - 由于首尾房屋不能同时偷，可以将问题拆分为两个子问题：偷 `nums[0..n-2]` 的最大值，和偷 `nums[1..n-1]` 的最大值，取两者的最大值即为答案。
-  - 每个子问题都等价于 House Robber I（线性版本），可以复用原来的 DP 解法。
-  - 注意特殊情况：若 `nums` 只有一个元素，直接返回该元素；若有两个元素，返回较大的那个。
+  - Since the first and last houses cannot both be robbed, split the problem into two subproblems: the maximum for `nums[0..n-2]` and the maximum for `nums[1..n-1]`; take the larger of the two as the answer.
+  - Each subproblem is equivalent to House Robber I (the linear version) — you can reuse the same DP solution.
+  - Handle edge cases: if `nums` has only one element, return it directly; if it has two elements, return the larger one.
 
 starterCode:
   PYTHON: |
@@ -49,11 +49,11 @@ starterCode:
 
     class Solution:
         def rob(self, nums: List[int]) -> int:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     int rob(int* nums, int numsSize) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     #include <vector>
@@ -62,7 +62,7 @@ starterCode:
     class Solution {
     public:
         int rob(vector<int>& nums) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -71,7 +71,7 @@ starterCode:
      * @return {number}
      */
     var rob = function(nums) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

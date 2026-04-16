@@ -9,36 +9,36 @@ concepts:
   - name: Hash Table
     relevance: 0.8
 description: |
-  给定一个字符串 `s`，请找出其中不含重复字符的**最长子串**的长度。
+  Given a string `s`, find the length of the **longest substring** without repeating characters.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：s = "abcabcbb"
-  输出：3
-  解释：最长子串为 "abc"，长度为 3。
-  ```
-
-  **示例 2：**
-  ```
-  输入：s = "bbbbb"
-  输出：1
-  解释：最长子串为 "b"，长度为 1。
+  Input: s = "abcabcbb"
+  Output: 3
+  Explanation: The longest substring is "abc", with length 3.
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：s = "pwwkew"
-  输出：3
-  解释：最长子串为 "wke"，长度为 3。注意答案必须是子串，"pwke" 是子序列而非子串。
+  Input: s = "bbbbb"
+  Output: 1
+  Explanation: The longest substring is "b", with length 1.
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: s = "pwwkew"
+  Output: 3
+  Explanation: The longest substring is "wke", with length 3. Note that the answer must be a substring — "pwke" is a subsequence, not a substring.
+  ```
+
+  **Constraints:**
   - `0 <= s.length <= 5 * 10^4`
-  - `s` 由英文字母、数字、符号和空格组成
+  - `s` consists of English letters, digits, symbols, and spaces
 hints:
-  - 使用滑动窗口技术，维护一个左指针和右指针，窗口内保证没有重复字符。
-  - 用哈希表记录每个字符最近一次出现的位置，当遇到重复字符时，将左指针移动到该字符上次出现位置的下一位。
-  - 每次移动右指针后，更新当前窗口长度，并与历史最大值比较，取最大值作为答案。
+  - Use the sliding window technique, maintaining a left and right pointer such that the window always contains no duplicate characters.
+  - Use a hash map to record the most recent index of each character. When a duplicate character is encountered, move the left pointer to one position past that character's last occurrence.
+  - After advancing the right pointer each time, update the current window length and compare it with the running maximum to track the answer.
 starterCode:
   PYTHON: |
     class Solution:

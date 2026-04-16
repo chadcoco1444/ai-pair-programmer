@@ -9,33 +9,33 @@ concepts:
   - name: Hash Table
     relevance: 0.8
 description: |
-  給定一個整數陣列 `nums`，如果陣列中**任何一個值出現至少兩次**，回傳 `true`；如果所有元素都不相同，回傳 `false`。
+  Given an integer array `nums`, return `true` if **any value appears at least twice** in the array, and return `false` if every element is distinct.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：nums = [1,2,3,1]
-  輸出：true
-  ```
-
-  **範例 2：**
-  ```
-  輸入：nums = [1,2,3,4]
-  輸出：false
+  Input: nums = [1,2,3,1]
+  Output: true
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：nums = [1,1,1,3,3,4,3,2,4,2]
-  輸出：true
+  Input: nums = [1,2,3,4]
+  Output: false
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: nums = [1,1,1,3,3,4,3,2,4,2]
+  Output: true
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 10^5`
   - `-10^9 <= nums[i] <= 10^9`
 hints:
-  - 最直觀的方式是排序後比較相鄰元素，時間複雜度為 O(n log n)。思考看看有沒有 O(n) 的解法？
-  - 使用 Hash Set 來追蹤已見過的數字。遍歷陣列，若當前數字已在 Set 中，代表有重複。
-  - 將每個數字加入 Set 前先檢查是否存在，Set 的查找操作為 O(1)，整體時間複雜度為 O(n)，空間複雜度為 O(n)。
+  - The most straightforward approach is to sort and compare adjacent elements, with O(n log n) time complexity. Can you find an O(n) solution?
+  - Use a Hash Set to track numbers seen so far. Traverse the array — if the current number is already in the Set, a duplicate exists.
+  - Before adding each number to the Set, check if it already exists. Set lookups are O(1), giving O(n) overall time complexity and O(n) space complexity.
 starterCode:
   PYTHON: |
     class Solution:

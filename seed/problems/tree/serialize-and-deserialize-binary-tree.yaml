@@ -9,30 +9,30 @@ concepts:
   - name: Queue
     relevance: 0.8
 description: |
-  **序列化**是指將資料結構或物件轉換為位元序列的過程，使其可以儲存在檔案或記憶體緩衝區中，或通過網路連線傳輸，之後可在相同或不同的電腦環境中重建。
+  **Serialization** is the process of converting a data structure or object into a sequence of bits so that it can be stored in a file or memory buffer, or transmitted across a network, and later reconstructed in the same or another computer environment.
 
-  請設計一種算法來序列化和反序列化二元樹。序列化和反序列化的方式不受限制，只需確保二元樹能夠被正確序列化為字串，並且能夠從該字串反序列化還原。
+  Design an algorithm to serialize and deserialize a binary tree. There is no restriction on how serialization and deserialization should work — you just need to ensure the binary tree can be correctly serialized to a string and deserialized back from that string.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：root = [1,2,3,null,null,4,5]
-  輸出：[1,2,3,null,null,4,5]
-  解釋：序列化後的字串（例如 "1,2,3,null,null,4,5"）可以被反序列化為原始的樹結構。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：root = []
-  輸出：[]
+  Input: root = [1,2,3,null,null,4,5]
+  Output: [1,2,3,null,null,4,5]
+  Explanation: The serialized string (e.g., "1,2,3,null,null,4,5") can be deserialized back to the original tree structure.
   ```
 
-  **限制條件：**
-  - 樹中節點數量範圍為 `[0, 10^4]`
+  **Example 2:**
+  ```
+  Input: root = []
+  Output: []
+  ```
+
+  **Constraints:**
+  - The number of nodes in the tree is in the range `[0, 10^4]`
   - `-1000 <= Node.val <= 1000`
 hints:
-  - 使用 BFS 層序遍歷進行序列化：將節點值以逗號分隔，null 節點記錄為特殊字元（如 "null"）。
-  - 反序列化時，將字串分割為陣列，按層序重建樹：用佇列存放待填充子節點的父節點，依序從陣列取值填入左右子節點。
-  - 也可以使用前序 DFS 遞迴：序列化時遞迴輸出節點值，null 用 "#" 表示；反序列化時同樣遞迴，按前序順序依次從字串取出值重建樹。
+  - Use BFS level-order traversal for serialization: separate node values with commas and record null nodes as a special token (e.g., "null").
+  - For deserialization, split the string into an array and rebuild the tree level by level: use a queue to hold parent nodes waiting to be filled, and assign left and right children sequentially from the array.
+  - You can also use preorder DFS recursion: during serialization, recursively output node values, representing null as "#"; during deserialization, likewise recurse and pull values from the string in preorder sequence to rebuild the tree.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

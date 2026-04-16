@@ -9,37 +9,37 @@ concepts:
   - name: Stack
     relevance: 0.7
 description: |
-  給定一棵二元搜索樹的根節點 `root` 和一個整數 `k`，請回傳樹中**第 k 小**的節點值（k 從 1 開始計數）。
+  Given the root node `root` of a binary search tree and an integer `k`, return the **k-th smallest** node value in the tree (k is 1-indexed).
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：root = [3,1,4,null,2], k = 1
-  輸出：1
-  解釋：
+  Input: root = [3,1,4,null,2], k = 1
+  Output: 1
+  Explanation:
       3
      / \
     1   4
      \
       2
-  中序遍歷：[1, 2, 3, 4]，第 1 小的元素為 1。
+  Inorder traversal: [1, 2, 3, 4], the 1st smallest element is 1.
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：root = [5,3,6,2,4,null,null,1], k = 3
-  輸出：3
-  解釋：中序遍歷：[1, 2, 3, 4, 5, 6]，第 3 小的元素為 3。
+  Input: root = [5,3,6,2,4,null,null,1], k = 3
+  Output: 3
+  Explanation: Inorder traversal: [1, 2, 3, 4, 5, 6], the 3rd smallest element is 3.
   ```
 
-  **限制條件：**
-  - 樹中節點數量為 `n`，`1 <= k <= n <= 10^4`
+  **Constraints:**
+  - The number of nodes in the tree is `n`, where `1 <= k <= n <= 10^4`
   - `0 <= Node.val <= 10^4`
 
-  **進階：** 如果 BST 被頻繁修改（插入/刪除操作），且需要頻繁地查找第 k 小的值，應如何優化？
+  **Follow-up:** If the BST is modified frequently (insertions/deletions) and you need to find the k-th smallest value frequently, how would you optimize?
 hints:
-  - 利用 BST 的關鍵特性：中序遍歷（左 → 根 → 右）得到的序列是嚴格遞增的。因此，第 k 小的元素就是中序遍歷中的第 k 個元素。
-  - 遞迴解法：進行中序遍歷，維護一個計數器，當計數器達到 k 時記錄並回傳當前節點值。
-  - 迭代解法：使用顯式堆疊模擬中序遍歷，依次訪問節點，計數到第 k 個節點時回傳其值。迭代方法可以在找到第 k 個元素後立即停止，避免遍歷整棵樹。
+  - Leverage a key property of BSTs: the inorder traversal (left → root → right) yields a strictly increasing sequence. Therefore, the k-th smallest element is simply the k-th element in the inorder traversal.
+  - Recursive approach: perform an inorder traversal, maintain a counter, and record and return the current node's value when the counter reaches k.
+  - Iterative approach: use an explicit stack to simulate inorder traversal, visiting nodes one by one and returning the value at the k-th node. The iterative method can stop immediately upon finding the k-th element, avoiding traversal of the entire tree.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

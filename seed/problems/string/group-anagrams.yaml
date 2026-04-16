@@ -9,36 +9,36 @@ concepts:
   - name: Array
     relevance: 0.6
 description: |
-  给定一个字符串数组 `strs`，将所有字母异位词组合在一起，并以任意顺序返回结果列表。
+  Given an array of strings `strs`, group the anagrams together and return the result list in any order.
 
-  **字母异位词**是指由相同字母重新排列组合而成的字符串（字母种类和数量相同，顺序可以不同）。
+  An **anagram** is a word or phrase formed by rearranging the letters of another word or phrase, using all the original letters exactly once.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：strs = ["eat","tea","tan","ate","nat","bat"]
-  输出：[["bat"],["nat","tan"],["ate","eat","tea"]]
-  ```
-
-  **示例 2：**
-  ```
-  输入：strs = [""]
-  输出：[[""]]
+  Input: strs = ["eat","tea","tan","ate","nat","bat"]
+  Output: [["bat"],["nat","tan"],["ate","eat","tea"]]
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：strs = ["a"]
-  输出：[["a"]]
+  Input: strs = [""]
+  Output: [[""]]
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: strs = ["a"]
+  Output: [["a"]]
+  ```
+
+  **Constraints:**
   - `1 <= strs.length <= 10^4`
   - `0 <= strs[i].length <= 100`
-  - `strs[i]` 仅包含小写英文字母
+  - `strs[i]` consists of lowercase English letters only
 hints:
-  - 字母异位词排序后结果相同，可以用排序后的字符串作为哈希表的键，将原字符串归入对应的组。
-  - 另一种方法是用长度为 26 的字符计数数组（转换为元组或字符串）作为哈希表的键，避免排序，时间复杂度降至 O(n * k)，其中 k 为字符串的最大长度。
-  - 遍历所有字符串，生成每个字符串的键并插入哈希表，最后返回哈希表中所有值的列表。
+  - Anagrams produce the same string when sorted. Use the sorted string as a hash map key to group original strings into the same bucket.
+  - Alternatively, use a character count array of length 26 (converted to a tuple or string) as the hash map key. This avoids sorting and reduces time complexity to O(n * k), where k is the maximum string length.
+  - Iterate over all strings, generate the key for each, insert into the hash map, and finally return all values in the map as a list.
 starterCode:
   PYTHON: |
     from typing import List

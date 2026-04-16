@@ -11,32 +11,32 @@ concepts:
   - name: Array
     relevance: 0.6
 description: |
-  给你一个非负整数数组 `nums`，你最初位于数组的**第一个下标**。数组中的每个元素代表你在该位置可以跳跃的最大长度。
+  You are given an integer array `nums`. You are initially positioned at the array's **first index**, and each element in the array represents your maximum jump length at that position.
 
-  判断你是否能够到达最后一个下标，如果可以，返回 `true`；否则，返回 `false`。
+  Return `true` if you can reach the last index, or `false` otherwise.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：nums = [2,3,1,1,4]
-  输出：true
-  解释：可以先跳 1 步，从下标 0 到达下标 1, 然后再从下标 1 跳 3 步到达最后一个下标。
-  ```
-
-  **示例 2：**
-  ```
-  输入：nums = [3,2,1,0,4]
-  输出：false
-  解释：无论怎样，总会到达下标为 3 的位置。但该下标的最大跳跃长度是 0 ，所以永远不能到达最后一个下标。
+  Input: nums = [2,3,1,1,4]
+  Output: true
+  Explanation: Jump 1 step from index 0 to index 1, then 3 steps to the last index.
   ```
 
-  **约束条件：**
+  **Example 2:**
+  ```
+  Input: nums = [3,2,1,0,4]
+  Output: false
+  Explanation: You will always arrive at index 3 no matter what. Its maximum jump length is 0, which makes it impossible to reach the last index.
+  ```
+
+  **Constraints:**
   - `1 <= nums.length <= 10^4`
   - `0 <= nums[i] <= 10^5`
 
 hints:
-  - 贪心方法：维护一个变量 `maxReach` 表示当前能到达的最远位置，遍历数组时不断更新 `maxReach = max(maxReach, i + nums[i])`，若任意位置 `i > maxReach` 则说明无法到达该位置。
-  - 从左到右遍历，每次检查当前索引是否在可达范围内（`i <= maxReach`），若不在则直接返回 false；若 `maxReach >= n-1` 则返回 true。
-  - DP 方法：`dp[i]` 表示能否到达索引 i，初始 `dp[0] = true`，对每个可达的 i，将 `dp[i+nums[i]]` 及其之间的所有位置标记为 true。
+  - Greedy approach: maintain a variable `maxReach` representing the farthest index reachable so far. As you iterate, update `maxReach = max(maxReach, i + nums[i])`; if any index `i > maxReach`, that position cannot be reached.
+  - Iterate left to right, checking at each step whether the current index is within reach (`i <= maxReach`). If not, return false immediately; if `maxReach >= n-1`, return true.
+  - DP approach: `dp[i]` indicates whether index i is reachable. Start with `dp[0] = true`; for each reachable i, mark all positions up to `i + nums[i]` as true.
 
 starterCode:
   PYTHON: |
@@ -44,12 +44,12 @@ starterCode:
 
     class Solution:
         def canJump(self, nums: List[int]) -> bool:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     #include <stdbool.h>
     bool canJump(int* nums, int numsSize) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     #include <vector>
@@ -58,7 +58,7 @@ starterCode:
     class Solution {
     public:
         bool canJump(vector<int>& nums) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -67,7 +67,7 @@ starterCode:
      * @return {boolean}
      */
     var canJump = function(nums) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

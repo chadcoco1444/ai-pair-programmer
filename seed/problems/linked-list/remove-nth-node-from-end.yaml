@@ -9,38 +9,38 @@ concepts:
   - name: Two Pointer
     relevance: 0.9
 description: |
-  給定一個鏈結串列的頭節點 `head` 和一個整數 `n`，請刪除鏈結串列中**倒數第 n 個**節點，並回傳修改後的鏈結串列頭節點。
+  Given the head node `head` of a linked list and an integer `n`, remove the **nth node from the end** of the list and return the head of the modified list.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：head = [1,2,3,4,5], n = 2
-  輸出：[1,2,3,5]
-  解釋：刪除倒數第 2 個節點（值為 4）。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：head = [1], n = 1
-  輸出：[]
+  Input: head = [1,2,3,4,5], n = 2
+  Output: [1,2,3,5]
+  Explanation: Remove the 2nd node from the end (value 4).
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：head = [1,2], n = 1
-  輸出：[1]
+  Input: head = [1], n = 1
+  Output: []
   ```
 
-  **限制條件：**
-  - 鏈結串列中的節點數量為 `sz`
+  **Example 3:**
+  ```
+  Input: head = [1,2], n = 1
+  Output: [1]
+  ```
+
+  **Constraints:**
+  - The number of nodes in the list is `sz`
   - `1 <= sz <= 30`
   - `0 <= Node.val <= 100`
   - `1 <= n <= sz`
 
-  **進階：** 你能僅用一次遍歷解決這個問題嗎？
+  **Follow-up:** Can you solve this in one pass?
 hints:
-  - 兩次遍歷法：第一次遍歷計算串列總長度 `L`，第二次遍歷找到第 `L - n` 個節點（即倒數第 n 個節點的前一個節點），修改其 `next` 指標跳過目標節點。
-  - 一次遍歷法（雙指標）：使用快慢指標，讓快指標先走 `n` 步，然後快慢指標同步向前，直到快指標到達最後一個節點，此時慢指標恰好在倒數第 n+1 個節點。
-  - 使用虛擬頭節點（Dummy Node）可以優雅地處理需要刪除頭節點的邊界情況（例如 `n == sz`），避免需要單獨判斷。
+  - Two-pass approach: in the first pass, compute the total length `L` of the list. In the second pass, find the `L - n`th node (the node just before the one to delete) and update its `next` pointer to skip the target node.
+  - One-pass approach (two pointers): use a fast and slow pointer. Advance the fast pointer `n` steps first, then move both pointers forward together until the fast pointer reaches the last node. At that point, the slow pointer is at the (n+1)th node from the end.
+  - Using a Dummy Node elegantly handles the edge case where the head itself needs to be deleted (e.g., `n == sz`), avoiding a special check.
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

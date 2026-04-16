@@ -11,40 +11,40 @@ concepts:
   - name: Hash Table
     relevance: 0.7
 description: |
-  給定兩個整數陣列 `preorder` 和 `inorder`，其中 `preorder` 是某棵二元樹的**前序遍歷**結果，`inorder` 是同一棵樹的**中序遍歷**結果，請建構並回傳這棵二元樹。
+  Given two integer arrays `preorder` and `inorder`, where `preorder` is the **preorder traversal** of a binary tree and `inorder` is the **inorder traversal** of the same tree, construct and return the binary tree.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
-  輸出：[3,9,20,null,null,15,7]
-  解釋：
+  Input: preorder = [3,9,20,15,7], inorder = [9,3,15,20,7]
+  Output: [3,9,20,null,null,15,7]
+  Explanation:
       3
      / \
     9  20
        / \
       15   7
-  前序 [3,9,20,15,7]：根 → 左子樹 → 右子樹
-  中序 [9,3,15,20,7]：左子樹 → 根 → 右子樹
+  Preorder [3,9,20,15,7]: root → left subtree → right subtree
+  Inorder [9,3,15,20,7]: left subtree → root → right subtree
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：preorder = [-1], inorder = [-1]
-  輸出：[-1]
+  Input: preorder = [-1], inorder = [-1]
+  Output: [-1]
   ```
 
-  **限制條件：**
+  **Constraints:**
   - `1 <= preorder.length <= 3000`
   - `inorder.length == preorder.length`
   - `-3000 <= preorder[i], inorder[i] <= 3000`
-  - `preorder` 和 `inorder` 均由**不重複**的元素組成
-  - `inorder` 中每個值都在 `preorder` 中出現
-  - `preorder` 保證是樹的有效前序遍歷序列
-  - `inorder` 保證是樹的有效中序遍歷序列
+  - `preorder` and `inorder` consist of **unique** elements
+  - Each value in `inorder` also appears in `preorder`
+  - `preorder` is guaranteed to be a valid preorder traversal sequence of a tree
+  - `inorder` is guaranteed to be a valid inorder traversal sequence of a tree
 hints:
-  - 前序遍歷的第一個元素一定是當前子樹的根節點。在中序遍歷中找到這個根節點的位置，其左側是左子樹，右側是右子樹。
-  - 使用 Hash Table 預先儲存中序遍歷每個值的索引，避免每次遞迴都線性搜索，將整體時間複雜度從 O(n²) 降低到 O(n)。
-  - 遞迴建構：根據中序遍歷中根節點的位置計算左子樹的節點數，從而在前序遍歷中分割出左子樹和右子樹的部分，分別遞迴建構。
+  - The first element of the preorder traversal is always the root of the current subtree. Find the position of this root in the inorder traversal — everything to its left is the left subtree, and everything to its right is the right subtree.
+  - Use a Hash Table to pre-store the index of each value in the inorder traversal, avoiding linear search on every recursive call, reducing overall time complexity from O(n²) to O(n).
+  - Recursive construction: use the root's position in the inorder traversal to calculate the size of the left subtree, then split the preorder traversal into left and right subtree portions and recursively construct each.
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

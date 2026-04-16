@@ -11,42 +11,42 @@ concepts:
   - name: Array
     relevance: 0.3
 description: |
-  给你一个字符串 `s` 和一个字符串列表 `wordDict` 作为字典。如果可以利用字典中出现的一个或多个单词拼接出 `s` 则返回 `true`。
+  Given a string `s` and a dictionary of strings `wordDict`, return `true` if `s` can be segmented into a space-separated sequence of one or more dictionary words.
 
-  **注意：** 不要求字典中出现的单词全部都使用，并且字典中的单词可以重复使用。
+  **Note:** The same word in the dictionary may be reused multiple times in the segmentation, and you do not need to use all words in the dictionary.
 
-  **示例 1：**
+  **Example 1:**
   ```
-  输入：s = "leetcode", wordDict = ["leet","code"]
-  输出：true
-  解释：返回 true 因为 "leetcode" 可以由 "leet" 和 "code" 拼接成。
-  ```
-
-  **示例 2：**
-  ```
-  输入：s = "applepenapple", wordDict = ["apple","pen"]
-  输出：true
-  解释：返回 true 因为 "applepenapple" 可以由 "apple" "pen" "apple" 拼接成。
-       注意，你可以重复使用字典中的单词。
+  Input: s = "leetcode", wordDict = ["leet","code"]
+  Output: true
+  Explanation: Return true because "leetcode" can be segmented as "leet code".
   ```
 
-  **示例 3：**
+  **Example 2:**
   ```
-  输入：s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
-  输出：false
+  Input: s = "applepenapple", wordDict = ["apple","pen"]
+  Output: true
+  Explanation: Return true because "applepenapple" can be segmented as "apple pen apple".
+               Note that you are allowed to reuse a dictionary word.
   ```
 
-  **约束条件：**
+  **Example 3:**
+  ```
+  Input: s = "catsandog", wordDict = ["cats","dog","sand","and","cat"]
+  Output: false
+  ```
+
+  **Constraints:**
   - `1 <= s.length <= 300`
   - `1 <= wordDict.length <= 1000`
   - `1 <= wordDict[i].length <= 20`
-  - `s` 和 `wordDict[i]` 仅由小写英文字母组成
-  - `wordDict` 中的所有字符串**互不相同**
+  - `s` and `wordDict[i]` consist of only lowercase English letters
+  - All the strings of `wordDict` are **unique**
 
 hints:
-  - 定义 `dp[i]` 表示字符串 `s` 的前 `i` 个字符能否被字典中的单词拼接而成，初始化 `dp[0] = true`（空字符串可以被拼接）。
-  - 对于每个位置 i，遍历所有 j < i，若 `dp[j]` 为 true 且 `s[j:i]` 在字典中，则 `dp[i] = true`。
-  - 将 `wordDict` 转为哈希集合以实现 O(1) 的查找，可以显著提升效率。
+  - Define `dp[i]` as whether the first `i` characters of `s` can be segmented using words from the dictionary. Initialize `dp[0] = true` (an empty string can always be segmented).
+  - For each position i, iterate over all j < i; if `dp[j]` is true and `s[j:i]` is in the dictionary, set `dp[i] = true`.
+  - Convert `wordDict` to a hash set for O(1) lookups, which significantly improves performance.
 
 starterCode:
   PYTHON: |
@@ -54,12 +54,12 @@ starterCode:
 
     class Solution:
         def wordBreak(self, s: str, wordDict: List[str]) -> bool:
-            # 请在此处编写你的解法
+            # Write your solution here
             pass
   C: |
     #include <stdbool.h>
     bool wordBreak(char* s, char** wordDict, int wordDictSize) {
-        // 请在此处编写你的解法
+        // Write your solution here
     }
   CPP: |
     #include <string>
@@ -69,7 +69,7 @@ starterCode:
     class Solution {
     public:
         bool wordBreak(string s, vector<string>& wordDict) {
-            // 请在此处编写你的解法
+            // Write your solution here
         }
     };
   JAVASCRIPT: |
@@ -79,7 +79,7 @@ starterCode:
      * @return {boolean}
      */
     var wordBreak = function(s, wordDict) {
-        // 请在此处编写你的解法
+        // Write your solution here
     };
 
 testCases:

@@ -7,38 +7,38 @@ concepts:
   - name: Tree
     relevance: 1.0
 description: |
-  給定兩棵二元樹 `root` 和 `subRoot`，請判斷 `subRoot` 是否是 `root` 的**子樹**。
+  Given two binary trees `root` and `subRoot`, determine whether `subRoot` is a **subtree** of `root`.
 
-  如果存在 `root` 中某個節點，以該節點為根的子樹與 `subRoot` 在結構和節點值上完全相同，則認為 `subRoot` 是 `root` 的子樹。
+  A subtree of `root` is considered to exist if there is a node in `root` such that the subtree rooted at that node is identical to `subRoot` in both structure and node values.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：root = [3,4,5,1,2], subRoot = [4,1,2]
-  輸出：true
-  解釋：
+  Input: root = [3,4,5,1,2], subRoot = [4,1,2]
+  Output: true
+  Explanation:
        3
       / \
      4   5       subRoot:  4
     / \                   / \
    1   2                 1   2
-  subRoot 是 root 的子樹（以節點 4 為根）。
+  subRoot is a subtree of root (rooted at node 4).
   ```
 
-  **範例 2：**
+  **Example 2:**
   ```
-  輸入：root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]
-  輸出：false
-  解釋：root 中 4 的左子樹有額外的節點 0，結構不同。
+  Input: root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]
+  Output: false
+  Explanation: The left subtree of node 4 in root has an extra node 0, so the structure is different.
   ```
 
-  **限制條件：**
-  - `root` 樹中節點數量範圍為 `[1, 2000]`
-  - `subRoot` 樹中節點數量範圍為 `[1, 1000]`
+  **Constraints:**
+  - The number of nodes in the `root` tree is in the range `[1, 2000]`
+  - The number of nodes in the `subRoot` tree is in the range `[1, 1000]`
   - `-10^4 <= Node.val <= 10^4`
 hints:
-  - 對 `root` 的每個節點，判斷以它為根的子樹是否與 `subRoot` 完全相同。可以複用「Same Tree」的邏輯作為輔助函式。
-  - 遞迴主函式：若當前節點為 null 回傳 false；若 `isSameTree(root, subRoot)` 為 true 則回傳 true；否則遞迴判斷左子樹或右子樹是否包含 subRoot。
-  - 進階方法：將兩棵樹序列化為字串（加入特殊分隔符避免誤判），然後判斷 subRoot 的字串是否是 root 字串的子字串（KMP 或內建 contains）。
+  - For each node in `root`, check whether the subtree rooted at it is identical to `subRoot`. You can reuse the "Same Tree" logic as a helper function.
+  - Recursive main function: if the current node is null, return false; if `isSameTree(root, subRoot)` is true, return true; otherwise, recursively check whether the left or right subtree contains subRoot.
+  - Advanced approach: serialize both trees to strings (with special delimiters to avoid false matches), then check whether subRoot's string is a substring of root's string (using KMP or built-in contains).
 starterCode:
   PYTHON: |
     # Definition for a binary tree node.

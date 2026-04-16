@@ -9,36 +9,36 @@ concepts:
   - name: Sorting
     relevance: 1.0
 description: |
-  給定一個區間陣列 `intervals`，其中 `intervals[i] = [starti, endi]`，請合併所有**重疊的區間**，並回傳一個不重疊的區間陣列，覆蓋所有輸入中的區間。
+  Given an array of `intervals` where `intervals[i] = [starti, endi]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 
-  **範例 1：**
+  **Example 1:**
   ```
-  輸入：intervals = [[1,3],[2,6],[8,10],[15,18]]
-  輸出：[[1,6],[8,10],[15,18]]
-  解釋：[1,3] 和 [2,6] 重疊，合併為 [1,6]。
-  ```
-
-  **範例 2：**
-  ```
-  輸入：intervals = [[1,4],[4,5]]
-  輸出：[[1,5]]
-  解釋：[1,4] 和 [4,5] 在端點 4 處相觸，也視為重疊，合併為 [1,5]。
+  Input: intervals = [[1,3],[2,6],[8,10],[15,18]]
+  Output: [[1,6],[8,10],[15,18]]
+  Explanation: Since intervals [1,3] and [2,6] overlap, merge them into [1,6].
   ```
 
-  **範例 3：**
+  **Example 2:**
   ```
-  輸入：intervals = [[1,4],[0,4]]
-  輸出：[[0,4]]
+  Input: intervals = [[1,4],[4,5]]
+  Output: [[1,5]]
+  Explanation: Intervals [1,4] and [4,5] are considered overlapping (they touch at endpoint 4), so merge them into [1,5].
   ```
 
-  **限制條件：**
+  **Example 3:**
+  ```
+  Input: intervals = [[1,4],[0,4]]
+  Output: [[0,4]]
+  ```
+
+  **Constraints:**
   - `1 <= intervals.length <= 10^4`
   - `intervals[i].length == 2`
   - `0 <= starti <= endi <= 10^4`
 hints:
-  - 關鍵前置步驟：先按照每個區間的**起始值**進行排序。排序後，重疊的區間必定相鄰，便於逐一合併。
-  - 維護一個結果列表，將第一個區間加入。對於每個後續區間，若其起始值**小於等於**結果列表最後一個區間的結束值，則它們重疊，更新最後一個區間的結束值為兩者的最大值；否則直接將新區間加入結果列表。
-  - 時間複雜度為 O(n log n)（排序），空間複雜度為 O(n)（儲存結果）。
+  - Key first step: sort the intervals by their **start value**. After sorting, overlapping intervals will be adjacent, making them easy to merge one by one.
+  - Maintain a result list and add the first interval to it. For each subsequent interval, if its start value is **less than or equal to** the end value of the last interval in the result, they overlap — update the last interval's end to the maximum of the two ends. Otherwise, append the new interval to the result.
+  - Time complexity is O(n log n) (sorting); space complexity is O(n) (storing the result).
 starterCode:
   PYTHON: |
     class Solution:
