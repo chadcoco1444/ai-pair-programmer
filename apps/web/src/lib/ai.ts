@@ -14,4 +14,4 @@ if (process.env.NODE_ENV !== "production") {
   globalForAI.genai = genai;
 }
 
-export const AI_MODEL = process.env.GEMINI_MODEL || "gemini-1.5-flash";
+export const AI_MODEL = process.env.GEMINI_MODEL || "gemini-2.0-flash";

@@ -93,22 +93,20 @@ export class SKILLOrchestrator {
       const problem = await this.getProblemContext(params.problemId);
 
       if (!AI_AVAILABLE) {
-        const fallbackMessage = problem
-          ? `👋 Welcome to **${problem.title}**!\n\nI'm your AI Tutor, but I'm currently offline. Set \`GEMINI_API_KEY\` in \`.env\` to enable me.\n\nIn the meantime, try these on your own:\n- 🤔 What data structure fits this problem best?\n- ⏱️ What's the brute-force time complexity?\n- 🚀 Can you optimize it?\n\nYou can still write code and submit!\n\n[S] Socratic`
-          : "⚠️ AI Tutor is currently unavailable. Set `GEMINI_API_KEY` in `.env`.";
+        const fallback = "⚠️ AI Tutor unavailable. Set `GEMINI_API_KEY` in `.env`.";
 
         await this.prisma.message.create({
           data: {
             conversationId: conversation.id,
             role: "ASSISTANT",
-            content: fallbackMessage,
+            content: fallback,
             skillPhase: "SOCRATIC",
           },
         });
 
         return {
           conversation,
-          initialMessage: fallbackMessage,
+          initialMessage: fallback,
           phase: "SOCRATIC" as SKILLPhase,
         };
       }
@@ -131,7 +129,7 @@ export class SKILLOrchestrator {
         const result = await model.generateContent("Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.");
         assistantMessage = result.response.text();
       } catch (error: any) {
-        assistantMessage = `👋 Welcome! I had trouble connecting (${error.message}).\n\nHere are some questions to get you started:\n- What's your first instinct for solving this?\n- What's the time complexity of the brute-force approach?\n- Is there a data structure that could help?\n\nYou can still write code and submit!\n\n[S] Socratic`;
+        assistantMessage = `⚠️ AI Tutor connection error: ${error.message}`;
       }
 
       // 儲存系統訊息

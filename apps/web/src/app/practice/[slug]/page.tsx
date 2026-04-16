@@ -95,7 +95,7 @@ export default function PracticePage() {
   return (
     <div className="flex h-[calc(100vh-3.5rem)] gap-2 bg-[#0a0a0f] p-2">
       {/* ===== Left: Problem Description (Mac Window) ===== */}
-      <MacWindow title="Problem" titleColor="text-gray-400" className="w-1/2">
+      <MacWindow title="Problem" titleColor="text-gray-400" className="min-w-0 flex-1">
         {/* Tabs inside window */}
         <div className="flex border-b border-gray-700/50 bg-[#252525]">
           {([
@@ -228,7 +228,7 @@ export default function PracticePage() {
       </MacWindow>
 
       {/* ===== Right: Code Editor (Mac Window) ===== */}
-      <div className="flex w-1/2 flex-col gap-2">
+      <div className="flex min-w-0 flex-1 flex-col gap-2">
         {/* Code Editor Window */}
         <MacWindow
           title={`</> Code — ${LANGUAGES.find((l) => l.value === language)?.label}`}
