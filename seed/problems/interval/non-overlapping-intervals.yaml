@@ -1,0 +1,91 @@
+title: Non-overlapping Intervals
+slug: non-overlapping-intervals
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [interval, greedy, sorting, dynamic-programming]
+concepts:
+  - name: Greedy
+    relevance: 1.0
+  - name: Sorting
+    relevance: 0.8
+  - name: Dynamic Programming
+    relevance: 0.5
+description: |
+  給定一個區間陣列 `intervals`，其中 `intervals[i] = [starti, endi]`，請回傳**最少需要移除多少個區間**，使得剩下的區間互不重疊。
+
+  **注意：** 只在端點相觸（如 `[1,2]` 和 `[2,3]`）的區間**不算**重疊。
+
+  **範例 1：**
+  ```
+  輸入：intervals = [[1,2],[2,3],[3,4],[1,3]]
+  輸出：1
+  解釋：移除 [1,3] 後，剩下的區間互不重疊。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：intervals = [[1,2],[1,2],[1,2]]
+  輸出：2
+  解釋：需要移除兩個 [1,2] 才能使剩下的區間不重疊。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：intervals = [[1,2],[2,3]]
+  輸出：0
+  解釋：兩個區間不重疊，不需要移除任何區間。
+  ```
+
+  **限制條件：**
+  - `1 <= intervals.length <= 10^5`
+  - `intervals[i].length == 2`
+  - `-5 * 10^4 <= starti < endi <= 5 * 10^4`
+hints:
+  - 等價轉換：「最少移除數量」= 總區間數 - **最多能保留的不重疊區間數**。問題轉化為找最多不重疊區間的數量。
+  - 使用**貪心策略**：按照區間的**結束時間**升序排序。每次優先選擇結束時間最早的區間，這樣可以為後續區間留下最多空間。若當前區間的起始時間**大於等於**上一個已選區間的結束時間，則選取它。
+  - 貪心排序後，維護一個 `end` 變數（初始為負無窮）。遍歷每個區間：若 `start >= end`，則保留此區間並更新 `end = 當前結束值`；否則跳過（即移除）並計數加一。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def eraseOverlapIntervals(self, intervals: list[list[int]]) -> int:
+            pass
+  C: |
+    int eraseOverlapIntervals(int** intervals, int intervalsSize, int* intervalsColSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int eraseOverlapIntervals(vector<vector<int>>& intervals) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[][]} intervals
+     * @return {number}
+     */
+    var eraseOverlapIntervals = function(intervals) {
+
+    };
+testCases:
+  - input: "intervals = [[1,2],[2,3],[3,4],[1,3]]"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "intervals = [[1,2],[1,2],[1,2]]"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "intervals = [[1,2],[2,3]]"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "intervals = [[-52,31],[-73,-26],[82,97],[-65,-11],[-62,-49],[95,99],[58,95],[-31,49],[66,98],[-63,2],[30,47],[-40,-26]]"
+    expected: "7"
+    isHidden: true
+    isKiller: false
+  - input: "intervals = [[0,1],[0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[2,3]]"
+    expected: "6"
+    isHidden: true
+    isKiller: true

@@ -1,0 +1,102 @@
+title: Unique Paths
+slug: unique-paths
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [dynamic-programming, math]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.9
+  - name: Array
+    relevance: 0.4
+description: |
+  一个机器人位于一个 `m x n` 网格的左上角（起始点在下图中标记为 "Start"）。
+
+  机器人每次只能向下或者向右移动一步。机器人试图达到网格的右下角（在下图中标记为 "Finish"）。
+
+  问总共有多少条不同的路径？
+
+  **示例 1：**
+  ```
+  输入：m = 3, n = 7
+  输出：28
+  ```
+
+  **示例 2：**
+  ```
+  输入：m = 3, n = 2
+  输出：3
+  解释：从左上角开始，总共有 3 条路径可以到达右下角。
+  1. 向右 -> 向下 -> 向下
+  2. 向下 -> 向下 -> 向右
+  3. 向下 -> 向右 -> 向下
+  ```
+
+  **示例 3：**
+  ```
+  输入：m = 7, n = 3
+  输出：28
+  ```
+
+  **示例 4：**
+  ```
+  输入：m = 3, n = 3
+  输出：6
+  ```
+
+  **约束条件：**
+  - `1 <= m, n <= 100`
+  - 题目数据保证答案小于等于 `2 * 10^9`
+
+hints:
+  - 定义 `dp[i][j]` 为到达格子 (i, j) 的不同路径数，由于只能向右或向下移动，状态转移为 `dp[i][j] = dp[i-1][j] + dp[i][j-1]`。
+  - 初始条件：第一行和第一列的所有格子路径数均为 1（只有一种方式到达）。
+  - 数学方法：机器人总共需要走 (m-1)+(n-1) 步，其中 (m-1) 步向下，(n-1) 步向右，答案即为组合数 C(m+n-2, m-1)。
+
+starterCode:
+  PYTHON: |
+    class Solution:
+        def uniquePaths(self, m: int, n: int) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    int uniquePaths(int m, int n) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    class Solution {
+    public:
+        int uniquePaths(int m, int n) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} m
+     * @param {number} n
+     * @return {number}
+     */
+    var uniquePaths = function(m, n) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "3 7"
+    expected: "28"
+    isHidden: false
+    isKiller: false
+  - input: "3 2"
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "1 1"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "10 10"
+    expected: "48620"
+    isHidden: true
+    isKiller: false
+  - input: "23 12"
+    expected: "193536720"
+    isHidden: true
+    isKiller: true

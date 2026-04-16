@@ -1,0 +1,131 @@
+title: Encode and Decode Strings
+slug: encode-and-decode-strings
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [string, design]
+concepts:
+  - name: Array
+    relevance: 0.6
+description: |
+  请设计一个算法，将字符串列表**编码**为单个字符串，并能将编码后的字符串**解码**还原为原始字符串列表。
+
+  编码和解码的算法需要满足：在网络传输中，机器 A 将字符串列表编码为单个字符串后发送，机器 B 接收该字符串后能够正确解码还原原始列表。
+
+  编解码方案不能依赖任何外部库或序列化机制。
+
+  **示例 1：**
+  ```
+  输入：strs = ["Hello","World"]
+  编码后：（某种中间格式）
+  解码后：["Hello","World"]
+  输出：["Hello","World"]
+  ```
+
+  **示例 2：**
+  ```
+  输入：strs = [""]
+  输出：[""]
+  ```
+
+  **示例 3：**
+  ```
+  输入：strs = ["Hello","#World","#"]
+  输出：["Hello","#World","#"]
+  解释：方案需要处理字符串中包含特殊字符的情况。
+  ```
+
+  **约束条件：**
+  - `1 <= strs.length <= 200`
+  - `0 <= strs[i].length <= 200`
+  - `strs[i]` 包含除 `','` 以外的任意 256 个 ASCII 字符
+hints:
+  - 简单地用某个分隔符连接字符串是不够的，因为字符串本身可能包含该分隔符。一种可靠的方法是"长度前缀编码"：将每个字符串编码为 "<长度>#<字符串内容>" 的格式。
+  - 编码时，对每个字符串 s，将 str(len(s)) + '#' + s 追加到结果字符串中；解码时，读取 '#' 之前的数字得到字符串长度，然后截取对应长度的内容。
+  - 解码时维护一个指针 i，首先找到下一个 '#' 的位置，取其之前的数字为长度 L，然后从 '#' 后面读取 L 个字符作为原始字符串，重复直到处理完整个编码字符串。
+starterCode:
+  PYTHON: |
+    from typing import List
+
+    class Codec:
+        def encode(self, strs: List[str]) -> str:
+            pass
+
+        def decode(self, s: str) -> List[str]:
+            pass
+
+    # Your Codec object will be instantiated and called as such:
+    # codec = Codec()
+    # codec.decode(codec.encode(strs))
+  C: |
+    /** Encodes a list of strings to a single string */
+    char* encode(char** strs, int strsSize) {
+
+    }
+
+    /** Decodes a single string to a list of strings */
+    char** decode(char* s, int* returnSize) {
+
+    }
+  CPP: |
+    class Codec {
+    public:
+        // Encodes a list of strings to a single string.
+        string encode(vector<string>& strs) {
+
+        }
+
+        // Decodes a single string to a list of strings.
+        vector<string> decode(string s) {
+
+        }
+    };
+
+    // Your Codec object will be instantiated and called as such:
+    // Codec codec;
+    // codec.decode(codec.encode(strs));
+  JAVASCRIPT: |
+    /**
+     * Encodes a list of strings to a single string.
+     *
+     * @param {string[]} strs
+     * @return {string}
+     */
+    var encode = function(strs) {
+
+    };
+
+    /**
+     * Decodes a single string to a list of strings.
+     *
+     * @param {string} s
+     * @return {string[]}
+     */
+    var decode = function(s) {
+
+    };
+
+    /**
+     * Your functions will be called as such:
+     * decode(encode(strs));
+     */
+testCases:
+  - input: '["Hello","World"]'
+    expected: '["Hello","World"]'
+    isHidden: false
+    isKiller: false
+  - input: '[""]'
+    expected: '[""]'
+    isHidden: false
+    isKiller: false
+  - input: '["Hello","#World","#"]'
+    expected: '["Hello","#World","#"]'
+    isHidden: false
+    isKiller: false
+  - input: '["we","say",":","yes"]'
+    expected: '["we","say",":","yes"]'
+    isHidden: true
+    isKiller: false
+  - input: '["4#abc","5#hello","0#","contains spaces and\nnewlines"]'
+    expected: '["4#abc","5#hello","0#","contains spaces and\nnewlines"]'
+    isHidden: true
+    isKiller: true

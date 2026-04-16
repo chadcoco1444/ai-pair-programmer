@@ -1,0 +1,98 @@
+title: Word Search II
+slug: word-search-ii
+difficulty: HARD
+category: ALGORITHM
+tags: [trie, backtracking, matrix, dfs]
+concepts:
+  - name: Tree
+    relevance: 0.9
+  - name: Backtracking
+    relevance: 1.0
+description: |
+  給定一個 `m x n` 的字元矩陣 `board` 和一個字串列表 `words`，請回傳所有在矩陣中能找到的單字。
+
+  單字必須由矩陣中相鄰的格子組成，其中「相鄰」是指水平或垂直方向相鄰的格子。**同一個格子中的字母在一個單字中不能重複使用。**
+
+  **範例 1：**
+  ```
+  輸入：
+  board = [
+    ["o","a","a","n"],
+    ["e","t","a","e"],
+    ["i","h","k","r"],
+    ["i","f","l","v"]
+  ]
+  words = ["oath","pea","eat","rain"]
+  輸出：["eat","oath"]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：
+  board = [["a","b"],["c","d"]], words = ["abcb"]
+  輸出：[]
+  解釋：無法在不重複使用格子的情況下組成 "abcb"。
+  ```
+
+  **限制條件：**
+  - `m == board.length`
+  - `n == board[i].length`
+  - `1 <= m, n <= 12`
+  - `board[i][j]` 是大寫或小寫英文字母
+  - `1 <= words.length <= 3 * 10^4`
+  - `1 <= words[i].length <= 10`
+  - `words[i]` 只包含小寫英文字母
+  - `words` 中的所有字串均不重複
+hints:
+  - 不要對每個單字分別做 DFS 搜索（效率太低）。先將所有單字插入 Trie，然後從矩陣的每個格子出發做一次 DFS，同時在 Trie 中導航，如此可以同時搜索所有單字。
+  - DFS 回溯時，需要用特殊字元（如 '#'）標記已訪問的格子，退出遞迴後恢復原值，避免在同一個單字路徑中重複使用同一格子。
+  - 重要優化：當 Trie 中某個節點的所有子樹都已找到對應單字後，可以從 Trie 中刪除該節點（剪枝），避免對已找到的單字進行重複搜索，大幅提升效率。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def findWords(self, board: list[list[str]], words: list[str]) -> list[str]:
+            pass
+  C: |
+    /**
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    char** findWords(char** board, int boardSize, int* boardColSize, char** words, int wordsSize, int* returnSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        vector<string> findWords(vector<vector<char>>& board, vector<string>& words) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {character[][]} board
+     * @param {string[]} words
+     * @return {string[]}
+     */
+    var findWords = function(board, words) {
+
+    };
+testCases:
+  - input: 'board = [["o","a","a","n"],["e","t","a","e"],["i","h","k","r"],["i","f","l","v"]], words = ["oath","pea","eat","rain"]'
+    expected: '["eat","oath"]'
+    isHidden: false
+    isKiller: false
+  - input: 'board = [["a","b"],["c","d"]], words = ["abcb"]'
+    expected: "[]"
+    isHidden: false
+    isKiller: false
+  - input: 'board = [["a"]], words = ["a"]'
+    expected: '["a"]'
+    isHidden: false
+    isKiller: false
+  - input: 'board = [["a","b","c"],["d","e","f"],["g","h","i"]], words = ["abc","cfi","beh","dehi","cadg"]'
+    expected: '["abc","cfi","beh"]'
+    isHidden: true
+    isKiller: false
+  - input: 'board = [["a","a","a","a"],["a","a","a","a"],["a","a","a","a"],["a","a","a","a"]], words = ["aaaaaaaaaaaa","aaaaaaaaaaaaa"]'
+    expected: "[]"
+    isHidden: true
+    isKiller: true

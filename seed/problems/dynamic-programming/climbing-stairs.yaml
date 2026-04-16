@@ -1,0 +1,89 @@
+title: Climbing Stairs
+slug: climbing-stairs
+difficulty: EASY
+category: ALGORITHM
+tags: [dynamic-programming, math]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.9
+  - name: Greedy
+    relevance: 0.2
+description: |
+  假设你正在爬楼梯。需要 `n` 阶你才能到达楼顶。
+
+  每次你可以爬 `1` 或 `2` 个台阶。你有多少种不同的方法可以爬到楼顶呢？
+
+  **示例 1：**
+  ```
+  输入：n = 2
+  输出：2
+  解释：有两种方法可以爬到楼顶。
+  1. 1 阶 + 1 阶
+  2. 2 阶
+  ```
+
+  **示例 2：**
+  ```
+  输入：n = 3
+  输出：3
+  解释：有三种方法可以爬到楼顶。
+  1. 1 阶 + 1 阶 + 1 阶
+  2. 1 阶 + 2 阶
+  3. 2 阶 + 1 阶
+  ```
+
+  **约束条件：**
+  - `1 <= n <= 45`
+
+hints:
+  - 思考递推关系：到达第 n 阶的方法数等于到达第 n-1 阶的方法数加上到达第 n-2 阶的方法数，因为你可以从第 n-1 阶跨 1 步，或从第 n-2 阶跨 2 步到达第 n 阶。
+  - 这个递推关系就是斐波那契数列！初始条件为 `dp[1] = 1`，`dp[2] = 2`，从 3 开始递推即可。
+  - 可以只用两个变量来优化空间，不需要存储整个 dp 数组。
+
+starterCode:
+  PYTHON: |
+    class Solution:
+        def climbStairs(self, n: int) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    int climbStairs(int n) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    class Solution {
+    public:
+        int climbStairs(int n) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} n
+     * @return {number}
+     */
+    var climbStairs = function(n) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "2"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "3"
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "1"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "10"
+    expected: "89"
+    isHidden: true
+    isKiller: false
+  - input: "45"
+    expected: "1836311903"
+    isHidden: true
+    isKiller: true

@@ -1,0 +1,95 @@
+title: Search in Rotated Sorted Array
+slug: search-in-rotated-sorted-array
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, binary-search]
+concepts:
+  - name: Array
+    relevance: 0.5
+  - name: Binary Search
+    relevance: 1.0
+description: |
+  有一個整數陣列 `nums`，按升序排列，但在某個未知 pivot 點被旋轉（例如 `[0,1,2,4,5,6,7]` 變成 `[4,5,6,7,0,1,2]`）。
+
+  給定旋轉後的陣列 `nums` 和一個整數 `target`，如果 `target` 存在於陣列中，回傳其 index；否則回傳 `-1`。
+
+  你必須在 **O(log n)** 時間複雜度內完成。
+
+  **範例 1：**
+  ```
+  輸入：nums = [4,5,6,7,0,1,2], target = 0
+  輸出：4
+  ```
+
+  **範例 2：**
+  ```
+  輸入：nums = [4,5,6,7,0,1,2], target = 3
+  輸出：-1
+  ```
+
+  **範例 3：**
+  ```
+  輸入：nums = [1], target = 0
+  輸出：-1
+  ```
+
+  **限制條件：**
+  - `1 <= nums.length <= 5000`
+  - `-10^4 <= nums[i] <= 10^4`
+  - 陣列中所有元素**互不相同**
+  - `nums` 是一個旋轉過的升序陣列
+  - `-10^4 <= target <= 10^4`
+hints:
+  - 雖然陣列被旋轉，但每次取 `mid` 後，左半段和右半段至少有一段是**有序**的。可以利用這個特性判斷 target 在哪一側。
+  - 若 `nums[left] <= nums[mid]`，左半段有序。判斷 target 是否在 `[nums[left], nums[mid]]` 範圍內，若是則搜尋左半段，否則搜尋右半段。
+  - 若左半段無序，則右半段一定有序。判斷 target 是否在 `[nums[mid], nums[right]]` 範圍內，若是則搜尋右半段，否則搜尋左半段。每次都能縮小一半搜尋範圍，達到 O(log n)。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def search(self, nums: list[int], target: int) -> int:
+            pass
+  C: |
+    int search(int* nums, int numsSize, int target) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int search(vector<int>& nums, int target) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} nums
+     * @param {number} target
+     * @return {number}
+     */
+    var search = function(nums, target) {
+
+    };
+testCases:
+  - input: "nums = [4,5,6,7,0,1,2], target = 0"
+    expected: "4"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [4,5,6,7,0,1,2], target = 3"
+    expected: "-1"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [1], target = 0"
+    expected: "-1"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [1,3], target = 3"
+    expected: "1"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [5,1,3], target = 5"
+    expected: "0"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [3,4,5,6,7,8,9,1,2], target = 2"
+    expected: "8"
+    isHidden: false
+    isKiller: true

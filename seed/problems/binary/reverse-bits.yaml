@@ -1,0 +1,88 @@
+title: Reverse Bits
+slug: reverse-bits
+difficulty: EASY
+category: ALGORITHM
+tags: [bit-manipulation]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.1
+  - name: Greedy
+    relevance: 0.2
+description: |
+  颠倒给定的 32 位无符号整数的二进制位。
+
+  **注意：**
+  - 请注意，在某些语言（如 Java）中，没有无符号整数类型。在这种情况下，输入和输出都将被指定为有符号整数类型，并且不应影响您的实现，因为无论整数是有符号的还是无符号的，其内部的二进制表示都是相同的。
+  - 在 Java 中，编译器使用二进制补码记法来表示有符号整数。因此，在 **示例 2** 中，输入表示有符号整数 `-3`，输出表示有符号整数 `-1073741825`。
+
+  **示例 1：**
+  ```
+  输入：n = 00000010100101000001111010011100
+  输出：964176192（00111001011110000010100101000000）
+  解释：输入的二进制串 00000010100101000001111010011100 表示无符号整数 43261596，
+       因此返回 964176192，其二进制表示为 00111001011110000010100101000000。
+  ```
+
+  **示例 2：**
+  ```
+  输入：n = 11111111111111111111111111111101
+  输出：3221225471（10111111111111111111111111111111）
+  解释：输入的二进制串 11111111111111111111111111111101 表示无符号整数 4294967293，
+       因此返回 3221225471，其二进制表示为 10111111111111111111111111111111。
+  ```
+
+  **约束条件：**
+  - 输入是一个长度为 32 的二进制字符串。
+
+hints:
+  - 逐位处理：每次取出 n 的最低位（`n & 1`），将结果左移并加上这一位，然后将 n 右移，重复 32 次。
+  - 初始化结果为 0，循环 32 次：将 result 左移一位，将 n 的最低位加到 result 上，再将 n 右移一位。
+  - 注意在 Python 中，需要使用掩码 `0xFFFFFFFF` 来确保结果是 32 位无符号整数，防止负数问题。
+
+starterCode:
+  PYTHON: |
+    class Solution:
+        def reverseBits(self, n: int) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    uint32_t reverseBits(uint32_t n) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    class Solution {
+    public:
+        uint32_t reverseBits(uint32_t n) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} n - a positive integer
+     * @return {number} - a positive integer
+     */
+    var reverseBits = function(n) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "43261596"
+    expected: "964176192"
+    isHidden: false
+    isKiller: false
+  - input: "4294967293"
+    expected: "3221225471"
+    isHidden: false
+    isKiller: false
+  - input: "0"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "1"
+    expected: "2147483648"
+    isHidden: true
+    isKiller: false
+  - input: "2147483648"
+    expected: "1"
+    isHidden: true
+    isKiller: true

@@ -1,0 +1,123 @@
+title: Maximum Depth of Binary Tree
+slug: maximum-depth-of-binary-tree
+difficulty: EASY
+category: ALGORITHM
+tags: [tree, dfs, bfs, recursion]
+concepts:
+  - name: Tree
+    relevance: 1.0
+  - name: Queue
+    relevance: 0.6
+description: |
+  給定一棵二元樹的根節點 `root`，請回傳其**最大深度**。
+
+  二元樹的最大深度是指從根節點到最遠葉節點的最長路徑上的節點數量。
+
+  **範例 1：**
+  ```
+  輸入：root = [3,9,20,null,null,15,7]
+  輸出：3
+  解釋：
+      3
+     / \
+    9  20
+       / \
+      15   7
+  最長路徑為 3 → 20 → 15（或 3 → 20 → 7），深度為 3。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：root = [1,null,2]
+  輸出：2
+  ```
+
+  **範例 3：**
+  ```
+  輸入：root = []
+  輸出：0
+  ```
+
+  **限制條件：**
+  - 樹中節點數量範圍為 `[0, 10^4]`
+  - `-100 <= Node.val <= 100`
+hints:
+  - 思考遞迴的定義：一棵樹的最大深度等於左子樹最大深度和右子樹最大深度中的較大值，再加上 1（根節點本身）。
+  - 遞迴基底情形（base case）：當節點為 null 時，深度為 0。對每個節點呼叫 max(left_depth, right_depth) + 1。
+  - 也可以使用 BFS（層序遍歷）：用一個佇列逐層處理節點，每處理完一層就將深度計數加 1，最終回傳總層數。
+starterCode:
+  PYTHON: |
+    # Definition for a binary tree node.
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    class Solution:
+        def maxDepth(self, root: TreeNode) -> int:
+            pass
+  C: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        struct TreeNode *left;
+        struct TreeNode *right;
+    };
+
+    int maxDepth(struct TreeNode* root) {
+
+    }
+  CPP: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    };
+
+    class Solution {
+    public:
+        int maxDepth(TreeNode* root) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for a binary tree node.
+    function TreeNode(val, left, right) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @return {number}
+     */
+    var maxDepth = function(root) {
+
+    };
+testCases:
+  - input: "root = [3,9,20,null,null,15,7]"
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "root = [1,null,2]"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "root = []"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "root = [1]"
+    expected: "1"
+    isHidden: true
+    isKiller: false
+  - input: "root = [1,2,3,4,5,null,null,8,9]"
+    expected: "4"
+    isHidden: true
+    isKiller: true

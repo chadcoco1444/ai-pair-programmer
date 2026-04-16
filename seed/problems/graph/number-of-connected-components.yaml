@@ -1,0 +1,93 @@
+title: Number of Connected Components in an Undirected Graph
+slug: number-of-connected-components
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [graph, union-find, bfs, dfs]
+concepts:
+  - name: Graph
+    relevance: 1.0
+  - name: Queue
+    relevance: 0.5
+description: |
+  給定一個有 `n` 個節點（編號為 `0` 到 `n-1`）的無向圖，以及一個邊的列表 `edges`，其中 `edges[i] = [ai, bi]` 表示節點 `ai` 和 `bi` 之間有一條無向邊。
+
+  請計算圖中**連通分量（Connected Components）**的數量。
+
+  **範例 1：**
+  ```
+  輸入：n = 5, edges = [[0,1],[1,2],[3,4]]
+  輸出：2
+  解釋：{0,1,2} 是一個連通分量，{3,4} 是另一個連通分量。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]
+  輸出：1
+  解釋：所有節點都相互連通，只有 1 個連通分量。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：n = 5, edges = []
+  輸出：5
+  解釋：沒有邊，每個節點自身是一個連通分量。
+  ```
+
+  **限制條件：**
+  - `1 <= n <= 2000`
+  - `0 <= edges.length <= 5000`
+  - `edges[i].length == 2`
+  - `0 <= ai, bi < n`
+  - `ai != bi`
+  - 沒有重複的邊
+hints:
+  - 方法一（DFS/BFS）：維護一個 `visited` 陣列。遍歷所有節點，每當遇到未訪問的節點，計數器加一，然後從該節點出發做 DFS 或 BFS，標記所有可達節點為已訪問。
+  - 方法二（聯合查找 Union-Find）：初始時每個節點各自為一個集合，計數器設為 `n`。對每條邊執行合併操作，若兩個節點不在同一集合，則合併並將計數器減一。最終計數器的值即為答案。
+  - Union-Find 是解決此類連通性問題的經典資料結構。實作時加入**路徑壓縮**和**按秩合併**可以讓時間複雜度接近 O(n)，非常高效。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def countComponents(self, n: int, edges: list[list[int]]) -> int:
+            pass
+  C: |
+    int countComponents(int n, int** edges, int edgesSize, int* edgesColSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int countComponents(int n, vector<vector<int>>& edges) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} n
+     * @param {number[][]} edges
+     * @return {number}
+     */
+    var countComponents = function(n, edges) {
+
+    };
+testCases:
+  - input: "n = 5, edges = [[0,1],[1,2],[3,4]]"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "n = 5, edges = [[0,1],[1,2],[2,3],[3,4]]"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "n = 5, edges = []"
+    expected: "5"
+    isHidden: false
+    isKiller: false
+  - input: "n = 1, edges = []"
+    expected: "1"
+    isHidden: true
+    isKiller: false
+  - input: "n = 8, edges = [[0,1],[1,2],[2,3],[4,5],[6,7]]"
+    expected: "3"
+    isHidden: true
+    isKiller: true

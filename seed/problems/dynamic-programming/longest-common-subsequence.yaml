@@ -1,0 +1,101 @@
+title: Longest Common Subsequence
+slug: longest-common-subsequence
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [dynamic-programming, string]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.9
+  - name: Array
+    relevance: 0.4
+description: |
+  给定两个字符串 `text1` 和 `text2`，返回这两个字符串的**最长公共子序列**的长度。如果不存在公共子序列，返回 `0`。
+
+  一个字符串的**子序列**是指这样一个新的字符串：它是由原字符串在不改变字符的相对顺序的情况下删除某些字符（也可以不删除任何字符）后组成的新字符串。
+
+  - 例如，`"ace"` 是 `"abcde"` 的子序列，但 `"aec"` 不是 `"abcde"` 的子序列。
+
+  两个字符串的**公共子序列**是这两个字符串所共同拥有的子序列。
+
+  **示例 1：**
+  ```
+  输入：text1 = "abcde", text2 = "ace"
+  输出：3
+  解释：最长公共子序列是 "ace"，它的长度为 3。
+  ```
+
+  **示例 2：**
+  ```
+  输入：text1 = "abc", text2 = "abc"
+  输出：3
+  解释：最长公共子序列是 "abc"，它的长度为 3。
+  ```
+
+  **示例 3：**
+  ```
+  输入：text1 = "abc", text2 = "def"
+  输出：0
+  解释：两个字符串没有公共子序列，返回 0。
+  ```
+
+  **约束条件：**
+  - `1 <= text1.length, text2.length <= 1000`
+  - `text1` 和 `text2` 仅由小写英文字符组成。
+
+hints:
+  - 建立二维 DP 表：`dp[i][j]` 表示 `text1[0..i-1]` 和 `text2[0..j-1]` 的最长公共子序列长度。
+  - 状态转移：若 `text1[i-1] == text2[j-1]`，则 `dp[i][j] = dp[i-1][j-1] + 1`；否则 `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`。
+  - 初始化第 0 行和第 0 列全为 0（空字符串与任何字符串的 LCS 长度为 0），最终答案为 `dp[m][n]`。
+
+starterCode:
+  PYTHON: |
+    class Solution:
+        def longestCommonSubsequence(self, text1: str, text2: str) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    int longestCommonSubsequence(char* text1, char* text2) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    #include <string>
+    #include <vector>
+    using namespace std;
+
+    class Solution {
+    public:
+        int longestCommonSubsequence(string text1, string text2) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} text1
+     * @param {string} text2
+     * @return {number}
+     */
+    var longestCommonSubsequence = function(text1, text2) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "\"abcde\" \"ace\""
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "\"abc\" \"abc\""
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "\"abc\" \"def\""
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "\"oxcpqrsvwf\" \"shmtulqrypy\""
+    expected: "2"
+    isHidden: true
+    isKiller: false
+  - input: "\"bsbininm\" \"jmjkbkjkv\""
+    expected: "1"
+    isHidden: true
+    isKiller: true

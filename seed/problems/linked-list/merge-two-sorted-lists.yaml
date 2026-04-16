@@ -1,0 +1,112 @@
+title: Merge Two Sorted Lists
+slug: merge-two-sorted-lists
+difficulty: EASY
+category: ALGORITHM
+tags: [linked-list, recursion]
+concepts:
+  - name: Linked List
+    relevance: 1.0
+description: |
+  給定兩個已排序的鏈結串列 `list1` 和 `list2` 的頭節點，請將兩個串列合併成一個升序排列的新串列並回傳。
+
+  合併後的鏈結串列應由兩個輸入串列的節點拼接而成。
+
+  **範例 1：**
+  ```
+  輸入：list1 = [1,2,4], list2 = [1,3,4]
+  輸出：[1,1,2,3,4,4]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：list1 = [], list2 = []
+  輸出：[]
+  ```
+
+  **範例 3：**
+  ```
+  輸入：list1 = [], list2 = [0]
+  輸出：[0]
+  ```
+
+  **限制條件：**
+  - 兩個鏈結串列的節點數量均在 `[0, 50]` 的範圍內
+  - `-100 <= Node.val <= 100`
+  - `list1` 和 `list2` 都以非遞減順序排列
+hints:
+  - 使用虛擬頭節點（Dummy Node）技巧：建立一個 `dummy` 節點作為合併串列的起點，維護一個 `curr` 指標追蹤當前尾部，可避免處理頭節點的特殊情況。
+  - 比較兩個串列當前節點的值，將較小的節點接到 `curr.next`，然後移動對應串列的指標和 `curr` 指標，重複此過程直到其中一個串列為空。
+  - 遞迴方法：若 `list1.val <= list2.val`，則 `list1.next = merge(list1.next, list2)`，回傳 `list1`；否則對稱處理。基底情況：任一串列為空時回傳另一個串列。
+starterCode:
+  PYTHON: |
+    # Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+
+    class Solution:
+        def mergeTwoLists(self, list1: ListNode, list2: ListNode) -> ListNode:
+            pass
+  C: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        struct ListNode *next;
+    };
+
+    struct ListNode* mergeTwoLists(struct ListNode* list1, struct ListNode* list2) {
+
+    }
+  CPP: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode() : val(0), next(nullptr) {}
+        ListNode(int x) : val(x), next(nullptr) {}
+        ListNode(int x, ListNode *next) : val(x), next(next) {}
+    };
+
+    class Solution {
+    public:
+        ListNode* mergeTwoLists(ListNode* list1, ListNode* list2) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for singly-linked list.
+    function ListNode(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
+    }
+
+    /**
+     * @param {ListNode} list1
+     * @param {ListNode} list2
+     * @return {ListNode}
+     */
+    var mergeTwoLists = function(list1, list2) {
+
+    };
+testCases:
+  - input: "list1 = [1,2,4], list2 = [1,3,4]"
+    expected: "[1,1,2,3,4,4]"
+    isHidden: false
+    isKiller: false
+  - input: "list1 = [], list2 = []"
+    expected: "[]"
+    isHidden: false
+    isKiller: false
+  - input: "list1 = [], list2 = [0]"
+    expected: "[0]"
+    isHidden: false
+    isKiller: false
+  - input: "list1 = [1,3,5,7,9], list2 = [2,4,6,8,10]"
+    expected: "[1,2,3,4,5,6,7,8,9,10]"
+    isHidden: true
+    isKiller: false
+  - input: "list1 = [-10,-5,0,5,10], list2 = [-8,-3,1,6]"
+    expected: "[-10,-8,-5,-3,0,1,5,6,10]"
+    isHidden: true
+    isKiller: true

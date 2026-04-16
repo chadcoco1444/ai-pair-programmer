@@ -1,0 +1,116 @@
+title: Linked List Cycle
+slug: linked-list-cycle
+difficulty: EASY
+category: ALGORITHM
+tags: [linked-list, two-pointer]
+concepts:
+  - name: Linked List
+    relevance: 1.0
+  - name: Two Pointer
+    relevance: 0.9
+description: |
+  給定一個鏈結串列的頭節點 `head`，請判斷這個鏈結串列中是否存在環。
+
+  如果鏈結串列中某個節點可以被不斷追蹤 `next` 指標再次到達，則表示鏈結串列中存在環。
+
+  **範例 1：**
+  ```
+  輸入：head = [3,2,0,-4], pos = 1
+  輸出：true
+  解釋：鏈結串列中存在環，尾節點連接到索引為 1 的節點。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：head = [1,2], pos = 0
+  輸出：true
+  解釋：鏈結串列中存在環，尾節點連接到索引為 0 的節點。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：head = [1], pos = -1
+  輸出：false
+  解釋：鏈結串列中不存在環。
+  ```
+
+  **限制條件：**
+  - 鏈結串列中的節點數量範圍為 `[0, 10^4]`
+  - `-10^5 <= Node.val <= 10^5`
+  - `pos` 為 `-1` 或鏈結串列中的某個有效索引
+
+  **進階：** 你能用 O(1) 的記憶體空間解決這個問題嗎？
+hints:
+  - 最直觀的做法是使用 Hash Set 記錄所有已訪問過的節點，若遇到重複的節點則表示有環。但這需要 O(n) 的額外空間。
+  - 進階做法是使用 Floyd's Cycle Detection（龜兔賽跑）演算法：設定一個慢指標（每次走一步）和一個快指標（每次走兩步），如果存在環，快慢指標最終一定會相遇。
+  - 若快指標到達 null 或快指標的 next 為 null，則表示鏈結串列無環，直接回傳 false。
+starterCode:
+  PYTHON: |
+    # Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, x):
+            self.val = x
+            self.next = None
+
+    class Solution:
+        def hasCycle(self, head: ListNode) -> bool:
+            pass
+  C: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        struct ListNode *next;
+    };
+
+    bool hasCycle(struct ListNode *head) {
+
+    }
+  CPP: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode(int x) : val(x), next(nullptr) {}
+    };
+
+    class Solution {
+    public:
+        bool hasCycle(ListNode *head) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for singly-linked list.
+    function ListNode(val) {
+        this.val = val;
+        this.next = null;
+    }
+
+    /**
+     * @param {ListNode} head
+     * @return {boolean}
+     */
+    var hasCycle = function(head) {
+
+    };
+testCases:
+  - input: "head = [3,2,0,-4], pos = 1"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2], pos = 0"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1], pos = -1"
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2,3,4,5], pos = -1"
+    expected: "false"
+    isHidden: true
+    isKiller: false
+  - input: "head = [1,2,3,4,5,6,7,8,9,10], pos = 0"
+    expected: "true"
+    isHidden: true
+    isKiller: true

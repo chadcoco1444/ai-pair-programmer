@@ -1,0 +1,95 @@
+title: Find Minimum in Rotated Sorted Array
+slug: find-minimum-in-rotated-sorted-array
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, binary-search]
+concepts:
+  - name: Array
+    relevance: 0.5
+  - name: Binary Search
+    relevance: 1.0
+description: |
+  假設一個按升序排列的陣列在某個未知的 pivot 點被旋轉（例如 `[0,1,2,4,5,6,7]` 可能變成 `[4,5,6,7,0,1,2]`）。
+
+  給定這個旋轉後的陣列 `nums`，且陣列中**沒有重複元素**，請找出其中的最小值。
+
+  你必須在 **O(log n)** 時間複雜度內完成。
+
+  **範例 1：**
+  ```
+  輸入：nums = [3,4,5,1,2]
+  輸出：1
+  解釋：原始陣列為 [1,2,3,4,5]，在 index 3 處旋轉。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：nums = [4,5,6,7,0,1,2]
+  輸出：0
+  ```
+
+  **範例 3：**
+  ```
+  輸入：nums = [11,13,15,17]
+  輸出：11
+  解釋：陣列沒有旋轉，最小值就是第一個元素。
+  ```
+
+  **限制條件：**
+  - `1 <= nums.length <= 5000`
+  - `-5000 <= nums[i] <= 5000`
+  - 陣列中所有元素**互不相同**
+  - `nums` 是經過旋轉的升序陣列（旋轉次數在 `[1, n]` 之間）
+hints:
+  - 題目要求 O(log n)，應使用 Binary Search。對於中間元素 `mid`，它不是在左半段有序的部分，就是在右半段有序的部分。
+  - 比較 `nums[mid]` 和 `nums[right]`：若 `nums[mid] > nums[right]`，表示旋轉點（最小值）在右半段，移動 `left = mid + 1`；否則最小值在左半段（包含 mid），移動 `right = mid`。
+  - 當 `left == right` 時，`nums[left]` 就是最小值。注意：若陣列完全有序（無旋轉），`nums[0]` 就是最小值，此演算法也能正確處理。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def findMin(self, nums: list[int]) -> int:
+            pass
+  C: |
+    int findMin(int* nums, int numsSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int findMin(vector<int>& nums) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    var findMin = function(nums) {
+
+    };
+testCases:
+  - input: "nums = [3,4,5,1,2]"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [4,5,6,7,0,1,2]"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [11,13,15,17]"
+    expected: "11"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [2,1]"
+    expected: "1"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [1]"
+    expected: "1"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [5000,-5000,-4999,-4998,-4997]"
+    expected: "-5000"
+    isHidden: false
+    isKiller: true

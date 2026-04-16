@@ -1,0 +1,129 @@
+title: Clone Graph
+slug: clone-graph
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [graph, bfs, dfs, hash-table]
+concepts:
+  - name: Graph
+    relevance: 1.0
+  - name: Hash Table
+    relevance: 0.8
+description: |
+  給定一個無向連通圖中某節點的引用，請回傳該圖的**深拷貝（Deep Copy）**。
+
+  圖中每個節點包含一個整數值 `val` 和一個鄰居節點列表 `neighbors`。
+
+  ```
+  class Node {
+      public int val;
+      public List<Node> neighbors;
+  }
+  ```
+
+  圖以鄰接表形式表示，節點值從 `1` 到 `n`。
+
+  **範例 1：**
+  ```
+  輸入：adjList = [[2,4],[1,3],[2,4],[1,3]]
+  輸出：[[2,4],[1,3],[2,4],[1,3]]
+  解釋：圖中共有 4 個節點，節點 1 的鄰居是 2 和 4，節點 2 的鄰居是 1 和 3，以此類推。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：adjList = [[]]
+  輸出：[[]]
+  解釋：圖中只有一個節點，且該節點沒有鄰居。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：adjList = []
+  輸出：[]
+  解釋：圖為空，回傳 null。
+  ```
+
+  **限制條件：**
+  - 節點數量範圍為 `[0, 100]`
+  - `1 <= Node.val <= 100`
+  - 每個節點的值都是唯一的
+  - 圖中不存在重複邊，也不存在自環
+  - 圖是連通的
+hints:
+  - 深拷貝的關鍵挑戰是：如何避免重複複製同一個節點（圖中可能存在環）？使用 Hash Table 記錄「原始節點 → 複製節點」的映射關係。
+  - 使用 BFS 或 DFS 遍歷原圖。每次遇到一個節點時，先檢查 Hash Table 中是否已存在對應的複製節點；若不存在，才建立新節點並加入 Hash Table。
+  - 對每個節點，遍歷其所有鄰居，將對應的複製節點加入新節點的 neighbors 列表。若鄰居尚未被複製，遞迴（DFS）或加入佇列（BFS）處理。
+starterCode:
+  PYTHON: |
+    # Definition for a Node.
+    class Node:
+        def __init__(self, val = 0, neighbors = None):
+            self.val = val
+            self.neighbors = neighbors if neighbors is not None else []
+
+    class Solution:
+        def cloneGraph(self, node: 'Node') -> 'Node':
+            pass
+  C: |
+    // Definition for a Node.
+    struct Node {
+        int val;
+        int numNeighbors;
+        struct Node** neighbors;
+    };
+
+    struct Node *cloneGraph(struct Node *s) {
+
+    }
+  CPP: |
+    // Definition for a Node.
+    class Node {
+    public:
+        int val;
+        vector<Node*> neighbors;
+        Node() : val(0), neighbors(vector<Node*>()) {}
+        Node(int _val) : val(_val), neighbors(vector<Node*>()) {}
+        Node(int _val, vector<Node*> _neighbors) : val(_val), neighbors(_neighbors) {}
+    };
+
+    class Solution {
+    public:
+        Node* cloneGraph(Node* node) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for a Node.
+    function Node(val, neighbors) {
+        this.val = val === undefined ? 0 : val;
+        this.neighbors = neighbors === undefined ? [] : neighbors;
+    };
+
+    /**
+     * @param {Node} node
+     * @return {Node}
+     */
+    var cloneGraph = function(node) {
+
+    };
+testCases:
+  - input: "adjList = [[2,4],[1,3],[2,4],[1,3]]"
+    expected: "[[2,4],[1,3],[2,4],[1,3]]"
+    isHidden: false
+    isKiller: false
+  - input: "adjList = [[]]"
+    expected: "[[]]"
+    isHidden: false
+    isKiller: false
+  - input: "adjList = []"
+    expected: "[]"
+    isHidden: false
+    isKiller: false
+  - input: "adjList = [[2],[1,3],[2,4],[3]]"
+    expected: "[[2],[1,3],[2,4],[3]]"
+    isHidden: true
+    isKiller: false
+  - input: "adjList = [[2,3,4,5],[1,3],[1,2,4,5],[1,3,5],[1,3,4]]"
+    expected: "[[2,3,4,5],[1,3],[1,2,4,5],[1,3,5],[1,3,4]]"
+    isHidden: true
+    isKiller: true

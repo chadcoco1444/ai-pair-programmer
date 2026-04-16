@@ -1,0 +1,89 @@
+title: Minimum Window Substring
+slug: minimum-window-substring
+difficulty: HARD
+category: ALGORITHM
+tags: [string, sliding-window, hash-table]
+concepts:
+  - name: Sliding Window
+    relevance: 0.95
+  - name: Hash Table
+    relevance: 0.85
+description: |
+  给定字符串 `s` 和字符串 `t`，返回 `s` 中涵盖 `t` 所有字符的**最小子串**。如果 `s` 中不存在涵盖 `t` 所有字符的子串，则返回空字符串 `""`。
+
+  注意：对于 `t` 中重复的字符，我们寻找的子串中该字符的数量必须不少于 `t` 中该字符的数量。
+
+  **示例 1：**
+  ```
+  输入：s = "ADOBECODEBANC", t = "ABC"
+  输出："BANC"
+  解释：最小覆盖子串 "BANC" 包含了 t 中的所有字符 'A'、'B' 和 'C'。
+  ```
+
+  **示例 2：**
+  ```
+  输入：s = "a", t = "a"
+  输出："a"
+  ```
+
+  **示例 3：**
+  ```
+  输入：s = "a", t = "aa"
+  输出：""
+  解释：t 中有两个 'a'，但 s 中只有一个，无法满足条件。
+  ```
+
+  **约束条件：**
+  - `1 <= s.length, t.length <= 10^5`
+  - `s` 和 `t` 由英文字母组成
+  - 答案唯一
+hints:
+  - 使用两个哈希表分别记录 t 中每个字符的需求量和当前窗口中每个字符的数量，以及一个 formed 变量记录当前窗口中已满足 t 要求的字符种类数。
+  - 右指针扩大窗口直到覆盖所有 t 中字符，然后移动左指针缩小窗口，尝试找到更短的满足条件的子串，同时更新答案。
+  - 当某字符的窗口内数量等于 t 中的需求量时 formed 加一；当左指针将某字符移出窗口导致数量不足时 formed 减一，从而高效判断窗口是否满足条件。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def minWindow(self, s: str, t: str) -> str:
+            pass
+  C: |
+    char* minWindow(char* s, char* t) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        string minWindow(string s, string t) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} s
+     * @param {string} t
+     * @return {string}
+     */
+    var minWindow = function(s, t) {
+
+    };
+testCases:
+  - input: '"ADOBECODEBANC", "ABC"'
+    expected: '"BANC"'
+    isHidden: false
+    isKiller: false
+  - input: '"a", "a"'
+    expected: '"a"'
+    isHidden: false
+    isKiller: false
+  - input: '"a", "aa"'
+    expected: '""'
+    isHidden: false
+    isKiller: false
+  - input: '"aa", "aa"'
+    expected: '"aa"'
+    isHidden: true
+    isKiller: false
+  - input: '"cabwefgewcwaefgcf", "cae"'
+    expected: '"cwae"'
+    isHidden: true
+    isKiller: true

@@ -1,0 +1,81 @@
+title: Sum of Two Integers
+slug: sum-of-two-integers
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [bit-manipulation]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.2
+  - name: Greedy
+    relevance: 0.3
+description: |
+  给定两个整数 `a` 和 `b`，在**不使用**运算符 `+` 和 `-` 的情况下，计算并返回两整数之和。
+
+  **示例 1：**
+  ```
+  输入：a = 1, b = 2
+  输出：3
+  ```
+
+  **示例 2：**
+  ```
+  输入：a = 2, b = 3
+  输出：5
+  ```
+
+  **约束条件：**
+  - `-1000 <= a, b <= 1000`
+
+hints:
+  - 考虑使用位运算来模拟加法，`a XOR b` 可以得到不考虑进位的加法结果。
+  - 使用 `(a AND b) << 1` 计算进位，然后将进位加到上一步的结果中，重复这个过程直到没有进位为止。
+  - 注意处理负数的情况，在 Python 中需要使用掩码来处理补码表示。
+
+starterCode:
+  PYTHON: |
+    class Solution:
+        def getSum(self, a: int, b: int) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    int getSum(int a, int b) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    class Solution {
+    public:
+        int getSum(int a, int b) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} a
+     * @param {number} b
+     * @return {number}
+     */
+    var getSum = function(a, b) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "1 2"
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "2 3"
+    expected: "5"
+    isHidden: false
+    isKiller: false
+  - input: "-1 1"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "-100 100"
+    expected: "0"
+    isHidden: true
+    isKiller: false
+  - input: "-999 -1"
+    expected: "-1000"
+    isHidden: true
+    isKiller: true

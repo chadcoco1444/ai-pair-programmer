@@ -1,0 +1,90 @@
+title: Maximum Product Subarray
+slug: maximum-product-subarray
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, dynamic-programming]
+concepts:
+  - name: Array
+    relevance: 0.7
+  - name: Dynamic Programming
+    relevance: 1.0
+description: |
+  給定一個整數陣列 `nums`，請找到一個具有最大乘積的**連續子陣列**（子陣列至少包含一個元素），並回傳其最大乘積。
+
+  **範例 1：**
+  ```
+  輸入：nums = [2,3,-2,4]
+  輸出：6
+  解釋：子陣列 [2,3] 的乘積最大，為 6。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：nums = [-2,0,-1]
+  輸出：0
+  解釋：結果不能是 2，因為 [-2,-1] 不是子陣列（中間有 0 間隔）。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：nums = [-2,3,-4]
+  輸出：24
+  ```
+
+  **限制條件：**
+  - `1 <= nums.length <= 2 * 10^4`
+  - `-10 <= nums[i] <= 10`
+  - 任何前綴子陣列的乘積都保證在 **32 位元整數**範圍內
+hints:
+  - 這題比最大子陣列和更複雜，因為負數乘以負數會變成正數。所以不僅要追蹤當前最大值，也要追蹤當前最小值。
+  - 維護 `maxProd`（當前子陣列的最大乘積）和 `minProd`（當前子陣列的最小乘積）。遇到每個新元素時，新的最大值可能是：`nums[i]`、`maxProd * nums[i]`、`minProd * nums[i]` 三者之一。
+  - 遇到 0 時，當前乘積會歸零，等同於從下一個元素重新開始。遇到負數時，最大值與最小值會互換，要特別注意更新順序（先暫存舊的 maxProd 再更新）。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def maxProduct(self, nums: list[int]) -> int:
+            pass
+  C: |
+    int maxProduct(int* nums, int numsSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int maxProduct(vector<int>& nums) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} nums
+     * @return {number}
+     */
+    var maxProduct = function(nums) {
+
+    };
+testCases:
+  - input: "nums = [2,3,-2,4]"
+    expected: "6"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [-2,0,-1]"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [-2,3,-4]"
+    expected: "24"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [0,2]"
+    expected: "2"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [-3,-1,-1]"
+    expected: "3"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [-2,-3,0,-2,-40]"
+    expected: "80"
+    isHidden: false
+    isKiller: true

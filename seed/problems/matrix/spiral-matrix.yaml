@@ -1,0 +1,88 @@
+title: Spiral Matrix
+slug: spiral-matrix
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, matrix]
+concepts:
+  - name: Array
+    relevance: 1.0
+description: |
+  給定一個 `m x n` 的矩陣 `matrix`，請以**螺旋順序**回傳矩陣中所有元素。
+
+  螺旋順序為：從左上角開始，依序向右、向下、向左、向上，逐層向內遍歷。
+
+  **範例 1：**
+  ```
+  輸入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+  輸出：[1,2,3,6,9,8,7,4,5]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]
+  輸出：[1,2,3,4,8,12,11,10,9,5,6,7]
+  ```
+
+  **範例 3：**
+  ```
+  輸入：matrix = [[1]]
+  輸出：[1]
+  ```
+
+  **限制條件：**
+  - `m == matrix.length`
+  - `n == matrix[i].length`
+  - `1 <= m, n <= 10`
+  - `-100 <= matrix[i][j] <= 100`
+hints:
+  - 模擬螺旋路徑：維護四個邊界變數 `top`、`bottom`、`left`、`right`，每完成一個方向的遍歷，就將對應邊界向內縮一格，直到所有元素都被訪問。
+  - 每一輪遍歷四個方向：① 從左到右遍歷 `top` 行，之後 `top++`；② 從上到下遍歷 `right` 列，之後 `right--`；③ 從右到左遍歷 `bottom` 行（需確認 `top <= bottom`），之後 `bottom--`；④ 從下到上遍歷 `left` 列（需確認 `left <= right`），之後 `left++`。
+  - 注意奇偶情況：當矩陣列數多於行數時，最終可能只剩一行需從右到左遍歷；當行數多時可能只剩一列需從下到上遍歷。在步驟 ③ 和 ④ 中加入邊界條件判斷可避免重複計入。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def spiralOrder(self, matrix: list[list[int]]) -> list[int]:
+            pass
+  C: |
+    /**
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* spiralOrder(int** matrix, int matrixSize, int* matrixColSize, int* returnSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        vector<int> spiralOrder(vector<vector<int>>& matrix) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[][]} matrix
+     * @return {number[]}
+     */
+    var spiralOrder = function(matrix) {
+
+    };
+testCases:
+  - input: "matrix = [[1,2,3],[4,5,6],[7,8,9]]"
+    expected: "[1,2,3,6,9,8,7,4,5]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[1,2,3,4],[5,6,7,8],[9,10,11,12]]"
+    expected: "[1,2,3,4,8,12,11,10,9,5,6,7]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[1]]"
+    expected: "[1]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[1,2],[3,4]]"
+    expected: "[1,2,4,3]"
+    isHidden: true
+    isKiller: false
+  - input: "matrix = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20],[21,22,23,24,25]]"
+    expected: "[1,2,3,4,5,10,15,20,25,24,23,22,21,16,11,6,7,8,9,14,19,18,17,12,13]"
+    isHidden: true
+    isKiller: true

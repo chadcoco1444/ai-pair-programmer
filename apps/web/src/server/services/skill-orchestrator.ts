@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { anthropic, AI_MODEL, AI_AVAILABLE } from "@/lib/anthropic";
+import { genai, AI_MODEL, AI_AVAILABLE } from "@/lib/ai";
 import {
   buildSKILLPrompt,
   detectPhaseTransition,
@@ -68,6 +68,13 @@ export class SKILLOrchestrator {
     };
   }
 
+  private buildGeminiHistory(messages: ConversationMessage[]): { role: "user" | "model"; parts: { text: string }[] }[] {
+    return messages.map((m) => ({
+      role: m.role === "user" ? "user" as const : "model" as const,
+      parts: [{ text: m.content }],
+    }));
+  }
+
   async startConversation(params: {
     userId: string;
     problemId?: string;
@@ -87,8 +94,8 @@ export class SKILLOrchestrator {
 
       if (!AI_AVAILABLE) {
         const fallbackMessage = problem
-          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師目前不可用（請在 .env 中設定 ANTHROPIC_API_KEY 並確保有足夠額度）。你仍然可以瀏覽題目、撰寫程式碼並提交。\n\n[S] 蘇格拉底`
-          : "⚠️ AI 導師目前不可用。請在 .env 中設定 ANTHROPIC_API_KEY。";
+          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師目前不可用（請在 .env 中設定 GEMINI_API_KEY）。你仍然可以瀏覽題目、撰寫程式碼並提交。\n\n[S] 蘇格拉底`
+          : "⚠️ AI 導師目前不可用。請在 .env 中設定 GEMINI_API_KEY。";
 
         await this.prisma.message.create({
           data: {
@@ -116,20 +123,13 @@ export class SKILLOrchestrator {
 
       let assistantMessage: string;
       try {
-        const response = await anthropic.messages.create({
+        const model = genai.getGenerativeModel({
           model: AI_MODEL,
-          max_tokens: 1024,
-          system: systemPrompt,
-          messages: [
-            {
-              role: "user",
-              content: "請開始引導我解這道題。",
-            },
-          ],
+          systemInstruction: systemPrompt,
         });
 
-        assistantMessage =
-          response.content[0].type === "text" ? response.content[0].text : "";
+        const result = await model.generateContent("請開始引導我解這道題。");
+        assistantMessage = result.response.text();
       } catch (error: any) {
         assistantMessage = problem
           ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師暫時無法連線（${error.message}）。你仍然可以撰寫程式碼並提交。\n\n[S] 蘇格拉底`
@@ -239,7 +239,7 @@ export class SKILLOrchestrator {
     phase: SKILLPhase;
   }): AsyncGenerator<string> {
     if (!AI_AVAILABLE) {
-      const fallback = "⚠️ AI 導師目前不可用。請在 .env 中設定 ANTHROPIC_API_KEY 並確保有足夠額度。\n\n你仍然可以撰寫程式碼並提交測試。";
+      const fallback = "⚠️ AI 導師目前不可用。請在 .env 中設定 GEMINI_API_KEY。\n\n你仍然可以撰寫程式碼並提交測試。";
       yield fallback;
       await this.prisma.message.create({
         data: {
@@ -255,20 +255,23 @@ export class SKILLOrchestrator {
     let fullResponse = "";
 
     try {
-      const stream = anthropic.messages.stream({
+      const model = genai.getGenerativeModel({
         model: AI_MODEL,
-        max_tokens: 2048,
-        system: params.systemPrompt,
-        messages: params.messages,
+        systemInstruction: params.systemPrompt,
       });
 
-      for await (const event of stream) {
-        if (
-          event.type === "content_block_delta" &&
-          event.delta.type === "text_delta"
-        ) {
-          fullResponse += event.delta.text;
-          yield event.delta.text;
+      // 組裝 Gemini 對話歷史（排除最後一條 user message）
+      const history = this.buildGeminiHistory(params.messages.slice(0, -1));
+      const lastMessage = params.messages[params.messages.length - 1].content;
+
+      const chat = model.startChat({ history });
+      const result = await chat.sendMessageStream(lastMessage);
+
+      for await (const chunk of result.stream) {
+        const text = chunk.text();
+        if (text) {
+          fullResponse += text;
+          yield text;
         }
       }
     } catch (error: any) {

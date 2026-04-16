@@ -1,0 +1,88 @@
+title: Top K Frequent Elements
+slug: top-k-frequent-elements
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, hash-table, heap, sorting]
+concepts:
+  - name: Array
+    relevance: 0.8
+  - name: Hash Table
+    relevance: 0.9
+  - name: Heap
+    relevance: 1.0
+description: |
+  給定一個整數陣列 `nums` 和一個整數 `k`，請回傳其中出現頻率前 `k` 高的元素。你可以以**任意順序**回傳答案。
+
+  **範例 1：**
+  ```
+  輸入：nums = [1,1,1,2,2,3], k = 2
+  輸出：[1,2]
+  解釋：元素 1 出現 3 次，元素 2 出現 2 次，元素 3 出現 1 次。頻率前 2 高的元素為 1 和 2。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：nums = [1], k = 1
+  輸出：[1]
+  ```
+
+  **限制條件：**
+  - `1 <= nums.length <= 10^5`
+  - `-10^4 <= nums[i] <= 10^4`
+  - `k` 的值域在 `[1, 陣列中不同元素的數量]` 範圍內
+  - 題目保證答案是唯一的，換句話說，陣列中前 k 個高頻元素的集合是唯一的
+
+  **進階：** 你的算法的時間複雜度必須優於 O(n log n)。
+hints:
+  - 第一步：使用 Hash Table 統計每個元素的出現頻率，時間複雜度 O(n)。
+  - 第二步：使用**大小為 k 的最小堆（Min-Heap）**維護頻率最高的 k 個元素。遍歷 Hash Table，若堆的大小小於 k 直接加入；若堆已滿且當前元素頻率大於堆頂（最小頻率），則彈出堆頂並加入當前元素，最終堆中就是答案。
+  - 另一種 O(n) 方法是**桶排序（Bucket Sort）**：建立長度為 n+1 的桶陣列，索引表示頻率，將每個元素放入對應頻率的桶中，最後從高頻率桶向低頻率桶取元素，直到取滿 k 個。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def topKFrequent(self, nums: list[int], k: int) -> list[int]:
+            pass
+  C: |
+    /**
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* topKFrequent(int* nums, int numsSize, int k, int* returnSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        vector<int> topKFrequent(vector<int>& nums, int k) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} nums
+     * @param {number} k
+     * @return {number[]}
+     */
+    var topKFrequent = function(nums, k) {
+
+    };
+testCases:
+  - input: "nums = [1,1,1,2,2,3], k = 2"
+    expected: "[1,2]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [1], k = 1"
+    expected: "[1]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [1,2], k = 2"
+    expected: "[1,2]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [4,1,-1,2,-1,2,3], k = 2"
+    expected: "[-1,2]"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [1,1,1,2,2,3,3,3,3,4,4,4,4,4], k = 3"
+    expected: "[4,3,1]"
+    isHidden: true
+    isKiller: true

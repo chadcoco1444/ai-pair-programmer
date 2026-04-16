@@ -1,0 +1,101 @@
+title: Coin Change
+slug: coin-change
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [dynamic-programming, bfs]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.9
+  - name: Array
+    relevance: 0.5
+  - name: Greedy
+    relevance: 0.3
+description: |
+  给你一个整数数组 `coins`，代表不同面额的硬币；以及一个整数 `amount`，代表总金额。
+
+  计算并返回可以凑成总金额所需的**最少的硬币个数**。如果没有任何一种硬币组合能组成总金额，返回 `-1`。
+
+  你可以认为每种硬币的数量是无限的。
+
+  **示例 1：**
+  ```
+  输入：coins = [1,2,5], amount = 11
+  输出：3
+  解释：11 = 5 + 5 + 1
+  ```
+
+  **示例 2：**
+  ```
+  输入：coins = [2], amount = 3
+  输出：-1
+  ```
+
+  **示例 3：**
+  ```
+  输入：coins = [1], amount = 0
+  输出：0
+  ```
+
+  **约束条件：**
+  - `1 <= coins.length <= 12`
+  - `1 <= coins[i] <= 2^31 - 1`
+  - `0 <= amount <= 10^4`
+
+hints:
+  - 定义 `dp[i]` 为凑成金额 i 所需的最少硬币数，初始化 `dp[0] = 0`，其余为无穷大（或 amount+1）。
+  - 状态转移：对于每个金额 i，遍历所有硬币面额 c，若 `i >= c`，则 `dp[i] = min(dp[i], dp[i-c] + 1)`。
+  - 最终若 `dp[amount]` 仍为初始的无穷大值，说明无法凑成，返回 -1；否则返回 `dp[amount]`。
+
+starterCode:
+  PYTHON: |
+    from typing import List
+
+    class Solution:
+        def coinChange(self, coins: List[int], amount: int) -> int:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    int coinChange(int* coins, int coinsSize, int amount) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    #include <vector>
+    using namespace std;
+
+    class Solution {
+    public:
+        int coinChange(vector<int>& coins, int amount) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} coins
+     * @param {number} amount
+     * @return {number}
+     */
+    var coinChange = function(coins, amount) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "[1,2,5] 11"
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: "[2] 3"
+    expected: "-1"
+    isHidden: false
+    isKiller: false
+  - input: "[1] 0"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "[1,5,10,25] 30"
+    expected: "2"
+    isHidden: true
+    isKiller: false
+  - input: "[3,7,405,436] 8839"
+    expected: "25"
+    isHidden: true
+    isKiller: true

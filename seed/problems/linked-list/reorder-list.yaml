@@ -1,0 +1,113 @@
+title: Reorder List
+slug: reorder-list
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [linked-list, two-pointer, stack]
+concepts:
+  - name: Linked List
+    relevance: 1.0
+  - name: Two Pointer
+    relevance: 0.8
+  - name: Stack
+    relevance: 0.6
+description: |
+  給定一個單向鏈結串列 `L`，其形式為：L0 → L1 → … → Ln-1 → Ln
+
+  請將其重新排列成：L0 → Ln → L1 → Ln-1 → L2 → Ln-2 → …
+
+  不能修改節點中的值，只能修改節點本身，且**必須原地（in-place）**修改串列。
+
+  **範例 1：**
+  ```
+  輸入：head = [1,2,3,4]
+  輸出：[1,4,2,3]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：head = [1,2,3,4,5]
+  輸出：[1,5,2,4,3]
+  ```
+
+  **限制條件：**
+  - 鏈結串列中的節點數量範圍為 `[1, 5 * 10^4]`
+  - `1 <= Node.val <= 1000`
+hints:
+  - 這道題可以拆解成三個步驟：① 找到鏈結串列的中間節點；② 反轉後半部分串列；③ 交叉合併前半部分和反轉後的後半部分。
+  - 找中間節點使用快慢指標：慢指標每次走一步，快指標每次走兩步，當快指標到達末尾時，慢指標恰好在中間。然後從中間節點斷開，得到前後兩段串列。
+  - 反轉後半部分後，用兩個指標分別從前半段頭部和後半段頭部開始，交替將後半段節點插入前半段，注意在每次操作前保存 `next` 指標避免丟失引用。
+starterCode:
+  PYTHON: |
+    # Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+
+    class Solution:
+        def reorderList(self, head: ListNode) -> None:
+            """
+            Do not return anything, modify head in-place instead.
+            """
+            pass
+  C: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        struct ListNode *next;
+    };
+
+    void reorderList(struct ListNode* head) {
+
+    }
+  CPP: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode() : val(0), next(nullptr) {}
+        ListNode(int x) : val(x), next(nullptr) {}
+        ListNode(int x, ListNode *next) : val(x), next(next) {}
+    };
+
+    class Solution {
+    public:
+        void reorderList(ListNode* head) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for singly-linked list.
+    function ListNode(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
+    }
+
+    /**
+     * @param {ListNode} head
+     * @return {void} Do not return anything, modify head in-place instead.
+     */
+    var reorderList = function(head) {
+
+    };
+testCases:
+  - input: "head = [1,2,3,4]"
+    expected: "[1,4,2,3]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2,3,4,5]"
+    expected: "[1,5,2,4,3]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1]"
+    expected: "[1]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2,3,4,5,6]"
+    expected: "[1,6,2,5,3,4]"
+    isHidden: true
+    isKiller: false
+  - input: "head = [1,2,3,4,5,6,7,8,9,10]"
+    expected: "[1,10,2,9,3,8,4,7,5,6]"
+    isHidden: true
+    isKiller: true

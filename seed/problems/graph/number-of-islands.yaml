@@ -1,0 +1,97 @@
+title: Number of Islands
+slug: number-of-islands
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [graph, dfs, bfs, matrix]
+concepts:
+  - name: Graph
+    relevance: 1.0
+  - name: Queue
+    relevance: 0.6
+description: |
+  給定一個由 `'1'`（陸地）和 `'0'`（水）組成的二維網格 `grid`，請計算**島嶼的數量**。
+
+  島嶼是由陸地水平或垂直相連（四個方向）所形成的區域，且四面被水包圍。你可以假設網格的四個邊界都被水包圍。
+
+  **範例 1：**
+  ```
+  輸入：grid = [
+    ["1","1","1","1","0"],
+    ["1","1","0","1","0"],
+    ["1","1","0","0","0"],
+    ["0","0","0","0","0"]
+  ]
+  輸出：1
+  ```
+
+  **範例 2：**
+  ```
+  輸入：grid = [
+    ["1","1","0","0","0"],
+    ["1","1","0","0","0"],
+    ["0","0","1","0","0"],
+    ["0","0","0","1","1"]
+  ]
+  輸出：3
+  ```
+
+  **範例 3：**
+  ```
+  輸入：grid = [["1"]]
+  輸出：1
+  ```
+
+  **限制條件：**
+  - `m == grid.length`
+  - `n == grid[i].length`
+  - `1 <= m, n <= 300`
+  - `grid[i][j]` 的值為 `'0'` 或 `'1'`
+hints:
+  - 遍歷整個網格。每當找到一個 `'1'`（陸地）時，計數器加一，然後用 DFS 或 BFS 將與之相連的所有陸地都標記為已訪問（例如改為 `'0'` 或 `'#'`）。
+  - DFS 方法：從找到的陸地格子出發，遞迴地向上下左右四個方向延伸，將所有相鄰的陸地「淹沒」。這樣每次啟動 DFS 就代表發現了一座新的島嶼。
+  - 注意邊界條件：在向四個方向延伸時，需要確保索引不超出網格範圍，且目標格子的值必須是 `'1'`。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def numIslands(self, grid: list[list[str]]) -> int:
+            pass
+  C: |
+    int numIslands(char** grid, int gridSize, int* gridColSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int numIslands(vector<vector<char>>& grid) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {character[][]} grid
+     * @return {number}
+     */
+    var numIslands = function(grid) {
+
+    };
+testCases:
+  - input: 'grid = [["1","1","1","1","0"],["1","1","0","1","0"],["1","1","0","0","0"],["0","0","0","0","0"]]'
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: 'grid = [["1","1","0","0","0"],["1","1","0","0","0"],["0","0","1","0","0"],["0","0","0","1","1"]]'
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: 'grid = [["1"]]'
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: 'grid = [["0","0","0"],["0","0","0"],["0","0","0"]]'
+    expected: "0"
+    isHidden: true
+    isKiller: false
+  - input: 'grid = [["1","0","1","0","1"],["0","1","0","1","0"],["1","0","1","0","1"],["0","1","0","1","0"]]'
+    expected: "10"
+    isHidden: true
+    isKiller: true

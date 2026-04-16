@@ -1,0 +1,87 @@
+title: Product of Array Except Self
+slug: product-of-array-except-self
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, prefix-sum]
+concepts:
+  - name: Array
+    relevance: 1.0
+description: |
+  給定一個整數陣列 `nums`，回傳一個陣列 `answer`，其中 `answer[i]` 等於 `nums` 中**除了 `nums[i]` 以外**所有元素的乘積。
+
+  **要求：必須在 O(n) 時間內完成，且不能使用除法運算。**
+
+  **範例 1：**
+  ```
+  輸入：nums = [1,2,3,4]
+  輸出：[24,12,8,6]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：nums = [-1,1,0,-3,3]
+  輸出：[0,0,9,0,0]
+  ```
+
+  **限制條件：**
+  - `2 <= nums.length <= 10^5`
+  - `-30 <= nums[i] <= 30`
+  - 輸入保證任何前綴或後綴的乘積都能在 **32 位元整數**範圍內
+
+  **進階：** 你能在 O(1) 額外空間複雜度下完成嗎（輸出陣列不計入空間複雜度）？
+hints:
+  - 對於 answer[i]，它是 nums[i] 左邊所有元素的乘積，乘以 nums[i] 右邊所有元素的乘積。能否分兩次遍歷分別計算？
+  - 第一次從左到右遍歷，建立 prefix 陣列，其中 prefix[i] = nums[0] * nums[1] * ... * nums[i-1]。第二次從右到左遍歷，用一個變數累積 suffix 乘積。
+  - 先用一次遍歷填入每個位置左邊的前綴積，再用一次遍歷從右往左乘上後綴積。整體只需兩次 O(n) 遍歷，且額外空間只需一個變數存 suffix。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def productExceptSelf(self, nums: list[int]) -> list[int]:
+            pass
+  C: |
+    /**
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* productExceptSelf(int* nums, int numsSize, int* returnSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        vector<int> productExceptSelf(vector<int>& nums) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} nums
+     * @return {number[]}
+     */
+    var productExceptSelf = function(nums) {
+
+    };
+testCases:
+  - input: "nums = [1,2,3,4]"
+    expected: "[24,12,8,6]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [-1,1,0,-3,3]"
+    expected: "[0,0,9,0,0]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [2,3]"
+    expected: "[3,2]"
+    isHidden: false
+    isKiller: false
+  - input: "nums = [1,0,3,4]"
+    expected: "[0,12,0,0]"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [-2,3,-4]"
+    expected: "[-12,8,-6]"
+    isHidden: true
+    isKiller: false
+  - input: "nums = [0,0,2,3]"
+    expected: "[0,0,0,0]"
+    isHidden: false
+    isKiller: true

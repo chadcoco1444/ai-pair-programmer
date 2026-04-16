@@ -1,0 +1,116 @@
+title: Remove Nth Node From End of List
+slug: remove-nth-node-from-end
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [linked-list, two-pointer]
+concepts:
+  - name: Linked List
+    relevance: 1.0
+  - name: Two Pointer
+    relevance: 0.9
+description: |
+  給定一個鏈結串列的頭節點 `head` 和一個整數 `n`，請刪除鏈結串列中**倒數第 n 個**節點，並回傳修改後的鏈結串列頭節點。
+
+  **範例 1：**
+  ```
+  輸入：head = [1,2,3,4,5], n = 2
+  輸出：[1,2,3,5]
+  解釋：刪除倒數第 2 個節點（值為 4）。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：head = [1], n = 1
+  輸出：[]
+  ```
+
+  **範例 3：**
+  ```
+  輸入：head = [1,2], n = 1
+  輸出：[1]
+  ```
+
+  **限制條件：**
+  - 鏈結串列中的節點數量為 `sz`
+  - `1 <= sz <= 30`
+  - `0 <= Node.val <= 100`
+  - `1 <= n <= sz`
+
+  **進階：** 你能僅用一次遍歷解決這個問題嗎？
+hints:
+  - 兩次遍歷法：第一次遍歷計算串列總長度 `L`，第二次遍歷找到第 `L - n` 個節點（即倒數第 n 個節點的前一個節點），修改其 `next` 指標跳過目標節點。
+  - 一次遍歷法（雙指標）：使用快慢指標，讓快指標先走 `n` 步，然後快慢指標同步向前，直到快指標到達最後一個節點，此時慢指標恰好在倒數第 n+1 個節點。
+  - 使用虛擬頭節點（Dummy Node）可以優雅地處理需要刪除頭節點的邊界情況（例如 `n == sz`），避免需要單獨判斷。
+starterCode:
+  PYTHON: |
+    # Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+
+    class Solution:
+        def removeNthFromEnd(self, head: ListNode, n: int) -> ListNode:
+            pass
+  C: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        struct ListNode *next;
+    };
+
+    struct ListNode* removeNthFromEnd(struct ListNode* head, int n) {
+
+    }
+  CPP: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode() : val(0), next(nullptr) {}
+        ListNode(int x) : val(x), next(nullptr) {}
+        ListNode(int x, ListNode *next) : val(x), next(next) {}
+    };
+
+    class Solution {
+    public:
+        ListNode* removeNthFromEnd(ListNode* head, int n) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for singly-linked list.
+    function ListNode(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
+    }
+
+    /**
+     * @param {ListNode} head
+     * @param {number} n
+     * @return {ListNode}
+     */
+    var removeNthFromEnd = function(head, n) {
+
+    };
+testCases:
+  - input: "head = [1,2,3,4,5], n = 2"
+    expected: "[1,2,3,5]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1], n = 1"
+    expected: "[]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2], n = 1"
+    expected: "[1]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2,3,4,5], n = 5"
+    expected: "[2,3,4,5]"
+    isHidden: true
+    isKiller: false
+  - input: "head = [1,2,3,4,5,6,7,8,9,10], n = 3"
+    expected: "[1,2,3,4,5,6,7,9,10]"
+    isHidden: true
+    isKiller: true

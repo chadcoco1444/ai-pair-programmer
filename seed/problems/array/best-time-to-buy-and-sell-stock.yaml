@@ -1,0 +1,88 @@
+title: Best Time to Buy and Sell Stock
+slug: best-time-to-buy-and-sell-stock
+difficulty: EASY
+category: ALGORITHM
+tags: [array, dynamic-programming]
+concepts:
+  - name: Array
+    relevance: 0.8
+  - name: Dynamic Programming
+    relevance: 0.5
+description: |
+  給定一個陣列 `prices`，其中 `prices[i]` 代表第 `i` 天的股票價格。
+
+  你只能選擇**某一天**買入股票，並在**未來的某一天**賣出，以獲取最大利潤。
+
+  回傳你能獲得的最大利潤。如果無法獲利，回傳 `0`。
+
+  **範例 1：**
+  ```
+  輸入：prices = [7,1,5,3,6,4]
+  輸出：5
+  解釋：在第 2 天（價格 = 1）買入，在第 5 天（價格 = 6）賣出，利潤 = 6 - 1 = 5。
+       注意不能在第 2 天買入後在第 1 天賣出，因為買入必須在賣出之前。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：prices = [7,6,4,3,1]
+  輸出：0
+  解釋：價格持續下跌，無法獲利，回傳 0。
+  ```
+
+  **限制條件：**
+  - `1 <= prices.length <= 10^5`
+  - `0 <= prices[i] <= 10^4`
+hints:
+  - 試想一個簡單問題：若你在第 i 天賣出，要獲得最大利潤，你應該在哪一天買入？
+  - 從左到右遍歷，維護一個「目前見過的最低價格」變數。對於每一天，計算若在當天賣出能獲得的利潤。
+  - 用一個變數 `minPrice` 記錄當前最低買入價，用 `maxProfit` 記錄最大利潤。每天更新這兩個變數即可在 O(n) 時間解決問題。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def maxProfit(self, prices: list[int]) -> int:
+            pass
+  C: |
+    int maxProfit(int* prices, int pricesSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int maxProfit(vector<int>& prices) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} prices
+     * @return {number}
+     */
+    var maxProfit = function(prices) {
+
+    };
+testCases:
+  - input: "prices = [7,1,5,3,6,4]"
+    expected: "5"
+    isHidden: false
+    isKiller: false
+  - input: "prices = [7,6,4,3,1]"
+    expected: "0"
+    isHidden: false
+    isKiller: false
+  - input: "prices = [1,2]"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "prices = [3,1,4,1,5,9,2,6]"
+    expected: "8"
+    isHidden: true
+    isKiller: false
+  - input: "prices = [1]"
+    expected: "0"
+    isHidden: true
+    isKiller: false
+  - input: "prices = [10000,9999,9998,9997,9996,9995,1,10000]"
+    expected: "9999"
+    isHidden: false
+    isKiller: true

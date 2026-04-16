@@ -1,0 +1,81 @@
+title: Rotate Image
+slug: rotate-image
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, matrix, math]
+concepts:
+  - name: Array
+    relevance: 0.9
+description: |
+  給定一個 `n x n` 的二維矩陣 `matrix` 代表一張圖片，請**原地（in-place）**將圖片順時針旋轉 90 度。
+
+  注意：你**不能**使用額外的矩陣空間。
+
+  **範例 1：**
+  ```
+  輸入：matrix = [[1,2,3],[4,5,6],[7,8,9]]
+  輸出：[[7,4,1],[8,5,2],[9,6,3]]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]
+  輸出：[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]
+  ```
+
+  **限制條件：**
+  - `n == matrix.length == matrix[i].length`
+  - `1 <= n <= 20`
+  - `-1000 <= matrix[i][j] <= 1000`
+hints:
+  - 順時針旋轉 90 度可以分解為兩步操作：① 對矩陣進行**轉置（Transpose）**，即 `matrix[i][j]` 與 `matrix[j][i]` 互換；② 對每一行進行**水平翻轉（Reverse）**，即將每行反轉。
+  - 轉置時只需遍歷矩陣的上三角部分（`j > i`），避免重複交換。翻轉時使用雙指標從兩端向中間交換即可。
+  - 也可以使用四格同時旋轉的方式：每次同時旋轉矩陣四個對應位置的元素（從外圈到內圈逐層旋轉），但轉置+翻轉的方式更直觀易記。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def rotate(self, matrix: list[list[int]]) -> None:
+            """
+            Do not return anything, modify matrix in-place instead.
+            """
+            pass
+  C: |
+    void rotate(int** matrix, int matrixSize, int* matrixColSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        void rotate(vector<vector<int>>& matrix) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[][]} matrix
+     * @return {void} Do not return anything, modify matrix in-place instead.
+     */
+    var rotate = function(matrix) {
+
+    };
+testCases:
+  - input: "matrix = [[1,2,3],[4,5,6],[7,8,9]]"
+    expected: "[[7,4,1],[8,5,2],[9,6,3]]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[5,1,9,11],[2,4,8,10],[13,3,6,7],[15,14,12,16]]"
+    expected: "[[15,13,2,5],[14,3,4,1],[12,6,8,9],[16,7,10,11]]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[1]]"
+    expected: "[[1]]"
+    isHidden: false
+    isKiller: false
+  - input: "matrix = [[1,2],[3,4]]"
+    expected: "[[3,1],[4,2]]"
+    isHidden: true
+    isKiller: false
+  - input: "matrix = [[1,2,3,4,5],[6,7,8,9,10],[11,12,13,14,15],[16,17,18,19,20],[21,22,23,24,25]]"
+    expected: "[[21,16,11,6,1],[22,17,12,7,2],[23,18,13,8,3],[24,19,14,9,4],[25,20,15,10,5]]"
+    isHidden: true
+    isKiller: true

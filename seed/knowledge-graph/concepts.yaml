@@ -1,9 +1,9 @@
-# 知識圖譜種子資料
+# 知識圖譜種子資料 — 覆蓋 Blind 75 所有分類
 # 每個概念包含：name, domain, description
 # 邊定義在 edges 區段
 
 concepts:
-  # ===== 演算法 =====
+  # ===== 演算法技巧 =====
   - name: Array
     domain: ALGORITHM
     description: 陣列是最基礎的資料結構，支援隨機存取。理解陣列操作是所有演算法的基礎。
@@ -40,6 +40,22 @@ concepts:
     domain: ALGORITHM
     description: 回溯法，系統性地搜尋所有可能的解，在發現不可行時回退。常用於排列、組合、棋盤問題。
 
+  - name: Bit Manipulation
+    domain: ALGORITHM
+    description: 位元運算，利用 AND、OR、XOR、位移等操作高效處理整數問題。常用於不使用算術運算符的加法、找缺失數等。
+
+  - name: Interval
+    domain: ALGORITHM
+    description: 區間問題，處理重疊、合併、插入區間。常見技巧是先排序再掃描。
+
+  - name: Union Find
+    domain: ALGORITHM
+    description: 並查集，用於高效處理不相交集合的合併與查詢。常用於圖的連通性問題。
+
+  - name: Topological Sort
+    domain: ALGORITHM
+    description: 拓撲排序，對有向無環圖（DAG）的頂點進行線性排序。常用於任務排程和課程先修關係。
+
   # ===== 資料結構 =====
   - name: Hash Table
     domain: DATA_STRUCTURE
@@ -63,15 +79,23 @@ concepts:
 
   - name: Tree
     domain: DATA_STRUCTURE
-    description: 樹是一種階層式資料結構。二元樹、BST、AVL 樹是常見變體。
+    description: 樹是一種階層式資料結構。二元樹、BST、AVL 樹是常見變體。DFS 和 BFS 是基礎遍歷方法。
 
   - name: Graph
     domain: DATA_STRUCTURE
-    description: 圖由節點和邊組成。BFS 和 DFS 是基礎遍歷演算法。
+    description: 圖由節點和邊組成。BFS 和 DFS 是基礎遍歷演算法。拓撲排序、最短路徑是進階應用。
 
   - name: Heap
     domain: DATA_STRUCTURE
     description: 堆積（優先佇列），支援 O(log n) 的插入和取出最大/最小值。用於 Top-K 問題和排程。
+
+  - name: Trie
+    domain: DATA_STRUCTURE
+    description: 字典樹（前綴樹），用於高效儲存和搜尋字串集合。支援前綴查詢和自動完成。
+
+  - name: Matrix
+    domain: DATA_STRUCTURE
+    description: 二維矩陣，用於表示網格、圖像、地圖。常見操作包括旋轉、螺旋遍歷、路徑搜尋。
 
   # ===== 系統設計 =====
   - name: CAP Theorem
@@ -145,6 +169,26 @@ edges:
     child: Dynamic Programming
     relation: related
 
+  - parent: Array
+    child: Bit Manipulation
+    relation: related
+
+  - parent: Array
+    child: Interval
+    relation: prerequisite
+
+  - parent: Sorting
+    child: Interval
+    relation: prerequisite
+
+  - parent: Graph
+    child: Union Find
+    relation: related
+
+  - parent: Graph
+    child: Topological Sort
+    relation: prerequisite
+
   # 資料結構前置關係
   - parent: Array
     child: Hash Table
@@ -165,6 +209,30 @@ edges:
   - parent: Array
     child: Heap
     relation: prerequisite
+
+  - parent: Array
+    child: Matrix
+    relation: prerequisite
+
+  - parent: Hash Table
+    child: Trie
+    relation: related
+
+  - parent: Tree
+    child: Trie
+    relation: prerequisite
+
+  - parent: Array
+    child: Linked List
+    relation: related
+
+  - parent: Linked List
+    child: Tree
+    relation: prerequisite
+
+  - parent: Tree
+    child: Heap
+    relation: related
 
   # 系統設計關聯
   - parent: Caching

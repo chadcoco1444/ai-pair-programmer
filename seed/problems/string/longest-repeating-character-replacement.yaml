@@ -1,0 +1,83 @@
+title: Longest Repeating Character Replacement
+slug: longest-repeating-character-replacement
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [string, sliding-window]
+concepts:
+  - name: Sliding Window
+    relevance: 0.95
+  - name: Hash Table
+    relevance: 0.7
+description: |
+  给定一个仅由大写英文字母组成的字符串 `s` 和一个整数 `k`，你可以选择字符串中的任意一个字符，并将其更改为任意其他大写英文字符，该操作最多可执行 `k` 次。
+
+  在执行上述操作后，返回包含相同字母的最长子串的长度。
+
+  **示例 1：**
+  ```
+  输入：s = "ABAB", k = 2
+  输出：4
+  解释：将两个 'A' 替换为 'B'，或将两个 'B' 替换为 'A'，可得到 "BBBB" 或 "AAAA"，长度为 4。
+  ```
+
+  **示例 2：**
+  ```
+  输入：s = "AABABBA", k = 1
+  输出：4
+  解释：将中间的 'A' 替换后可得到 "AABBBBA"，其中最长的相同字符子串为 "BBBB"，长度为 4。
+  ```
+
+  **约束条件：**
+  - `1 <= s.length <= 10^5`
+  - `s` 仅由大写英文字母组成
+  - `0 <= k <= s.length`
+hints:
+  - 使用滑动窗口，窗口内的字符替换数等于窗口长度减去窗口内出现次数最多的字符的频率。
+  - 当窗口内需要替换的字符数超过 k 时，缩小窗口（移动左指针）；否则扩大窗口。
+  - 记录窗口内出现频率最高的字符次数（maxCount），当 windowSize - maxCount > k 时需要收缩窗口，无需减少 maxCount 也不影响最终答案的正确性。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def characterReplacement(self, s: str, k: int) -> int:
+            pass
+  C: |
+    int characterReplacement(char* s, int k) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int characterReplacement(string s, int k) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} s
+     * @param {number} k
+     * @return {number}
+     */
+    var characterReplacement = function(s, k) {
+
+    };
+testCases:
+  - input: '"ABAB", 2'
+    expected: "4"
+    isHidden: false
+    isKiller: false
+  - input: '"AABABBA", 1'
+    expected: "4"
+    isHidden: false
+    isKiller: false
+  - input: '"AAAA", 0'
+    expected: "4"
+    isHidden: false
+    isKiller: false
+  - input: '"ABCDE", 1'
+    expected: "2"
+    isHidden: true
+    isKiller: false
+  - input: '"AAABBBCCC", 2'
+    expected: "5"
+    isHidden: true
+    isKiller: true

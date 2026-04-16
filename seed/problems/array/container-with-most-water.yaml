@@ -1,0 +1,90 @@
+title: Container With Most Water
+slug: container-with-most-water
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [array, two-pointer, greedy]
+concepts:
+  - name: Array
+    relevance: 0.5
+  - name: Two Pointer
+    relevance: 1.0
+description: |
+  給定一個長度為 `n` 的整數陣列 `height`，有 `n` 條垂直線，第 `i` 條線的兩端點為 `(i, 0)` 和 `(i, height[i])`。
+
+  找出兩條線，使它們與 x 軸共同構成的容器能夠容納最多的水。
+
+  回傳容器能夠儲存的最大水量。
+
+  **注意：容器不能傾斜。**
+
+  **範例 1：**
+  ```
+  輸入：height = [1,8,6,2,5,4,8,3,7]
+  輸出：49
+  解釋：選擇 index 1（高度 8）和 index 8（高度 7），寬度為 7，
+       容量 = min(8,7) * 7 = 49。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：height = [1,1]
+  輸出：1
+  ```
+
+  **限制條件：**
+  - `n == height.length`
+  - `2 <= n <= 10^5`
+  - `0 <= height[i] <= 10^4`
+hints:
+  - 暴力解法是枚舉所有 (i, j) 組合，時間複雜度為 O(n²)。思考：面積由兩邊的較小高度和兩者間距共同決定，能否用雙指針優化？
+  - 設 `left = 0`，`right = n - 1`，計算當前容量 `min(height[left], height[right]) * (right - left)`，然後移動指針。移動哪一個？移動較高的那條線無法增加容量，因為面積瓶頸在較矮的那條。
+  - 每次移動**較矮**那一側的指針（向內收縮），因為只有這樣才有可能找到更大的面積。持續更新最大值，直到 `left == right` 為止。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def maxArea(self, height: list[int]) -> int:
+            pass
+  C: |
+    int maxArea(int* height, int heightSize) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int maxArea(vector<int>& height) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number[]} height
+     * @return {number}
+     */
+    var maxArea = function(height) {
+
+    };
+testCases:
+  - input: "height = [1,8,6,2,5,4,8,3,7]"
+    expected: "49"
+    isHidden: false
+    isKiller: false
+  - input: "height = [1,1]"
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: "height = [4,3,2,1,4]"
+    expected: "16"
+    isHidden: false
+    isKiller: false
+  - input: "height = [1,2,1]"
+    expected: "2"
+    isHidden: true
+    isKiller: false
+  - input: "height = [2,3,4,5,18,17,6]"
+    expected: "17"
+    isHidden: true
+    isKiller: false
+  - input: "height = [10000,1,1,1,1,1,1,1,1,10000]"
+    expected: "90000"
+    isHidden: false
+    isKiller: true

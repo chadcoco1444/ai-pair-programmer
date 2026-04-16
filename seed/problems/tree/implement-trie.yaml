@@ -1,0 +1,181 @@
+title: Implement Trie (Prefix Tree)
+slug: implement-trie
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [trie, design, string, hash-table]
+concepts:
+  - name: Tree
+    relevance: 0.9
+  - name: Hash Table
+    relevance: 0.8
+description: |
+  請實作一個 **Trie（字典樹／前綴樹）** 類別，它需要支援以下操作：
+
+  - `Trie()` 初始化 Trie 物件。
+  - `void insert(String word)` 向 Trie 中插入字串 `word`。
+  - `boolean search(String word)` 若字串 `word` 在 Trie 中（即先前已插入），回傳 `true`，否則回傳 `false`。
+  - `boolean startsWith(String prefix)` 若先前插入的某個字串的前綴為 `prefix`，回傳 `true`，否則回傳 `false`。
+
+  **範例 1：**
+  ```
+  輸入：
+  ["Trie", "insert", "search", "search", "startsWith", "insert", "search"]
+  [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]]
+  輸出：
+  [null, null, true, false, true, null, true]
+
+  解釋：
+  Trie trie = new Trie();
+  trie.insert("apple");    // 插入 "apple"
+  trie.search("apple");    // 回傳 true
+  trie.search("app");      // 回傳 false（"app" 未被插入）
+  trie.startsWith("app");  // 回傳 true（"apple" 以 "app" 開頭）
+  trie.insert("app");      // 插入 "app"
+  trie.search("app");      // 回傳 true
+  ```
+
+  **限制條件：**
+  - `1 <= word.length, prefix.length <= 2000`
+  - `word` 和 `prefix` 只包含小寫英文字母
+  - insert、search 和 startsWith 的呼叫次數總和不超過 3 * 10^4
+hints:
+  - Trie 的節點需要兩個屬性：一個包含 26 個子節點的陣列（或 Hash Map），以及一個布林值標記該節點是否是某個單字的結尾。
+  - insert 操作：從根節點開始，對字串中每個字元，若對應的子節點不存在則建立新節點，然後移動到子節點，最後在末尾節點標記 is_end = true。
+  - search 和 startsWith 的邏輯相似：都是從根節點沿字元路徑走到底。不同之處在於 search 最終需要檢查末尾節點是否有 is_end 標記，而 startsWith 只需確認路徑存在即可。
+starterCode:
+  PYTHON: |
+    class Trie:
+        def __init__(self):
+            pass
+
+        def insert(self, word: str) -> None:
+            pass
+
+        def search(self, word: str) -> bool:
+            pass
+
+        def startsWith(self, prefix: str) -> bool:
+            pass
+
+    # Your Trie object will be instantiated and called as such:
+    # obj = Trie()
+    # obj.insert(word)
+    # param_2 = obj.search(word)
+    # param_3 = obj.startsWith(prefix)
+  C: |
+    typedef struct {
+
+    } Trie;
+
+    Trie* trieCreate() {
+
+    }
+
+    void trieInsert(Trie* obj, char* word) {
+
+    }
+
+    bool trieSearch(Trie* obj, char* word) {
+
+    }
+
+    bool trieStartsWith(Trie* obj, char* prefix) {
+
+    }
+
+    void trieFree(Trie* obj) {
+
+    }
+
+    /**
+     * Your Trie struct will be instantiated and called as such:
+     * Trie* obj = trieCreate();
+     * trieInsert(obj, word);
+     * bool param_2 = trieSearch(obj, word);
+     * bool param_3 = trieStartsWith(obj, prefix);
+     * trieFree(obj);
+     */
+  CPP: |
+    class Trie {
+    public:
+        Trie() {
+
+        }
+
+        void insert(string word) {
+
+        }
+
+        bool search(string word) {
+
+        }
+
+        bool startsWith(string prefix) {
+
+        }
+    };
+
+    /**
+     * Your Trie object will be instantiated and called as such:
+     * Trie* obj = new Trie();
+     * obj->insert(word);
+     * bool param_2 = obj->search(word);
+     * bool param_3 = obj->startsWith(prefix);
+     */
+  JAVASCRIPT: |
+    var Trie = function() {
+
+    };
+
+    /**
+     * @param {string} word
+     * @return {void}
+     */
+    Trie.prototype.insert = function(word) {
+
+    };
+
+    /**
+     * @param {string} word
+     * @return {boolean}
+     */
+    Trie.prototype.search = function(word) {
+
+    };
+
+    /**
+     * @param {string} prefix
+     * @return {boolean}
+     */
+    Trie.prototype.startsWith = function(prefix) {
+
+    };
+
+    /**
+     * Your Trie object will be instantiated and called as such:
+     * var obj = new Trie()
+     * obj.insert(word)
+     * var param_2 = obj.search(word)
+     * var param_3 = obj.startsWith(prefix)
+     */
+testCases:
+  - input: 'ops = ["Trie","insert","search","search","startsWith","insert","search"], args = [[],["apple"],["apple"],["app"],["app"],["app"],["app"]]'
+    expected: "[null,null,true,false,true,null,true]"
+    isHidden: false
+    isKiller: false
+  - input: 'ops = ["Trie","insert","search","startsWith"], args = [[],["hello"],["hello"],["hel"]]'
+    expected: "[null,null,true,true]"
+    isHidden: false
+    isKiller: false
+  - input: 'ops = ["Trie","insert","search","startsWith"], args = [[],["a"],["a"],["b"]]'
+    expected: "[null,null,true,false]"
+    isHidden: false
+    isKiller: false
+  - input: 'ops = ["Trie","insert","insert","search","search","startsWith"], args = [[],["apple"],["app"],["apple"],["app"],["ap"]]'
+    expected: "[null,null,null,true,true,true]"
+    isHidden: true
+    isKiller: false
+  - input: 'ops = ["Trie","insert","search","startsWith","search","startsWith"], args = [[],["ab"],["a"],["a"],["ab"],["abc"]]'
+    expected: "[null,null,false,true,true,false]"
+    isHidden: true
+    isKiller: true

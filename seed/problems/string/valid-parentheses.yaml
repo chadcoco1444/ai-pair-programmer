@@ -1,0 +1,92 @@
+title: Valid Parentheses
+slug: valid-parentheses
+difficulty: EASY
+category: ALGORITHM
+tags: [string, stack]
+concepts:
+  - name: Stack
+    relevance: 0.95
+description: |
+  给定一个只包含字符 `'('`，`')'`，`'{'`，`'}'`，`'['` 和 `']'` 的字符串 `s`，判断该字符串是否有效。
+
+  有效字符串需满足：
+  1. 左括号必须用相同类型的右括号闭合。
+  2. 左括号必须以正确的顺序闭合。
+  3. 每个右括号都有一个对应的相同类型的左括号。
+
+  **示例 1：**
+  ```
+  输入：s = "()"
+  输出：true
+  ```
+
+  **示例 2：**
+  ```
+  输入：s = "()[]{}"
+  输出：true
+  ```
+
+  **示例 3：**
+  ```
+  输入：s = "(]"
+  输出：false
+  ```
+
+  **示例 4：**
+  ```
+  输入：s = "([)]"
+  输出：false
+  ```
+
+  **约束条件：**
+  - `1 <= s.length <= 10^4`
+  - `s` 仅由括号字符 `'()[]{}'` 组成
+hints:
+  - 使用栈（Stack）数据结构，遇到左括号时将其压入栈中。
+  - 遇到右括号时，检查栈顶元素是否为对应的左括号；如果是则弹出栈顶，否则返回 false。如果栈为空但还有右括号，也返回 false。
+  - 遍历完整个字符串后，如果栈为空则说明所有括号都已正确匹配，返回 true；否则返回 false（存在未匹配的左括号）。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def isValid(self, s: str) -> bool:
+            pass
+  C: |
+    bool isValid(char* s) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        bool isValid(string s) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} s
+     * @return {boolean}
+     */
+    var isValid = function(s) {
+
+    };
+testCases:
+  - input: '"()"'
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: '"()[]{}"'
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: '"(]"'
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: '"([)]"'
+    expected: "false"
+    isHidden: true
+    isKiller: false
+  - input: '"{[]}"'
+    expected: "true"
+    isHidden: true
+    isKiller: true

@@ -16,6 +16,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.89.0",
     "@auth/prisma-adapter": "^2.9.0",
+    "@google/generative-ai": "^0.24.1",
     "@monaco-editor/react": "^4.7.0",
     "@prisma/client": "^6.5.0",
     "@skill/shared": "*",

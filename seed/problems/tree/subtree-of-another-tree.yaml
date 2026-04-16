@@ -1,0 +1,118 @@
+title: Subtree of Another Tree
+slug: subtree-of-another-tree
+difficulty: EASY
+category: ALGORITHM
+tags: [tree, dfs, string]
+concepts:
+  - name: Tree
+    relevance: 1.0
+description: |
+  給定兩棵二元樹 `root` 和 `subRoot`，請判斷 `subRoot` 是否是 `root` 的**子樹**。
+
+  如果存在 `root` 中某個節點，以該節點為根的子樹與 `subRoot` 在結構和節點值上完全相同，則認為 `subRoot` 是 `root` 的子樹。
+
+  **範例 1：**
+  ```
+  輸入：root = [3,4,5,1,2], subRoot = [4,1,2]
+  輸出：true
+  解釋：
+       3
+      / \
+     4   5       subRoot:  4
+    / \                   / \
+   1   2                 1   2
+  subRoot 是 root 的子樹（以節點 4 為根）。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]
+  輸出：false
+  解釋：root 中 4 的左子樹有額外的節點 0，結構不同。
+  ```
+
+  **限制條件：**
+  - `root` 樹中節點數量範圍為 `[1, 2000]`
+  - `subRoot` 樹中節點數量範圍為 `[1, 1000]`
+  - `-10^4 <= Node.val <= 10^4`
+hints:
+  - 對 `root` 的每個節點，判斷以它為根的子樹是否與 `subRoot` 完全相同。可以複用「Same Tree」的邏輯作為輔助函式。
+  - 遞迴主函式：若當前節點為 null 回傳 false；若 `isSameTree(root, subRoot)` 為 true 則回傳 true；否則遞迴判斷左子樹或右子樹是否包含 subRoot。
+  - 進階方法：將兩棵樹序列化為字串（加入特殊分隔符避免誤判），然後判斷 subRoot 的字串是否是 root 字串的子字串（KMP 或內建 contains）。
+starterCode:
+  PYTHON: |
+    # Definition for a binary tree node.
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    class Solution:
+        def isSubtree(self, root: TreeNode, subRoot: TreeNode) -> bool:
+            pass
+  C: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        struct TreeNode *left;
+        struct TreeNode *right;
+    };
+
+    bool isSubtree(struct TreeNode* root, struct TreeNode* subRoot) {
+
+    }
+  CPP: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    };
+
+    class Solution {
+    public:
+        bool isSubtree(TreeNode* root, TreeNode* subRoot) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for a binary tree node.
+    function TreeNode(val, left, right) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} subRoot
+     * @return {boolean}
+     */
+    var isSubtree = function(root, subRoot) {
+
+    };
+testCases:
+  - input: "root = [3,4,5,1,2], subRoot = [4,1,2]"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]"
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: "root = [1,null,1,null,1,null,1,null,1,2], subRoot = [1,null,1,2]"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "root = [1,2,3], subRoot = [1,2,3]"
+    expected: "true"
+    isHidden: true
+    isKiller: false
+  - input: "root = [1,2,2,3,4,3,4], subRoot = [2,3,4]"
+    expected: "true"
+    isHidden: true
+    isKiller: true

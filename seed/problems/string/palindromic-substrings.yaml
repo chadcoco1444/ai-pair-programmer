@@ -1,0 +1,81 @@
+title: Palindromic Substrings
+slug: palindromic-substrings
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [string, dynamic-programming]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.85
+  - name: Two Pointer
+    relevance: 0.8
+description: |
+  给定一个字符串 `s`，返回其中**回文子串的数目**。
+
+  **回文串**是指正着读和反着读都相同的字符串。**子串**是字符串中连续的字符序列。
+
+  **示例 1：**
+  ```
+  输入：s = "abc"
+  输出：3
+  解释：三个回文子串为 "a"、"b"、"c"。
+  ```
+
+  **示例 2：**
+  ```
+  输入：s = "aaa"
+  输出：6
+  解释：六个回文子串为 "a"、"a"、"a"、"aa"、"aa"、"aaa"。
+  ```
+
+  **约束条件：**
+  - `1 <= s.length <= 1000`
+  - `s` 仅由小写英文字母组成
+hints:
+  - 使用中心扩展法，以每个字符和每两个相邻字符之间为中心向两侧扩展，每成功扩展一次（即仍是回文串）就计数加一。
+  - 共有 2n-1 个中心需要检查（n 个奇数中心 + n-1 个偶数中心），每次扩展的时间复杂度为 O(n)，总体时间复杂度为 O(n²)。
+  - 也可以使用动态规划，定义 dp[i][j] 表示 s[i..j] 是否为回文子串，利用 dp[i+1][j-1] 推导 dp[i][j]，最终统计所有 dp[i][j] 为 true 的数量。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def countSubstrings(self, s: str) -> int:
+            pass
+  C: |
+    int countSubstrings(char* s) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        int countSubstrings(string s) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} s
+     * @return {number}
+     */
+    var countSubstrings = function(s) {
+
+    };
+testCases:
+  - input: '"abc"'
+    expected: "3"
+    isHidden: false
+    isKiller: false
+  - input: '"aaa"'
+    expected: "6"
+    isHidden: false
+    isKiller: false
+  - input: '"a"'
+    expected: "1"
+    isHidden: false
+    isKiller: false
+  - input: '"aba"'
+    expected: "4"
+    isHidden: true
+    isKiller: false
+  - input: '"abacaba"'
+    expected: "10"
+    isHidden: true
+    isKiller: true

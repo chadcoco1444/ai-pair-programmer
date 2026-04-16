@@ -1,0 +1,122 @@
+title: Same Tree
+slug: same-tree
+difficulty: EASY
+category: ALGORITHM
+tags: [tree, dfs, recursion]
+concepts:
+  - name: Tree
+    relevance: 1.0
+description: |
+  給定兩棵二元樹的根節點 `p` 和 `q`，請判斷這兩棵樹是否**完全相同**。
+
+  如果兩棵樹在結構上完全相同，且每個對應節點的值也相同，則認為它們是相同的。
+
+  **範例 1：**
+  ```
+  輸入：p = [1,2,3], q = [1,2,3]
+  輸出：true
+  解釋：
+    1       1
+   / \     / \
+  2   3   2   3
+  兩棵樹結構和值均相同。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：p = [1,2], q = [1,null,2]
+  輸出：false
+  解釋：兩棵樹結構不同。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：p = [1,2,1], q = [1,1,2]
+  輸出：false
+  解釋：兩棵樹結構相同，但節點值不同。
+  ```
+
+  **限制條件：**
+  - 兩棵樹的節點數量範圍均為 `[0, 100]`
+  - `-10^4 <= Node.val <= 10^4`
+hints:
+  - 使用遞迴思考：兩棵樹相同，當且僅當（1）當前根節點值相同，（2）左子樹相同，且（3）右子樹相同。
+  - 基底情形：若兩個節點都是 null，回傳 true；若只有一個是 null，回傳 false；若兩者值不相等，回傳 false。
+  - 也可以使用迭代方式，利用堆疊（Stack）同時遍歷兩棵樹，逐一比較對應節點。
+starterCode:
+  PYTHON: |
+    # Definition for a binary tree node.
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    class Solution:
+        def isSameTree(self, p: TreeNode, q: TreeNode) -> bool:
+            pass
+  C: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        struct TreeNode *left;
+        struct TreeNode *right;
+    };
+
+    bool isSameTree(struct TreeNode* p, struct TreeNode* q) {
+
+    }
+  CPP: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode() : val(0), left(nullptr), right(nullptr) {}
+        TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}
+        TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
+    };
+
+    class Solution {
+    public:
+        bool isSameTree(TreeNode* p, TreeNode* q) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for a binary tree node.
+    function TreeNode(val, left, right) {
+        this.val = (val === undefined ? 0 : val);
+        this.left = (left === undefined ? null : left);
+        this.right = (right === undefined ? null : right);
+    }
+
+    /**
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {boolean}
+     */
+    var isSameTree = function(p, q) {
+
+    };
+testCases:
+  - input: "p = [1,2,3], q = [1,2,3]"
+    expected: "true"
+    isHidden: false
+    isKiller: false
+  - input: "p = [1,2], q = [1,null,2]"
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: "p = [1,2,1], q = [1,1,2]"
+    expected: "false"
+    isHidden: false
+    isKiller: false
+  - input: "p = [], q = []"
+    expected: "true"
+    isHidden: true
+    isKiller: false
+  - input: "p = [1,2,3,4,5], q = [1,2,3,4,5]"
+    expected: "true"
+    isHidden: true
+    isKiller: true

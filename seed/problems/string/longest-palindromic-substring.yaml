@@ -1,0 +1,86 @@
+title: Longest Palindromic Substring
+slug: longest-palindromic-substring
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [string, dynamic-programming]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.85
+  - name: Two Pointer
+    relevance: 0.8
+description: |
+  给定一个字符串 `s`，返回其中**最长的回文子串**。
+
+  **回文串**是指正着读和反着读都相同的字符串。
+
+  **示例 1：**
+  ```
+  输入：s = "babad"
+  输出："bab"
+  解释："aba" 同样是符合题意的答案。
+  ```
+
+  **示例 2：**
+  ```
+  输入：s = "cbbd"
+  输出："bb"
+  ```
+
+  **示例 3：**
+  ```
+  输入：s = "a"
+  输出："a"
+  ```
+
+  **约束条件：**
+  - `1 <= s.length <= 1000`
+  - `s` 仅由数字和英文字母组成
+hints:
+  - 使用"中心扩展法"：以每个字符（以及每两个相邻字符之间的间隙）为中心向两边扩展，检查是否构成回文串，时间复杂度 O(n²)。
+  - 对于奇数长度的回文串，中心是单个字符；对于偶数长度的回文串，中心是两个相同的相邻字符。共有 2n-1 个可能的中心需要检查。
+  - 也可以使用动态规划，dp[i][j] 表示 s[i..j] 是否为回文串，状态转移方程为：dp[i][j] = (s[i] == s[j]) && dp[i+1][j-1]，记录最长回文子串的起止位置。
+starterCode:
+  PYTHON: |
+    class Solution:
+        def longestPalindrome(self, s: str) -> str:
+            pass
+  C: |
+    char* longestPalindrome(char* s) {
+
+    }
+  CPP: |
+    class Solution {
+    public:
+        string longestPalindrome(string s) {
+
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {string} s
+     * @return {string}
+     */
+    var longestPalindrome = function(s) {
+
+    };
+testCases:
+  - input: '"babad"'
+    expected: '"bab"'
+    isHidden: false
+    isKiller: false
+  - input: '"cbbd"'
+    expected: '"bb"'
+    isHidden: false
+    isKiller: false
+  - input: '"a"'
+    expected: '"a"'
+    isHidden: false
+    isKiller: false
+  - input: '"racecar"'
+    expected: '"racecar"'
+    isHidden: true
+    isKiller: false
+  - input: '"aacabdkacaa"'
+    expected: '"aca"'
+    isHidden: true
+    isKiller: true

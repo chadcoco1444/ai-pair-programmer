@@ -1,0 +1,103 @@
+title: Counting Bits
+slug: counting-bits
+difficulty: EASY
+category: ALGORITHM
+tags: [bit-manipulation, dynamic-programming]
+concepts:
+  - name: Dynamic Programming
+    relevance: 0.8
+  - name: Array
+    relevance: 0.5
+description: |
+  给你一个整数 `n`，对于 `0 <= i <= n` 中的每个 `i`，计算其二进制表示中 **`1` 的个数**，返回一个长度为 `n + 1` 的数组 `ans` 作为答案。
+
+  **示例 1：**
+  ```
+  输入：n = 2
+  输出：[0,1,1]
+  解释：
+  0 --> 0
+  1 --> 1
+  2 --> 10
+  ```
+
+  **示例 2：**
+  ```
+  输入：n = 5
+  输出：[0,1,1,2,1,2]
+  解释：
+  0 --> 0
+  1 --> 1
+  2 --> 10
+  3 --> 11
+  4 --> 100
+  5 --> 101
+  ```
+
+  **约束条件：**
+  - `0 <= n <= 10^5`
+
+  **进阶：**
+  - 很容易就能实现时间复杂度为 `O(n log n)` 的解决方案，你可以在线性时间 `O(n)` 内用一趟扫描解决此问题吗？
+  - 你能不使用任何内置函数解决此问题吗？
+
+hints:
+  - 利用动态规划思路：`dp[i]` 表示数字 i 中 1 的个数，注意观察偶数和奇数之间的规律。
+  - 对于偶数 i：`dp[i] = dp[i >> 1]`，因为右移一位不改变 1 的个数；对于奇数 i：`dp[i] = dp[i >> 1] + 1`。
+  - 也可以使用 `dp[i] = dp[i & (i-1)] + 1`，其中 `i & (i-1)` 会清除最低位的 1。
+
+starterCode:
+  PYTHON: |
+    from typing import List
+
+    class Solution:
+        def countBits(self, n: int) -> List[int]:
+            # 请在此处编写你的解法
+            pass
+  C: |
+    /**
+     * Note: The returned array must be malloced, assume caller calls free().
+     */
+    int* countBits(int n, int* returnSize) {
+        // 请在此处编写你的解法
+    }
+  CPP: |
+    #include <vector>
+    using namespace std;
+
+    class Solution {
+    public:
+        vector<int> countBits(int n) {
+            // 请在此处编写你的解法
+        }
+    };
+  JAVASCRIPT: |
+    /**
+     * @param {number} n
+     * @return {number[]}
+     */
+    var countBits = function(n) {
+        // 请在此处编写你的解法
+    };
+
+testCases:
+  - input: "2"
+    expected: "[0,1,1]"
+    isHidden: false
+    isKiller: false
+  - input: "5"
+    expected: "[0,1,1,2,1,2]"
+    isHidden: false
+    isKiller: false
+  - input: "0"
+    expected: "[0]"
+    isHidden: false
+    isKiller: false
+  - input: "10"
+    expected: "[0,1,1,2,1,2,2,3,1,2,2]"
+    isHidden: true
+    isKiller: false
+  - input: "100000"
+    expected: "100001"
+    isHidden: true
+    isKiller: true

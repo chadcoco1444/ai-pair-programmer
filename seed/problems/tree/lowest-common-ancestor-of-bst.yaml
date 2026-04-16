@@ -1,0 +1,117 @@
+title: Lowest Common Ancestor of a BST
+slug: lowest-common-ancestor-of-bst
+difficulty: MEDIUM
+category: ALGORITHM
+tags: [tree, dfs, bst]
+concepts:
+  - name: Tree
+    relevance: 1.0
+description: |
+  給定一棵二元搜索樹（BST），找到其中兩個指定節點 `p` 和 `q` 的**最近公共祖先（LCA）**。
+
+  最近公共祖先的定義為：對於兩個節點 p 和 q，在樹中最深的節點 x，使得 x 同時是 p 和 q 的祖先（節點也可以是自身的祖先）。
+
+  **範例 1：**
+  ```
+  輸入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8
+  輸出：6
+  解釋：節點 2 和節點 8 的最近公共祖先是根節點 6。
+  ```
+
+  **範例 2：**
+  ```
+  輸入：root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4
+  輸出：2
+  解釋：節點 2 和節點 4 的最近公共祖先是節點 2 本身（節點可以是自身的祖先）。
+  ```
+
+  **範例 3：**
+  ```
+  輸入：root = [2,1], p = 2, q = 1
+  輸出：2
+  ```
+
+  **限制條件：**
+  - 樹中節點數量範圍為 `[2, 10^5]`
+  - `-10^9 <= Node.val <= 10^9`
+  - 所有節點值均唯一
+  - p 和 q 均存在於 BST 中，且 p != q
+hints:
+  - 充分利用 BST 的特性：若 p 和 q 的值都小於當前節點，LCA 必定在左子樹中；若都大於當前節點，LCA 必定在右子樹中。
+  - 若 p 的值小於等於當前節點，且 q 的值大於等於當前節點（或反之），則當前節點就是 LCA，因為 p 和 q 分布在當前節點的兩側（或其中一個就是當前節點）。
+  - 這個問題可以迭代解決，不需要遞迴：從根節點開始，根據 p 和 q 的值與當前節點的大小關係，決定向左走、向右走或停止。
+starterCode:
+  PYTHON: |
+    # Definition for a binary tree node.
+    class TreeNode:
+        def __init__(self, val=0, left=None, right=None):
+            self.val = val
+            self.left = left
+            self.right = right
+
+    class Solution:
+        def lowestCommonAncestor(self, root: TreeNode, p: TreeNode, q: TreeNode) -> TreeNode:
+            pass
+  C: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        struct TreeNode *left;
+        struct TreeNode *right;
+    };
+
+    struct TreeNode* lowestCommonAncestor(struct TreeNode* root, struct TreeNode* p, struct TreeNode* q) {
+
+    }
+  CPP: |
+    // Definition for a binary tree node.
+    struct TreeNode {
+        int val;
+        TreeNode *left;
+        TreeNode *right;
+        TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+    };
+
+    class Solution {
+    public:
+        TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for a binary tree node.
+    function TreeNode(val) {
+        this.val = val;
+        this.left = this.right = null;
+    }
+
+    /**
+     * @param {TreeNode} root
+     * @param {TreeNode} p
+     * @param {TreeNode} q
+     * @return {TreeNode}
+     */
+    var lowestCommonAncestor = function(root, p, q) {
+
+    };
+testCases:
+  - input: "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 8"
+    expected: "6"
+    isHidden: false
+    isKiller: false
+  - input: "root = [6,2,8,0,4,7,9,null,null,3,5], p = 2, q = 4"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "root = [2,1], p = 2, q = 1"
+    expected: "2"
+    isHidden: false
+    isKiller: false
+  - input: "root = [6,2,8,0,4,7,9,null,null,3,5], p = 3, q = 5"
+    expected: "4"
+    isHidden: true
+    isKiller: false
+  - input: "root = [6,2,8,0,4,7,9,null,null,3,5], p = 0, q = 9"
+    expected: "6"
+    isHidden: true
+    isKiller: true

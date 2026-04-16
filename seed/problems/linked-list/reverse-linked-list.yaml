@@ -1,0 +1,110 @@
+title: Reverse Linked List
+slug: reverse-linked-list
+difficulty: EASY
+category: ALGORITHM
+tags: [linked-list, recursion]
+concepts:
+  - name: Linked List
+    relevance: 1.0
+description: |
+  給定一個單向鏈結串列的頭節點 `head`，請將整個鏈結串列反轉並回傳反轉後的頭節點。
+
+  **範例 1：**
+  ```
+  輸入：head = [1,2,3,4,5]
+  輸出：[5,4,3,2,1]
+  ```
+
+  **範例 2：**
+  ```
+  輸入：head = [1,2]
+  輸出：[2,1]
+  ```
+
+  **範例 3：**
+  ```
+  輸入：head = []
+  輸出：[]
+  ```
+
+  **限制條件：**
+  - 節點數量範圍為 `[0, 5000]`
+  - `-5000 <= Node.val <= 5000`
+
+  **進階：** 你能同時以迭代（Iterative）和遞迴（Recursive）兩種方式實作嗎？
+hints:
+  - 迭代方法：使用三個指標 `prev`、`curr`、`next`。每次將 `curr.next` 指向 `prev`，然後三個指標同步向前移動，直到 `curr` 為 null。
+  - 遞迴方法：先遞迴反轉除了頭節點以外的剩餘部分，取得新的頭節點，然後將原本頭節點的下一個節點的 `next` 指回頭節點，並將頭節點的 `next` 設為 null。
+  - 注意邊界情況：當鏈結串列為空（`head == null`）或只有一個節點時，直接回傳 `head`，不需要進行任何操作。
+starterCode:
+  PYTHON: |
+    # Definition for singly-linked list.
+    class ListNode:
+        def __init__(self, val=0, next=None):
+            self.val = val
+            self.next = next
+
+    class Solution:
+        def reverseList(self, head: ListNode) -> ListNode:
+            pass
+  C: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        struct ListNode *next;
+    };
+
+    struct ListNode* reverseList(struct ListNode* head) {
+
+    }
+  CPP: |
+    // Definition for singly-linked list.
+    struct ListNode {
+        int val;
+        ListNode *next;
+        ListNode() : val(0), next(nullptr) {}
+        ListNode(int x) : val(x), next(nullptr) {}
+        ListNode(int x, ListNode *next) : val(x), next(next) {}
+    };
+
+    class Solution {
+    public:
+        ListNode* reverseList(ListNode* head) {
+
+        }
+    };
+  JAVASCRIPT: |
+    // Definition for singly-linked list.
+    function ListNode(val, next) {
+        this.val = (val === undefined ? 0 : val);
+        this.next = (next === undefined ? null : next);
+    }
+
+    /**
+     * @param {ListNode} head
+     * @return {ListNode}
+     */
+    var reverseList = function(head) {
+
+    };
+testCases:
+  - input: "head = [1,2,3,4,5]"
+    expected: "[5,4,3,2,1]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2]"
+    expected: "[2,1]"
+    isHidden: false
+    isKiller: false
+  - input: "head = []"
+    expected: "[]"
+    isHidden: false
+    isKiller: false
+  - input: "head = [1,2,3,4,5,6,7,8,9,10]"
+    expected: "[10,9,8,7,6,5,4,3,2,1]"
+    isHidden: true
+    isKiller: false
+  - input: "head = [42]"
+    expected: "[42]"
+    isHidden: true
+    isKiller: true
