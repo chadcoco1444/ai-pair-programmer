@@ -2,7 +2,7 @@
 
 // ============================================================
 // SKILL Platform — 一鍵啟動開發環境
-// 啟動 DB + Redis + Next.js dev server
+// 啟動 DB + Redis + Executor + Next.js dev server
 // ============================================================
 
 import { execSync, spawn } from "child_process";
@@ -25,6 +25,15 @@ function sleep(ms) {
   return new Promise((r) => setTimeout(r, ms));
 }
 
+const children = [];
+
+function cleanup() {
+  for (const child of children) {
+    try { child.kill(); } catch {}
+  }
+  process.exit(0);
+}
+
 async function main() {
   console.log("==============================");
   console.log("  SKILL Platform 啟動中...");
@@ -38,7 +47,7 @@ async function main() {
   copyFileSync(resolve(ROOT, ".env"), resolve(ROOT, "apps/web/.env"));
 
   // 啟動 Docker
-  console.log("[1/2] 啟動 PostgreSQL 與 Redis...");
+  console.log("[1/3] 啟動 PostgreSQL 與 Redis...");
   run("docker compose up postgres redis -d");
 
   for (let i = 0; i < 20; i++) {
@@ -51,28 +60,53 @@ async function main() {
   }
   console.log("  ✓ 資料庫服務就緒\n");
 
+  // 啟動 Executor
+  console.log("[2/3] 啟動執行引擎 (port 4000)...");
+  const executor = spawn("npx", ["tsx", "watch", "src/server.ts"], {
+    cwd: resolve(ROOT, "services/executor"),
+    stdio: ["ignore", "pipe", "pipe"],
+    shell: true,
+    env: { ...process.env, PORT: "4000", REDIS_URL: "redis://localhost:6379" },
+  });
+  children.push(executor);
+
+  executor.stdout.on("data", (data) => {
+    const msg = data.toString().trim();
+    if (msg) console.log(`  [executor] ${msg}`);
+  });
+  executor.stderr.on("data", (data) => {
+    const msg = data.toString().trim();
+    if (msg && !msg.includes("ExperimentalWarning")) {
+      console.error(`  [executor] ${msg}`);
+    }
+  });
+
+  // 等一下讓 executor 啟動
+  await sleep(2000);
+  console.log("  ✓ 執行引擎已啟動\n");
+
   // 啟動 Next.js
-  console.log("[2/2] 啟動 Next.js...\n");
+  console.log("[3/3] 啟動 Next.js (port 3001)...\n");
   console.log("  ➜ http://localhost:3001\n");
 
-  const child = spawn("npx", ["next", "dev", "-p", "3001"], {
+  const next = spawn("npx", ["next", "dev", "-p", "3001"], {
     cwd: resolve(ROOT, "apps/web"),
     stdio: "inherit",
     shell: true,
   });
+  children.push(next);
 
-  child.on("exit", (code) => process.exit(code ?? 0));
+  next.on("exit", (code) => {
+    cleanup();
+  });
 
   // 優雅關閉
   for (const sig of ["SIGINT", "SIGTERM"]) {
-    process.on(sig, () => {
-      child.kill(sig);
-      process.exit(0);
-    });
+    process.on(sig, cleanup);
   }
 }
 
 main().catch((err) => {
   console.error("啟動失敗:", err.message);
-  process.exit(1);
+  cleanup();
 });

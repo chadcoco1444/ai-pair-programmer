@@ -35,11 +35,18 @@ export interface ExecuteResult {
 export class ExecutionClient {
   // 同步執行（等待結果）
   async executeSync(request: ExecuteRequest): Promise<ExecuteResult> {
-    const response = await fetch(`${EXECUTOR_URL}/execute/sync`, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(request),
-    });
+    let response: Response;
+    try {
+      response = await fetch(`${EXECUTOR_URL}/execute/sync`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(request),
+      });
+    } catch (error: any) {
+      throw new Error(
+        `無法連線到執行引擎（${EXECUTOR_URL}）。請確認 executor 服務已啟動：npm run dev:executor`
+      );
+    }
 
     if (!response.ok) {
       const error = await response.json();

@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@prisma/client";
-import { anthropic, AI_MODEL } from "@/lib/anthropic";
+import { anthropic, AI_MODEL, AI_AVAILABLE } from "@/lib/anthropic";
 import {
   buildSKILLPrompt,
   detectPhaseTransition,
@@ -83,8 +83,30 @@ export class SKILLOrchestrator {
 
     // 如果有題目，生成開場白
     if (params.problemId) {
-      const student = await this.getStudentProfile(params.userId);
       const problem = await this.getProblemContext(params.problemId);
+
+      if (!AI_AVAILABLE) {
+        const fallbackMessage = problem
+          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師目前不可用（請在 .env 中設定 ANTHROPIC_API_KEY 並確保有足夠額度）。你仍然可以瀏覽題目、撰寫程式碼並提交。\n\n[S] 蘇格拉底`
+          : "⚠️ AI 導師目前不可用。請在 .env 中設定 ANTHROPIC_API_KEY。";
+
+        await this.prisma.message.create({
+          data: {
+            conversationId: conversation.id,
+            role: "ASSISTANT",
+            content: fallbackMessage,
+            skillPhase: "SOCRATIC",
+          },
+        });
+
+        return {
+          conversation,
+          initialMessage: fallbackMessage,
+          phase: "SOCRATIC" as SKILLPhase,
+        };
+      }
+
+      const student = await this.getStudentProfile(params.userId);
 
       const systemPrompt = buildSKILLPrompt({
         phase: "SOCRATIC",
@@ -92,27 +114,34 @@ export class SKILLOrchestrator {
         problem,
       });
 
-      const response = await anthropic.messages.create({
-        model: AI_MODEL,
-        max_tokens: 1024,
-        system: systemPrompt,
-        messages: [
-          {
-            role: "user",
-            content: "請開始引導我解這道題。",
-          },
-        ],
-      });
+      let assistantMessage: string;
+      try {
+        const response = await anthropic.messages.create({
+          model: AI_MODEL,
+          max_tokens: 1024,
+          system: systemPrompt,
+          messages: [
+            {
+              role: "user",
+              content: "請開始引導我解這道題。",
+            },
+          ],
+        });
 
-      const assistantMessage =
-        response.content[0].type === "text" ? response.content[0].text : "";
+        assistantMessage =
+          response.content[0].type === "text" ? response.content[0].text : "";
+      } catch (error: any) {
+        assistantMessage = problem
+          ? `歡迎挑戰「${problem.title}」！\n\n**題目描述：**\n${problem.description}\n\n---\n⚠️ AI 導師暫時無法連線（${error.message}）。你仍然可以撰寫程式碼並提交。\n\n[S] 蘇格拉底`
+          : `⚠️ AI 導師暫時無法連線：${error.message}`;
+      }
 
       // 儲存系統訊息
       await this.prisma.message.create({
         data: {
           conversationId: conversation.id,
           role: "SYSTEM",
-          content: systemPrompt,
+          content: "SKILL system prompt",
           skillPhase: "SOCRATIC",
         },
       });
@@ -209,23 +238,43 @@ export class SKILLOrchestrator {
     conversationId: string;
     phase: SKILLPhase;
   }): AsyncGenerator<string> {
-    const stream = anthropic.messages.stream({
-      model: AI_MODEL,
-      max_tokens: 2048,
-      system: params.systemPrompt,
-      messages: params.messages,
-    });
+    if (!AI_AVAILABLE) {
+      const fallback = "⚠️ AI 導師目前不可用。請在 .env 中設定 ANTHROPIC_API_KEY 並確保有足夠額度。\n\n你仍然可以撰寫程式碼並提交測試。";
+      yield fallback;
+      await this.prisma.message.create({
+        data: {
+          conversationId: params.conversationId,
+          role: "ASSISTANT",
+          content: fallback,
+          skillPhase: params.phase,
+        },
+      });
+      return;
+    }
 
     let fullResponse = "";
 
-    for await (const event of stream) {
-      if (
-        event.type === "content_block_delta" &&
-        event.delta.type === "text_delta"
-      ) {
-        fullResponse += event.delta.text;
-        yield event.delta.text;
+    try {
+      const stream = anthropic.messages.stream({
+        model: AI_MODEL,
+        max_tokens: 2048,
+        system: params.systemPrompt,
+        messages: params.messages,
+      });
+
+      for await (const event of stream) {
+        if (
+          event.type === "content_block_delta" &&
+          event.delta.type === "text_delta"
+        ) {
+          fullResponse += event.delta.text;
+          yield event.delta.text;
+        }
       }
+    } catch (error: any) {
+      const errorMsg = `\n\n---\n⚠️ AI 回應中斷：${error.message}`;
+      fullResponse += errorMsg;
+      yield errorMsg;
     }
 
     // 儲存完整回應

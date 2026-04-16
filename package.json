@@ -9,6 +9,8 @@
   "scripts": {
     "setup": "node scripts/setup.mjs",
     "dev:web": "node scripts/dev.mjs",
+    "dev:executor": "cd services/executor && npx tsx watch src/server.ts",
+    "dev:all": "node scripts/dev.mjs",
     "stop": "node scripts/stop.mjs",
     "dev": "turbo dev",
     "build": "turbo build",
