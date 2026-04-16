@@ -1,0 +1,268 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ===== NextAuth.js 所需 =====
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+}
+
+// ===== 使用者 =====
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  image         String?
+  emailVerified DateTime?
+  level         Level     @default(BEGINNER)
+  xp            Int       @default(0)
+  createdAt     DateTime  @default(now())
+
+  accounts      Account[]
+  sessions      Session[]
+  submissions   Submission[]
+  conversations Conversation[]
+  progress      UserProgress[]
+  weaknesses    UserWeakness[]
+}
+
+enum Level {
+  BEGINNER
+  INTERMEDIATE
+  ADVANCED
+  EXPERT
+}
+
+// ===== 題目 =====
+model Problem {
+  id          String     @id @default(cuid())
+  title       String
+  slug        String     @unique
+  description String     @db.Text
+  difficulty  Difficulty
+  category    Category
+  starterCode Json       @default("{}")
+  hints       String[]
+  isGenerated Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+
+  tags          ProblemTag[]
+  testCases     TestCase[]
+  concepts      ProblemConcept[]
+  prerequisites ProblemPrereq[]
+  submissions   Submission[]
+}
+
+model ProblemTag {
+  id        String  @id @default(cuid())
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  tag       String
+
+  @@unique([problemId, tag])
+}
+
+enum Difficulty {
+  EASY
+  MEDIUM
+  HARD
+  EXPERT
+}
+
+enum Category {
+  ALGORITHM
+  DATA_STRUCTURE
+  SYSTEM_DESIGN
+  SYSTEM_PROGRAMMING
+  CONCURRENCY
+}
+
+model TestCase {
+  id        String  @id @default(cuid())
+  problemId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  input     String  @db.Text
+  expected  String  @db.Text
+  isHidden  Boolean @default(false)
+  isKiller  Boolean @default(false)
+}
+
+// ===== 知識圖譜 =====
+model Concept {
+  id          String   @id @default(cuid())
+  name        String   @unique
+  domain      Domain
+  description String   @db.Text
+
+  problems     ProblemConcept[]
+  parents      ConceptEdge[]  @relation("child")
+  children     ConceptEdge[]  @relation("parent")
+  userProgress UserProgress[]
+}
+
+enum Domain {
+  ALGORITHM
+  DATA_STRUCTURE
+  SYSTEM_DESIGN
+  OS_KERNEL
+  CONCURRENCY
+  NETWORKING
+  MEMORY_MANAGEMENT
+}
+
+model ConceptEdge {
+  id       String  @id @default(cuid())
+  parentId String
+  childId  String
+  parent   Concept @relation("parent", fields: [parentId], references: [id], onDelete: Cascade)
+  child    Concept @relation("child", fields: [childId], references: [id], onDelete: Cascade)
+  relation String
+
+  @@unique([parentId, childId])
+}
+
+model ProblemConcept {
+  problemId String
+  conceptId String
+  problem   Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  concept   Concept @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  relevance Float
+
+  @@id([problemId, conceptId])
+}
+
+model ProblemPrereq {
+  id              String  @id @default(cuid())
+  problemId       String
+  problem         Problem @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  prereqProblemId String
+}
+
+// ===== 使用者進度 =====
+model UserProgress {
+  id            String    @id @default(cuid())
+  userId        String
+  conceptId     String
+  user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  concept       Concept   @relation(fields: [conceptId], references: [id], onDelete: Cascade)
+  mastery       Float     @default(0)
+  attempts      Int       @default(0)
+  lastPracticed DateTime?
+
+  @@unique([userId, conceptId])
+}
+
+model UserWeakness {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  pattern   String
+  frequency Int      @default(1)
+  lastSeen  DateTime @default(now())
+  resolved  Boolean  @default(false)
+}
+
+// ===== 對話 =====
+model Conversation {
+  id        String           @id @default(cuid())
+  userId    String
+  user      User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problemId String?
+  mode      ConversationMode
+  messages  Message[]
+  createdAt DateTime         @default(now())
+}
+
+enum ConversationMode {
+  GUIDED_PRACTICE
+  SYSTEM_DESIGN
+  FREE_DISCUSSION
+  CODE_REVIEW
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role           Role
+  content        String       @db.Text
+  metadata       Json?
+  skillPhase     String?
+  createdAt      DateTime     @default(now())
+}
+
+enum Role {
+  USER
+  ASSISTANT
+  SYSTEM
+}
+
+// ===== 提交 =====
+model Submission {
+  id         String           @id @default(cuid())
+  userId     String
+  problemId  String
+  user       User             @relation(fields: [userId], references: [id], onDelete: Cascade)
+  problem    Problem          @relation(fields: [problemId], references: [id], onDelete: Cascade)
+  language   Language
+  code       String           @db.Text
+  status     SubmissionStatus
+  runtime    Int?
+  memory     Int?
+  results    Json?
+  aiAnalysis String?          @db.Text
+  createdAt  DateTime         @default(now())
+}
+
+enum Language {
+  PYTHON
+  C
+  CPP
+  JAVASCRIPT
+}
+
+enum SubmissionStatus {
+  PENDING
+  RUNNING
+  ACCEPTED
+  WRONG_ANSWER
+  TIME_LIMIT
+  MEMORY_LIMIT
+  RUNTIME_ERROR
+  COMPILE_ERROR
+}
