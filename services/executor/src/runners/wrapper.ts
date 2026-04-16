@@ -22,35 +22,67 @@ ${userCode}
 import sys, json, ast, re
 
 def _parse_leetcode_input(raw):
-    """Parse LeetCode-style input into a list of arguments."""
     raw = raw.strip()
     if not raw:
         return []
 
-    # Check if input uses "var = value" format
-    if re.match(r'^[a-zA-Z_]\\w*\\s*=', raw):
-        # Join all lines, then split by top-level ", varname ="
-        joined = " ".join(raw.split("\\n"))
-        # Split by ", varname =" pattern (look for ", word =")
-        parts = re.split(r',\\s*(?=[a-zA-Z_]\\w*\\s*=)', joined)
+    # Check for "var = value" format
+    if re.match(r'^[a-zA-Z_]', raw) and '=' in raw.split('\\n')[0]:
+        joined = ' '.join(raw.split('\\n'))
+        # Use bracket counting to split at top-level ", var ="
         args = []
-        for part in parts:
-            # Remove "varname = " prefix
-            val = re.sub(r'^[a-zA-Z_]\\w*\\s*=\\s*', '', part.strip())
-            try:
-                args.append(ast.literal_eval(val))
-            except:
-                # Try as raw string (strip quotes if present)
-                val = val.strip()
-                if (val.startswith('"') and val.endswith('"')) or \\
-                   (val.startswith("'") and val.endswith("'")):
-                    args.append(val[1:-1])
+        depth = 0
+        current = ''
+        i = 0
+        while i < len(joined):
+            c = joined[i]
+            if c in '([{':
+                depth += 1
+                current += c
+            elif c in ')]}':
+                depth -= 1
+                current += c
+            elif c == '"' or c == "'":
+                # Skip quoted string
+                quote = c
+                current += c
+                i += 1
+                while i < len(joined) and joined[i] != quote:
+                    if joined[i] == '\\\\':
+                        current += joined[i:i+2]
+                        i += 2
+                        continue
+                    current += joined[i]
+                    i += 1
+                if i < len(joined):
+                    current += joined[i]
+            elif c == ',' and depth == 0:
+                # Check if what follows is "varname ="
+                rest = joined[i+1:].lstrip()
+                if re.match(r'^[a-zA-Z_]\\w*\\s*=', rest):
+                    args.append(current.strip())
+                    current = ''
+                    i += 1
+                    continue
                 else:
-                    args.append(val)
-        return args
+                    current += c
+            else:
+                current += c
+            i += 1
+        if current.strip():
+            args.append(current.strip())
+
+        # Strip "var = " prefix and parse each value
+        parsed = []
+        for a in args:
+            val = re.sub(r'^[a-zA-Z_]\\w*\\s*=\\s*', '', a)
+            try:
+                parsed.append(ast.literal_eval(val))
+            except:
+                parsed.append(val)
+        return parsed
     else:
-        # One argument per line
-        lines = [l.strip() for l in raw.split("\\n") if l.strip()]
+        lines = [l.strip() for l in raw.split('\\n') if l.strip()]
         args = []
         for line in lines:
             try:

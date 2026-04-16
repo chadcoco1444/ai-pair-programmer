@@ -1,10 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { trpc } from "@/lib/trpc-client";
-import { CodeEditor } from "@/components/editor/code-editor";
+import { CodeEditor, type CodeEditorHandle } from "@/components/editor/code-editor";
 import { ExecutionResult } from "@/components/submission/execution-result";
 import { SubmissionHistory } from "@/components/submission/submission-history";
 import { ChatContainer } from "@/components/chat/chat-container";
@@ -40,6 +41,7 @@ export default function PracticePage() {
   const [activeTab, setActiveTab] = useState<LeftTab>("description");
   const [conversationId, setConversationId] = useState<string | null>(null);
   const [initialMessages, setInitialMessages] = useState<any[]>([]);
+  const editorRef = useRef<CodeEditorHandle>(null);
 
   const { data: problem, isLoading: problemLoading } =
     trpc.problem.getBySlug.useQuery({ slug });
@@ -92,6 +94,11 @@ export default function PracticePage() {
 
   const handleSubmit = async (code: string) => {
     await submit({ problemId: problem.id, language, code });
+  };
+
+  const handleTopRun = () => {
+    const code = editorRef.current?.getCode() ?? starterCode;
+    handleSubmit(code);
   };
 
   // ===== Left Panel Content =====
@@ -227,10 +234,9 @@ export default function PracticePage() {
       </div>
       <div className="flex-1">
         <CodeEditor
+          ref={editorRef}
           language={language}
           initialCode={starterCode}
-          onSubmit={handleSubmit}
-          onRun={handleSubmit}
           disabled={isSubmitting}
         />
       </div>
@@ -274,7 +280,36 @@ export default function PracticePage() {
   );
 
   return (
-    <div className="h-[calc(100vh-3.5rem)] bg-[#0a0a0f] p-1.5">
+    <div className="flex h-[calc(100vh-3.5rem)] flex-col bg-[#0a0a0f]">
+      {/* Top Action Bar */}
+      <div className="flex h-10 items-center justify-between border-b border-gray-800/60 bg-[#282828] px-4">
+        <div className="flex items-center gap-3">
+          <Link href="/practice" className="flex items-center gap-1.5 text-[13px] text-gray-400 hover:text-white">
+            <span>&#9776;</span> Problem List
+          </Link>
+          <span className="text-gray-600">|</span>
+          <span className="text-[13px] font-medium text-white">{problem.title}</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleTopRun}
+            disabled={isSubmitting}
+            className="flex items-center gap-1.5 rounded bg-[#333] px-3.5 py-1.5 text-[12px] font-medium text-gray-200 hover:bg-[#444] disabled:opacity-50"
+          >
+            <span className="text-green-400">&#9654;</span> Run
+          </button>
+          <button
+            onClick={handleTopRun}
+            disabled={isSubmitting}
+            className="flex items-center gap-1.5 rounded bg-green-600 px-3.5 py-1.5 text-[12px] font-medium text-white hover:bg-green-500 disabled:opacity-50"
+          >
+            <span>&#9654;</span> Submit
+          </button>
+        </div>
+      </div>
+
+      {/* Main Content */}
+      <div className="flex-1 p-1.5">
       <ResizableHorizontal
         left={leftPanel}
         right={
@@ -290,6 +325,7 @@ export default function PracticePage() {
         minLeftWidth={350}
         minRightWidth={400}
       />
+      </div>
     </div>
   );
 }

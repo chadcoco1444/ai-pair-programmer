@@ -42,8 +42,8 @@ describe("wrapPythonCode", () => {
 
   it("REGRESSION: should handle multi-arg 'var = value, var2 = value2' on single line", () => {
     const wrapped = wrapPythonCode("pass");
-    // Must split by ", varname =" pattern
-    expect(wrapped).toContain("re.split");
+    // Must use bracket counting to split at top-level commas
+    expect(wrapped).toContain("depth");
   });
 
   it("REGRESSION: should use definition order not alphabetical for method selection", () => {
@@ -107,25 +107,21 @@ describe("Python _parse_leetcode_input logic", () => {
   });
 
   it("wrapper should handle input: LeetCode var=value single line", () => {
-    // Input: 'nums = [2,7,11,15], target = 9'
-    // Expected: args = [[2,7,11,15], 9]
     const wrapped = wrapPythonCode("pass");
-    // The regex splits by ", varname ="
-    expect(wrapped).toContain("(?=[a-zA-Z_]");
+    // Uses bracket counting for top-level comma splitting
+    expect(wrapped).toContain("depth");
+    expect(wrapped).toContain("re.match");
   });
 
   it("REGRESSION: Word Search II input format", () => {
     // Input: 'board = [["o","a","a","n"],...], words = ["oath","pea","eat","rain"]'
-    // This is the exact format that caused the runtime error
-    // The wrapper must:
-    // 1. Detect "var = value" format
-    // 2. Split into board=... and words=...
-    // 3. Parse each value with ast.literal_eval
+    // Must use bracket counting to not split inside nested arrays
     const wrapped = wrapPythonCode("pass");
-    // Must handle nested brackets in split (split by ", words =" not ", " inside arrays)
-    expect(wrapped).toContain("re.split");
-    // The regex (?=[a-zA-Z_]\w*\s*=) ensures we only split before var names
-    expect(wrapped).toContain("(?=[a-zA-Z_]");
+    expect(wrapped).toContain("depth");
+    // Must detect "var = value" format
+    expect(wrapped).toContain("re.match");
+    // Must strip "var = " prefix before parsing
+    expect(wrapped).toContain("re.sub");
   });
 
   it("wrapper should handle input: string argument", () => {
