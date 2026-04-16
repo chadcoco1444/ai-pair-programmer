@@ -44,7 +44,7 @@ export class ExecutionClient {
       });
     } catch (error: any) {
       throw new Error(
-        `無法連線到執行引擎（${EXECUTOR_URL}）。請確認 executor 服務已啟動：npm run dev:executor`
+        `Cannot connect to execution engine (${EXECUTOR_URL}). Make sure to start with: npm run dev:web`
       );
     }
 
