@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc-client";
 import { ChatContainer } from "@/components/chat/chat-container";
@@ -17,6 +18,7 @@ const LANGUAGES: { value: Language; label: string }[] = [
 ];
 
 export default function PracticePage() {
+  const { status } = useSession();
   const params = useParams();
   const slug = params.slug as string;
 
@@ -30,9 +32,9 @@ export default function PracticePage() {
   const startConversation = trpc.conversation.start.useMutation();
   const { submit, isSubmitting, result } = useSubmission();
 
-  // 開始對話
+  // 開始對話（需要登入）
   useEffect(() => {
-    if (problem && !conversationId) {
+    if (problem && !conversationId && status === "authenticated") {
       startConversation
         .mutateAsync({
           problemId: problem.id,

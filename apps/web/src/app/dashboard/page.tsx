@@ -1,16 +1,33 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { trpc } from "@/lib/trpc-client";
 import { StatsOverview } from "@/components/dashboard/stats-overview";
 import { Recommendations } from "@/components/dashboard/recommendations";
 import { KnowledgeGraphViz } from "@/components/dashboard/knowledge-graph-viz";
 
 export default function DashboardPage() {
-  const { data: stats, isLoading: statsLoading } = trpc.learning.stats.useQuery();
-  const { data: recommendations, isLoading: recsLoading } = trpc.learning.recommendations.useQuery();
-  const { data: mermaid } = trpc.concept.mermaid.useQuery();
+  const { status } = useSession();
 
-  if (statsLoading) {
+  if (status === "unauthenticated") {
+    redirect("/");
+  }
+
+  const { data: stats, isLoading: statsLoading } = trpc.learning.stats.useQuery(
+    undefined,
+    { enabled: status === "authenticated" }
+  );
+  const { data: recommendations, isLoading: recsLoading } = trpc.learning.recommendations.useQuery(
+    undefined,
+    { enabled: status === "authenticated" }
+  );
+  const { data: mermaid } = trpc.concept.mermaid.useQuery(
+    undefined,
+    { enabled: status === "authenticated" }
+  );
+
+  if (status === "loading" || statsLoading) {
     return (
       <main className="mx-auto max-w-4xl p-8">
         <div className="text-gray-400">載入中...</div>

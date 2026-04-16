@@ -2,9 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { useSession } from "next-auth/react";
 import { AuthButton } from "./auth-button";
 
-const NAV_ITEMS = [
+const PUBLIC_ITEMS = [
+  { href: "/practice", label: "題庫" },
+];
+
+const AUTH_ITEMS = [
   { href: "/dashboard", label: "儀表板" },
   { href: "/practice", label: "題庫" },
   { href: "/profile", label: "個人檔案" },
@@ -12,6 +17,8 @@ const NAV_ITEMS = [
 
 export function NavBar() {
   const pathname = usePathname();
+  const { status } = useSession();
+  const navItems = status === "authenticated" ? AUTH_ITEMS : PUBLIC_ITEMS;
 
   return (
     <header className="border-b border-gray-800 bg-gray-950">
@@ -21,7 +28,7 @@ export function NavBar() {
             SKILL
           </Link>
           <div className="flex gap-4">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}

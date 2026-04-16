@@ -1,13 +1,22 @@
 "use client";
 
+import { useSession } from "next-auth/react";
+import { redirect } from "next/navigation";
 import { trpc } from "@/lib/trpc-client";
 
 export default function ProfilePage() {
-  const { data: user } = trpc.user.me.useQuery();
-  const { data: stats } = trpc.learning.stats.useQuery();
-  const { data: submissions } = trpc.submission.history.useQuery({ limit: 10 });
+  const { status } = useSession();
 
-  if (!user) {
+  if (status === "unauthenticated") {
+    redirect("/");
+  }
+
+  const enabled = status === "authenticated";
+  const { data: user } = trpc.user.me.useQuery(undefined, { enabled });
+  const { data: stats } = trpc.learning.stats.useQuery(undefined, { enabled });
+  const { data: submissions } = trpc.submission.history.useQuery({ limit: 10 }, { enabled });
+
+  if (status === "loading" || !user) {
     return (
       <main className="mx-auto max-w-4xl p-8">
         <div className="text-gray-400">載入中...</div>
