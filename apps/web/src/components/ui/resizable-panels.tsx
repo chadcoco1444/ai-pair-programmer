@@ -21,6 +21,11 @@ export function ResizableVertical({
   const [ratio, setRatio] = useState(defaultRatio);
   const isDragging = useRef(false);
 
+  // Sync ratio when defaultRatio changes (fold/unfold)
+  useEffect(() => {
+    setRatio(defaultRatio);
+  }, [defaultRatio]);
+
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
     isDragging.current = true;
@@ -92,6 +97,10 @@ export function ResizableHorizontal({
   const containerRef = useRef<HTMLDivElement>(null);
   const [ratio, setRatio] = useState(defaultRatio);
   const isDragging = useRef(false);
+
+  useEffect(() => {
+    setRatio(defaultRatio);
+  }, [defaultRatio]);
 
   const handleMouseDown = useCallback((e: React.MouseEvent) => {
     e.preventDefault();
