@@ -63,9 +63,10 @@ async function main() {
   // 啟動 Executor
   console.log("[2/3] 啟動執行引擎 (port 4000)...");
   const executorDir = resolve(ROOT, "services/executor");
+  const tsxBin = resolve(ROOT, "node_modules/.bin/tsx");
   const executor = spawn(
-    process.platform === "win32" ? "npx.cmd" : "npx",
-    ["tsx", "src/server.ts"],
+    tsxBin,
+    [resolve(executorDir, "src/server.ts")],
     {
       cwd: executorDir,
       stdio: ["ignore", "pipe", "pipe"],
