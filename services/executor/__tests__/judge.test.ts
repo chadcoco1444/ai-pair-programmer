@@ -26,6 +26,20 @@ describe("judgeTestCase", () => {
   it("輸出正確時應通過", () => {
     const result = judgeTestCase(makeTestCase(), makeRunResult());
     expect(result.passed).toBe(true);
+    expect(result.stderr).toBe("");
+  });
+
+  it("REGRESSION: should include stderr in result for runtime errors", () => {
+    const result = judgeTestCase(
+      makeTestCase(),
+      makeRunResult({
+        stdout: "",
+        stderr: "NameError: name 'collections' is not defined",
+        exitCode: 1,
+      })
+    );
+    expect(result.passed).toBe(false);
+    expect(result.stderr).toContain("NameError");
   });
 
   it("輸出錯誤時應不通過", () => {

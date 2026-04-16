@@ -8,6 +8,7 @@ interface TestResult {
   input: string;
   expected: string;
   actual: string;
+  stderr?: string;
   runtime: number;
   memory: number;
 }
@@ -114,6 +115,18 @@ export function ExecutionResult({
                   </pre>
                 </div>
               </div>
+
+              {/* Stderr (error details) */}
+              {currentResult.stderr && (
+                <div>
+                  <div className="mb-1.5 text-[12px] font-medium text-red-400">Error</div>
+                  <div className="rounded-lg bg-[#1a0000] border border-red-900/30 px-4 py-3">
+                    <pre className="text-[12px] font-mono text-red-300 whitespace-pre-wrap">
+                      {currentResult.stderr}
+                    </pre>
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </>

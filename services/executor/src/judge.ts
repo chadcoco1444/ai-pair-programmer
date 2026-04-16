@@ -17,6 +17,7 @@ export function judgeTestCase(
     input: testCase.isHidden ? "[hidden]" : testCase.input,
     expected: testCase.isHidden ? "[hidden]" : testCase.expected,
     actual: testCase.isHidden ? (actual === expected ? "[correct]" : "[wrong]") : actual,
+    stderr: runResult.stderr || "",
     runtime: runResult.runtime,
     memory: runResult.memory,
   };

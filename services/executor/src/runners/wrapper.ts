@@ -10,7 +10,13 @@
  */
 
 export function wrapPythonCode(userCode: string): string {
-  return `${userCode}
+  return `# === Auto-imported common modules ===
+import collections, heapq, itertools, functools, math, bisect, string
+from collections import defaultdict, Counter, deque, OrderedDict
+from typing import List, Optional, Tuple, Dict, Set
+from functools import lru_cache
+
+${userCode}
 
 # === Auto-generated I/O wrapper ===
 import sys, json, ast, re

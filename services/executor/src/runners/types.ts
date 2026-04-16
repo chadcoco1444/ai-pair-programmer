@@ -30,6 +30,7 @@ export interface TestCaseResult {
   input: string;
   expected: string;
   actual: string;
+  stderr: string;
   runtime: number;
   memory: number;
 }

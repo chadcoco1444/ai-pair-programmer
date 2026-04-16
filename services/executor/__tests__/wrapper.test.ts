@@ -54,6 +54,20 @@ describe("wrapPythonCode", () => {
     expect(wrapped).not.toContain("dir(_sol)");
   });
 
+  it("REGRESSION: should auto-import collections for defaultdict/Counter/deque", () => {
+    const wrapped = wrapPythonCode("pass");
+    expect(wrapped).toContain("import collections");
+    expect(wrapped).toContain("from collections import defaultdict");
+    expect(wrapped).toContain("Counter");
+    expect(wrapped).toContain("deque");
+  });
+
+  it("REGRESSION: should auto-import heapq, math, bisect", () => {
+    const wrapped = wrapPythonCode("pass");
+    expect(wrapped).toContain("import collections, heapq");
+    expect(wrapped).toContain("math");
+  });
+
   it("REGRESSION: empty output because no I/O wrapper was added", () => {
     const wrapped = wrapPythonCode("class Solution:\n    def isValid(self, s): return True");
     expect(wrapped).toContain("print(_format_result");
