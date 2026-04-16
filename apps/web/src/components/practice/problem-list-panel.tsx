@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { useSession } from "next-auth/react";
 import { trpc } from "@/lib/trpc-client";
 
 const DIFF_COLORS: Record<string, string> = {
@@ -25,7 +26,17 @@ interface ProblemListPanelProps {
 
 export function ProblemListPanel({ currentSlug, onClose }: ProblemListPanelProps) {
   const [search, setSearch] = useState("");
+  const { status } = useSession();
   const { data: problems } = trpc.problem.list.useQuery({});
+  const { data: submissions } = trpc.submission.history.useQuery(
+    { limit: 50 },
+    { enabled: status === "authenticated" }
+  );
+
+  // Build set of accepted problem IDs
+  const solvedIds = new Set(
+    submissions?.filter((s) => s.status === "ACCEPTED").map((s) => s.problem.slug) ?? []
+  );
 
   const filtered = problems?.filter((p) =>
     p.title.toLowerCase().includes(search.toLowerCase())
@@ -39,7 +50,9 @@ export function ProblemListPanel({ currentSlug, onClose }: ProblemListPanelProps
         <div className="flex h-11 items-center justify-between border-b border-gray-700/50 px-4">
           <div className="flex items-center gap-2">
             <span className="text-[14px] font-semibold text-white">Problem List</span>
-            <span className="text-[12px] text-gray-500">{problems?.length ?? 0} problems</span>
+            <span className="text-[12px] text-gray-500">
+              {solvedIds.size}/{problems?.length ?? 0} Solved
+            </span>
           </div>
           <button
             onClick={onClose}
@@ -66,6 +79,7 @@ export function ProblemListPanel({ currentSlug, onClose }: ProblemListPanelProps
         <div className="flex-1 overflow-y-auto">
           {filtered?.map((p, i) => {
             const isCurrent = p.slug === currentSlug;
+            const solved = solvedIds.has(p.slug);
             return (
               <Link
                 key={p.id}
@@ -78,7 +92,15 @@ export function ProblemListPanel({ currentSlug, onClose }: ProblemListPanelProps
                 } ${i % 2 === 0 ? "" : "bg-[#1e1e1e]/50"}`}
               >
                 <div className="flex items-center gap-2.5 min-w-0">
-                  <span className="text-gray-500 w-5 text-right shrink-0">{i + 1}.</span>
+                  <span className="w-5 shrink-0 text-center">
+                    {solved ? (
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="#4ade80" strokeWidth="2">
+                        <polyline points="3,8 6.5,11.5 13,5" />
+                      </svg>
+                    ) : (
+                      <span className="text-gray-600">{i + 1}.</span>
+                    )}
+                  </span>
                   <span className="truncate">{p.title}</span>
                 </div>
                 <span className={`shrink-0 text-[12px] font-medium ${DIFF_COLORS[p.difficulty] ?? "text-gray-400"}`}>
