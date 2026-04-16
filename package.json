@@ -7,13 +7,18 @@
     "services/*"
   ],
   "scripts": {
+    "setup": "bash scripts/setup.sh",
+    "dev:web": "bash scripts/dev.sh",
+    "stop": "bash scripts/stop.sh",
     "dev": "turbo dev",
     "build": "turbo build",
     "test": "turbo test",
     "lint": "turbo lint",
     "db:push": "cd apps/web && npx prisma db push",
     "db:generate": "cd apps/web && npx prisma generate",
-    "db:studio": "cd apps/web && npx prisma studio"
+    "db:seed": "cd apps/web && npx prisma db seed",
+    "db:studio": "cd apps/web && npx prisma studio",
+    "db:reset": "cd apps/web && npx prisma db push --force-reset && npx prisma db seed"
   },
   "devDependencies": {
     "turbo": "^2.5.0"
