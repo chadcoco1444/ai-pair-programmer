@@ -36,9 +36,9 @@ description: |
   - `-10 <= nums[i] <= 10`
   - The product of any subarray of `nums` is guaranteed to fit in a **32-bit integer**
 hints:
-  - This problem is more complex than Maximum Subarray because a negative times a negative becomes positive. So you need to track not only the current maximum but also the current minimum.
-  - Maintain `maxProd` (the maximum product of the current subarray) and `minProd` (the minimum product of the current subarray). For each new element, the new maximum could be one of: `nums[i]`, `maxProd * nums[i]`, or `minProd * nums[i]`.
-  - When you encounter 0, the current product resets to zero, effectively starting fresh from the next element. When you encounter a negative number, the max and min swap — be careful about the update order (save the old `maxProd` before updating).
+  - "This problem is more complex than Maximum Subarray because a negative times a negative becomes positive. So you need to track not only the current maximum but also the current minimum."
+  - "Maintain maxProd (the maximum product of the current subarray) and minProd (the minimum product of the current subarray). For each new element, the new maximum could be one of: nums[i], maxProd * nums[i], or minProd * nums[i]."
+  - "When you encounter 0, the current product resets to zero, effectively starting fresh from the next element. When you encounter a negative number, the max and min swap — be careful about the update order (save the old maxProd before updating)."
 starterCode:
   PYTHON: |
     class Solution:

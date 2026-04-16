@@ -30,9 +30,9 @@ description: |
 
   **Follow up:** Can you solve it in O(1) extra space complexity? (The output array does not count as extra space.)
 hints:
-  - For answer[i], it is the product of all elements to the left of nums[i] multiplied by the product of all elements to the right. Can you compute these in two separate passes?
-  - First pass left to right: build a prefix array where prefix[i] = nums[0] * nums[1] * ... * nums[i-1]. Second pass right to left: use a single variable to accumulate the suffix product.
-  - Fill each position with its left prefix product in one pass, then multiply the right suffix product from right to left in a second pass. Only two O(n) traversals are needed, with a single variable for the suffix.
+  - "For answer[i], it is the product of all elements to the left of nums[i] multiplied by the product of all elements to the right. Can you compute these in two separate passes?"
+  - "First pass left to right: build a prefix array where prefix[i] = nums[0] * nums[1] * ... * nums[i-1]. Second pass right to left: use a single variable to accumulate the suffix product."
+  - "Fill each position with its left prefix product in one pass, then multiply the right suffix product from right to left in a second pass. Only two O(n) traversals are needed, with a single variable for the suffix."
 starterCode:
   PYTHON: |
     class Solution:

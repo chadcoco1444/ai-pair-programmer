@@ -34,9 +34,9 @@ description: |
   - `-100 <= Node.val <= 100`
   - Both `list1` and `list2` are sorted in non-decreasing order
 hints:
-  - Use a Dummy Node technique: create a `dummy` node as the starting point of the merged list, and maintain a `curr` pointer tracking the current tail. This avoids special-casing the head node.
-  - Compare the current node values of both lists; attach the smaller node to `curr.next`, then advance the corresponding list pointer and the `curr` pointer. Repeat until one list is empty.
-  - Recursive approach: if `list1.val <= list2.val`, set `list1.next = merge(list1.next, list2)` and return `list1`; otherwise handle symmetrically. Base case: return the non-null list when one list is empty.
+  - "Use a Dummy Node technique: create a dummy node as the starting point of the merged list, and maintain a curr pointer tracking the current tail. This avoids special-casing the head node."
+  - "Compare the current node values of both lists; attach the smaller node to curr.next, then advance the corresponding list pointer and the curr pointer. Repeat until one list is empty."
+  - "Recursive approach: if list1.val <= list2.val, set list1.next = merge(list1.next, list2) and return list1; otherwise handle symmetrically. Base case: return the non-null list when one list is empty."
 starterCode:
   PYTHON: |
     # Definition for singly-linked list.

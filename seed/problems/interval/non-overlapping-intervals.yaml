@@ -41,9 +41,9 @@ description: |
   - `intervals[i].length == 2`
   - `-5 * 10^4 <= starti < endi <= 5 * 10^4`
 hints:
-  - Equivalent transformation: "minimum removals" = total intervals - **maximum number of non-overlapping intervals you can keep**. The problem reduces to finding the maximum number of non-overlapping intervals.
-  - Use a **greedy strategy**: sort intervals by their **end time** in ascending order. Always pick the interval that ends earliest, leaving the most room for subsequent intervals. Select an interval if its start time is **greater than or equal to** the end time of the last selected interval.
-  - After sorting, maintain an `end` variable (initially negative infinity). Iterate over each interval: if `start >= end`, keep the interval and update `end` to the current end value; otherwise skip it (i.e., remove it) and increment the count.
+  - "Equivalent transformation: minimum removals = total intervals - maximum number of non-overlapping intervals you can keep. The problem reduces to finding the maximum number of non-overlapping intervals."
+  - "Use a greedy strategy: sort intervals by their end time in ascending order. Always pick the interval that ends earliest, leaving the most room for subsequent intervals. Select an interval if its start time is greater than or equal to the end time of the last selected interval."
+  - "After sorting, maintain an end variable (initially negative infinity). Iterate over each interval: if start >= end, keep the interval and update end to the current end value; otherwise skip it (i.e., remove it) and increment the count."
 starterCode:
   PYTHON: |
     class Solution:

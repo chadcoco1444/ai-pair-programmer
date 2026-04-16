@@ -34,9 +34,9 @@ description: |
   - `0 <= nums[i] <= 400`
 
 hints:
-  - For each house you have two choices: rob it or skip it. If you rob the current house, you cannot rob the previous one; if you skip it, the previous one may or may not have been robbed.
-  - Define `dp[i]` as the maximum amount robbed from the first i houses. The transition is `dp[i] = max(dp[i-1], dp[i-2] + nums[i])`.
-  - Optimize space by using just two variables instead of an array: `prev2` for dp[i-2] and `prev1` for dp[i-1], updating them in a rolling fashion.
+  - "For each house you have two choices: rob it or skip it. If you rob the current house, you cannot rob the previous one; if you skip it, the previous one may or may not have been robbed."
+  - "Define dp[i] as the maximum amount robbed from the first i houses. The transition is dp[i] = max(dp[i-1], dp[i-2] + nums[i])."
+  - "Optimize space by using just two variables instead of an array: prev2 for dp[i-2] and prev1 for dp[i-1], updating them in a rolling fashion."
 
 starterCode:
   PYTHON: |

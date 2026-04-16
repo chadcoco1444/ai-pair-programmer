@@ -39,9 +39,9 @@ description: |
   - `0 <= strs[i].length <= 200`
   - `strs[i]` contains any of the 256 ASCII characters except `','`
 hints:
-  - Simply joining strings with a delimiter is insufficient because strings may contain that delimiter. A robust approach is "length-prefix encoding": encode each string as `"<length>#<string content>"`.
-  - To encode: for each string `s`, append `str(len(s)) + '#' + s` to the result. To decode: read the number before `'#'` to get the length, then extract that many characters following it.
-  - When decoding, maintain a pointer `i`. Find the next `'#'`, parse the number before it as length `L`, then read `L` characters after `'#'` as the original string. Repeat until the entire encoded string is consumed.
+  - "Simply joining strings with a delimiter is insufficient because strings may contain that delimiter. A robust approach is length-prefix encoding: encode each string as <length>#<string content>."
+  - "To encode: for each string s, append str(len(s)) + '#' + s to the result. To decode: read the number before '#' to get the length, then extract that many characters following it."
+  - "When decoding, maintain a pointer i. Find the next '#', parse the number before it as length L, then read L characters after '#' as the original string. Repeat until the entire encoded string is consumed."
 starterCode:
   PYTHON: |
     from typing import List

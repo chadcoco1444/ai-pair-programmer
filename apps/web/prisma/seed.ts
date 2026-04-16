@@ -99,7 +99,7 @@ async function seedProblems() {
           difficulty: data.difficulty as any,
           category: data.category as any,
           starterCode: data.starterCode || {},
-          hints: data.hints || [],
+          hints: (data.hints || []).map((h: any) => typeof h === "string" ? h : JSON.stringify(h)),
         },
         create: {
           title: data.title,
@@ -108,7 +108,7 @@ async function seedProblems() {
           difficulty: data.difficulty as any,
           category: data.category as any,
           starterCode: data.starterCode || {},
-          hints: data.hints || [],
+          hints: (data.hints || []).map((h: any) => typeof h === "string" ? h : JSON.stringify(h)),
         },
       });
 

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Editor from "@monaco-editor/react";
 
 const LANGUAGE_MAP: Record<string, string> = {
@@ -27,47 +27,52 @@ export function CodeEditor({
 }: CodeEditorProps) {
   const [code, setCode] = useState(initialCode ?? "");
 
+  useEffect(() => {
+    setCode(initialCode ?? "");
+  }, [initialCode]);
+
   return (
-    <div className="my-4 overflow-hidden rounded-lg border border-gray-700">
-      <div className="flex items-center justify-between bg-gray-800 px-3 py-2">
-        <span className="text-xs text-gray-400">
-          {LANGUAGE_MAP[language] ?? language}
-        </span>
-        <div className="flex gap-2">
-          {onRun && (
-            <button
-              onClick={() => onRun(code)}
-              disabled={disabled}
-              className="rounded bg-gray-700 px-3 py-1 text-xs text-white hover:bg-gray-600 disabled:opacity-50"
-            >
-              執行
-            </button>
-          )}
+    <div className="flex h-full flex-col">
+      {/* Toolbar */}
+      <div className="flex items-center justify-end gap-2 bg-gray-900 px-3 py-1.5">
+        {onRun && (
           <button
-            onClick={() => onSubmit(code)}
+            onClick={() => onRun(code)}
             disabled={disabled}
-            className="rounded bg-green-600 px-3 py-1 text-xs text-white hover:bg-green-500 disabled:opacity-50"
+            className="flex items-center gap-1 rounded bg-gray-700 px-3 py-1.5 text-xs font-medium text-white hover:bg-gray-600 disabled:opacity-50"
           >
-            提交
+            <span>&#9654;</span> Run
           </button>
-        </div>
+        )}
+        <button
+          onClick={() => onSubmit(code)}
+          disabled={disabled}
+          className="flex items-center gap-1 rounded bg-green-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-green-500 disabled:opacity-50"
+        >
+          <span>&#9654;</span> Submit
+        </button>
       </div>
-      <Editor
-        height="300px"
-        language={LANGUAGE_MAP[language] ?? "plaintext"}
-        value={code}
-        onChange={(value) => setCode(value ?? "")}
-        theme="vs-dark"
-        options={{
-          minimap: { enabled: false },
-          fontSize: 14,
-          lineNumbers: "on",
-          scrollBeyondLastLine: false,
-          automaticLayout: true,
-          tabSize: 4,
-          wordWrap: "on",
-        }}
-      />
+
+      {/* Editor */}
+      <div className="flex-1">
+        <Editor
+          height="100%"
+          language={LANGUAGE_MAP[language] ?? "plaintext"}
+          value={code}
+          onChange={(value) => setCode(value ?? "")}
+          theme="vs-dark"
+          options={{
+            minimap: { enabled: false },
+            fontSize: 14,
+            lineNumbers: "on",
+            scrollBeyondLastLine: false,
+            automaticLayout: true,
+            tabSize: 4,
+            wordWrap: "on",
+            padding: { top: 12 },
+          }}
+        />
+      </div>
     </div>
   );
 }

@@ -42,9 +42,9 @@ description: |
   - Can you do it without using any built-in function?
 
 hints:
-  - Use dynamic programming: `dp[i]` represents the number of 1's in `i`. Observe the pattern between even and odd numbers.
-  - For even `i`: `dp[i] = dp[i >> 1]`, because right-shifting by one does not change the count of 1's; for odd `i`: `dp[i] = dp[i >> 1] + 1`.
-  - You can also use `dp[i] = dp[i & (i-1)] + 1`, where `i & (i-1)` clears the lowest set bit.
+  - "Use dynamic programming: dp[i] represents the number of 1's in i. Observe the pattern between even and odd numbers."
+  - "For even i: dp[i] = dp[i >> 1], because right-shifting by one does not change the count of 1's; for odd i: dp[i] = dp[i >> 1] + 1."
+  - "You can also use dp[i] = dp[i & (i-1)] + 1, where i & (i-1) clears the lowest set bit."
 
 starterCode:
   PYTHON: |

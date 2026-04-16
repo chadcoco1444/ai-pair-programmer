@@ -43,9 +43,9 @@ description: |
   - `text1` and `text2` consist of only lowercase English characters.
 
 hints:
-  - Build a 2D DP table: `dp[i][j]` represents the length of the longest common subsequence of `text1[0..i-1]` and `text2[0..j-1]`.
-  - Transition: if `text1[i-1] == text2[j-1]`, then `dp[i][j] = dp[i-1][j-1] + 1`; otherwise `dp[i][j] = max(dp[i-1][j], dp[i][j-1])`.
-  - Initialize row 0 and column 0 to all zeros (the LCS of an empty string with any string is 0); the final answer is `dp[m][n]`.
+  - "Build a 2D DP table: dp[i][j] represents the length of the longest common subsequence of text1[0..i-1] and text2[0..j-1]."
+  - "Transition: if text1[i-1] == text2[j-1], then dp[i][j] = dp[i-1][j-1] + 1; otherwise dp[i][j] = max(dp[i-1][j], dp[i][j-1])."
+  - "Initialize row 0 and column 0 to all zeros (the LCS of an empty string with any string is 0); the final answer is dp[m][n]."
 
 starterCode:
   PYTHON: |

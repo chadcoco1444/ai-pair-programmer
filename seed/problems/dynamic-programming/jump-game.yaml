@@ -34,9 +34,9 @@ description: |
   - `0 <= nums[i] <= 10^5`
 
 hints:
-  - Greedy approach: maintain a variable `maxReach` representing the farthest index reachable so far. As you iterate, update `maxReach = max(maxReach, i + nums[i])`; if any index `i > maxReach`, that position cannot be reached.
-  - Iterate left to right, checking at each step whether the current index is within reach (`i <= maxReach`). If not, return false immediately; if `maxReach >= n-1`, return true.
-  - DP approach: `dp[i]` indicates whether index i is reachable. Start with `dp[0] = true`; for each reachable i, mark all positions up to `i + nums[i]` as true.
+  - "Greedy approach: maintain a variable maxReach representing the farthest index reachable so far. As you iterate, update maxReach = max(maxReach, i + nums[i]); if any index i > maxReach, that position cannot be reached."
+  - "Iterate left to right, checking at each step whether the current index is within reach (i <= maxReach). If not, return false immediately; if maxReach >= n-1, return true."
+  - "DP approach: dp[i] indicates whether index i is reachable. Start with dp[0] = true; for each reachable i, mark all positions up to i + nums[i] as true."
 
 starterCode:
   PYTHON: |
