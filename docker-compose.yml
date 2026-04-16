@@ -6,7 +6,7 @@ services:
       POSTGRES_PASSWORD: skill_password
       POSTGRES_DB: skill_platform
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
@@ -32,7 +32,7 @@ services:
       context: .
       dockerfile: apps/web/Dockerfile
     ports:
-      - "3000:3000"
+      - "3001:3000"
     environment:
       DATABASE_URL: "postgresql://skill:skill_password@postgres:5432/skill_platform?schema=public"
       REDIS_URL: "redis://redis:6379"
