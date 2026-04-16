@@ -1,0 +1,43 @@
+"use client";
+
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { AuthButton } from "./auth-button";
+
+const NAV_ITEMS = [
+  { href: "/dashboard", label: "儀表板" },
+  { href: "/practice", label: "題庫" },
+  { href: "/profile", label: "個人檔案" },
+];
+
+export function NavBar() {
+  const pathname = usePathname();
+
+  return (
+    <header className="border-b border-gray-800 bg-gray-950">
+      <nav className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
+        <div className="flex items-center gap-6">
+          <Link href="/" className="text-lg font-bold">
+            SKILL
+          </Link>
+          <div className="flex gap-4">
+            {NAV_ITEMS.map((item) => (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`text-sm transition-colors ${
+                  pathname === item.href
+                    ? "text-white"
+                    : "text-gray-400 hover:text-gray-200"
+                }`}
+              >
+                {item.label}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <AuthButton />
+      </nav>
+    </header>
+  );
+}
