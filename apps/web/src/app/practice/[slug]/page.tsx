@@ -235,8 +235,8 @@ export default function PracticePage() {
           titleColor="text-green-400"
           className="flex-1"
         >
-          {/* Language Selector + Buttons */}
-          <div className="flex items-center justify-between bg-[#252525] px-3 py-1.5">
+          {/* Language Selector */}
+          <div className="flex items-center bg-[#252525] px-3 py-1.5">
             <select
               value={language}
               onChange={(e) => setLanguage(e.target.value as Language)}
@@ -246,25 +246,9 @@ export default function PracticePage() {
                 <option key={l.value} value={l.value}>{l.label}</option>
               ))}
             </select>
-            <div className="flex gap-2">
-              <button
-                onClick={() => handleSubmit(starterCode)}
-                disabled={isSubmitting}
-                className="rounded bg-[#333] px-3 py-1 text-[12px] text-gray-300 hover:bg-[#444] disabled:opacity-50"
-              >
-                ▶ Run
-              </button>
-              <button
-                onClick={() => handleSubmit(starterCode)}
-                disabled={isSubmitting}
-                className="rounded bg-green-600 px-3 py-1 text-[12px] font-medium text-white hover:bg-green-500 disabled:opacity-50"
-              >
-                Submit
-              </button>
-            </div>
           </div>
 
-          {/* Editor */}
+          {/* Editor (Run/Submit buttons are inside CodeEditor) */}
           <div className="flex-1">
             <CodeEditor
               language={language}
