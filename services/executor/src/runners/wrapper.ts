@@ -22,9 +22,9 @@ def _parse_input(raw):
     # Try to parse as Python expression directly (handles lists, tuples, etc.)
     # Input lines can be: one value per line, or "var = val" per line,
     # or a single line with "var1 = val1, var2 = val2"
-    lines = raw.split('\\n')
+    lines = raw.splitlines()
     # If single line with multiple "var = val", split by top-level commas
-    if len(lines) == 1 and '=' in lines[0]:
+    if len(lines) == 1 and _looks_like_assignment(lines[0].strip()):
         raw_line = lines[0].strip()
         # Use bracket-aware splitting
         parts = _split_top_level(raw_line)
@@ -37,6 +37,26 @@ def _parse_input(raw):
             continue
         args.append(_parse_value(line))
     return args
+
+def _looks_like_assignment(s):
+    """Check if string starts with 'varname = ' (without regex to avoid escaping issues)."""
+    j = 0
+    # Skip identifier: [a-zA-Z_][a-zA-Z0-9_]*
+    if j < len(s) and (s[j].isalpha() or s[j] == '_'):
+        j += 1
+        while j < len(s) and (s[j].isalnum() or s[j] == '_'):
+            j += 1
+    else:
+        return False
+    # Skip spaces
+    while j < len(s) and s[j] == ' ':
+        j += 1
+    # Must have = but not ==
+    if j < len(s) and s[j] == '=':
+        if j + 1 < len(s) and s[j+1] == '=':
+            return False
+        return True
+    return False
 
 def _split_top_level(s):
     """Split 'var1 = val1, var2 = val2' by top-level commas between assignments."""
@@ -65,8 +85,7 @@ def _split_top_level(s):
         elif c == ',' and depth == 0:
             # Check if next non-space is a variable name followed by =
             rest = s[i+1:].lstrip()
-            import re as _re
-            if _re.match(r'^[a-zA-Z_]\\w*\\s*=(?!=)', rest):
+            if _looks_like_assignment(rest):
                 parts.append(current.strip())
                 current = ''
                 i += 1
@@ -84,14 +103,12 @@ def _parse_value(s):
     """Parse 'var = value' or just 'value'."""
     s = s.strip()
     # Strip "varname = " prefix if present
-    import re as _re
-    m = _re.match(r'^[a-zA-Z_]\\w*\\s*=\\s*', s)
-    if m:
-        s = s[m.end():]
+    if _looks_like_assignment(s):
+        eq_pos = s.index('=')
+        s = s[eq_pos+1:].strip()
     try:
         return ast.literal_eval(s)
     except:
-        # Return as string
         return s
 
 def _format_result(r):
