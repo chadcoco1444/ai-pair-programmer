@@ -6,6 +6,7 @@ import { useParams } from "next/navigation";
 import { trpc } from "@/lib/trpc-client";
 import { CodeEditor } from "@/components/editor/code-editor";
 import { ExecutionResult } from "@/components/submission/execution-result";
+import { SubmissionHistory } from "@/components/submission/submission-history";
 import { ChatContainer } from "@/components/chat/chat-container";
 import { MacWindow } from "@/components/ui/mac-window";
 import { ResizableHorizontal, ResizableVertical } from "@/components/ui/resizable-panels";
@@ -200,7 +201,7 @@ export default function PracticePage() {
         )}
 
         {activeTab === "submissions" && (
-          <div className="p-5 text-[13px] text-gray-500">No submissions yet.</div>
+          <SubmissionHistory problemId={problem.id} />
         )}
       </div>
     </MacWindow>
