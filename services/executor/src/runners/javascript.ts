@@ -8,15 +8,29 @@ export async function runJavaScript(config: RunConfig): Promise<RunResult> {
 
   // Wrap user code with I/O driver
   const wrappedCode = wrapJavaScriptCode(config.code);
+
+  // Base64 encode to avoid shell escaping issues
   const codeB64 = Buffer.from(wrappedCode).toString("base64");
+
+  // Use Node.js to decode base64 → write file → then run it as child process
+  const bootstrapCmd = [
+    `const fs = require('fs');`,
+    `const { execSync } = require('child_process');`,
+    `const code = Buffer.from('${codeB64}', 'base64').toString('utf-8');`,
+    `fs.writeFileSync('/tmp/solution.js', code);`,
+    `try {`,
+    `  const result = execSync('node /tmp/solution.js', { input: fs.readFileSync('/dev/stdin'), stdio: ['pipe', 'pipe', 'pipe'] });`,
+    `  process.stdout.write(result);`,
+    `} catch (e) {`,
+    `  if (e.stdout) process.stdout.write(e.stdout);`,
+    `  if (e.stderr) process.stderr.write(e.stderr);`,
+    `  process.exit(e.status || 1);`,
+    `}`,
+  ].join("\n");
 
   return runInSandbox({
     image: lang.image,
-    command: [
-      "sh",
-      "-c",
-      `printf '%s' "${codeB64}" | base64 -d > /tmp/solution.js && ${lang.runCmd("/tmp/solution.js")}`,
-    ],
+    command: ["node", "-e", bootstrapCmd],
     stdin: config.input,
     timeout: config.timeout,
     memoryLimit: config.memoryLimit,
