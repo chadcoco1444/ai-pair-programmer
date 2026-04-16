@@ -1,0 +1,189 @@
+# 知識圖譜種子資料
+# 每個概念包含：name, domain, description
+# 邊定義在 edges 區段
+
+concepts:
+  # ===== 演算法 =====
+  - name: Array
+    domain: ALGORITHM
+    description: 陣列是最基礎的資料結構，支援隨機存取。理解陣列操作是所有演算法的基礎。
+
+  - name: Two Pointer
+    domain: ALGORITHM
+    description: 雙指標技巧，使用兩個指標從不同方向遍歷陣列，常用於排序陣列的搜尋問題。
+
+  - name: Sliding Window
+    domain: ALGORITHM
+    description: 滑動窗口技巧，維護一個動態大小的窗口在陣列上滑動，適用於子陣列/子字串問題。
+
+  - name: Binary Search
+    domain: ALGORITHM
+    description: 二分搜尋，在有序資料中以 O(log n) 時間找到目標值。可擴展到搜尋答案空間。
+
+  - name: Sorting
+    domain: ALGORITHM
+    description: 排序演算法，包括比較排序（快速排序、合併排序）和非比較排序（計數排序、基數排序）。
+
+  - name: Divide and Conquer
+    domain: ALGORITHM
+    description: 分治法，將問題分解為子問題，遞迴求解後合併。合併排序和快速排序是經典範例。
+
+  - name: Greedy
+    domain: ALGORITHM
+    description: 貪心法，每一步都選擇局部最優解。需要證明局部最優能導致全域最優。
+
+  - name: Dynamic Programming
+    domain: ALGORITHM
+    description: 動態規劃，透過記錄子問題的解來避免重複計算。適用於具有最優子結構和重疊子問題的問題。
+
+  - name: Backtracking
+    domain: ALGORITHM
+    description: 回溯法，系統性地搜尋所有可能的解，在發現不可行時回退。常用於排列、組合、棋盤問題。
+
+  # ===== 資料結構 =====
+  - name: Hash Table
+    domain: DATA_STRUCTURE
+    description: 雜湊表，提供平均 O(1) 的插入、刪除、查詢。理解雜湊函數和碰撞處理是關鍵。
+
+  - name: Stack
+    domain: DATA_STRUCTURE
+    description: 堆疊，後進先出（LIFO）。常用於括號匹配、表達式求值、DFS 迭代實作。
+
+  - name: Monotonic Stack
+    domain: DATA_STRUCTURE
+    description: 單調棧，維護一個單調遞增或遞減的棧。用於找到每個元素的下一個更大/更小元素。
+
+  - name: Queue
+    domain: DATA_STRUCTURE
+    description: 佇列，先進先出（FIFO）。BFS 的基礎資料結構。
+
+  - name: Linked List
+    domain: DATA_STRUCTURE
+    description: 鏈結串列，動態大小的線性資料結構。理解指標操作是系統程式設計的基礎。
+
+  - name: Tree
+    domain: DATA_STRUCTURE
+    description: 樹是一種階層式資料結構。二元樹、BST、AVL 樹是常見變體。
+
+  - name: Graph
+    domain: DATA_STRUCTURE
+    description: 圖由節點和邊組成。BFS 和 DFS 是基礎遍歷演算法。
+
+  - name: Heap
+    domain: DATA_STRUCTURE
+    description: 堆積（優先佇列），支援 O(log n) 的插入和取出最大/最小值。用於 Top-K 問題和排程。
+
+  # ===== 系統設計 =====
+  - name: CAP Theorem
+    domain: SYSTEM_DESIGN
+    description: CAP 定理指出分散式系統最多只能同時滿足一致性、可用性、分區容忍中的兩個。
+
+  - name: Load Balancing
+    domain: SYSTEM_DESIGN
+    description: 負載均衡，將請求分散到多個伺服器。常見策略有輪詢、最少連接、一致性雜湊。
+
+  - name: Caching
+    domain: SYSTEM_DESIGN
+    description: 快取策略，在記憶體中儲存常用資料以減少延遲。需要考慮快取失效策略（LRU、LFU、TTL）。
+
+  - name: Rate Limiting
+    domain: SYSTEM_DESIGN
+    description: 速率限制，保護系統免受過多請求。常見演算法有令牌桶、漏桶、固定窗口、滑動窗口。
+
+  # ===== 系統程式設計 =====
+  - name: Memory Management
+    domain: MEMORY_MANAGEMENT
+    description: 記憶體管理，包括動態記憶體分配（malloc/free）、記憶體對齊、記憶體池。
+
+  - name: Thread Synchronization
+    domain: CONCURRENCY
+    description: 執行緒同步，使用互斥鎖、信號量、條件變數來協調多個執行緒的存取。
+
+  - name: Lock-free Programming
+    domain: CONCURRENCY
+    description: 無鎖程式設計，使用原子操作（CAS）實現不需要鎖的併發資料結構。
+
+  - name: Process Communication
+    domain: OS_KERNEL
+    description: 行程間通訊（IPC），包括管道、共享記憶體、訊息佇列、信號。
+
+edges:
+  # 演算法前置關係
+  - parent: Array
+    child: Two Pointer
+    relation: prerequisite
+
+  - parent: Array
+    child: Sliding Window
+    relation: prerequisite
+
+  - parent: Two Pointer
+    child: Sliding Window
+    relation: related
+
+  - parent: Array
+    child: Binary Search
+    relation: prerequisite
+
+  - parent: Binary Search
+    child: Divide and Conquer
+    relation: prerequisite
+
+  - parent: Array
+    child: Sorting
+    relation: prerequisite
+
+  - parent: Sorting
+    child: Divide and Conquer
+    relation: related
+
+  - parent: Dynamic Programming
+    child: Greedy
+    relation: related
+
+  - parent: Backtracking
+    child: Dynamic Programming
+    relation: related
+
+  # 資料結構前置關係
+  - parent: Array
+    child: Hash Table
+    relation: prerequisite
+
+  - parent: Stack
+    child: Monotonic Stack
+    relation: prerequisite
+
+  - parent: Queue
+    child: Graph
+    relation: prerequisite
+
+  - parent: Tree
+    child: Graph
+    relation: related
+
+  - parent: Array
+    child: Heap
+    relation: prerequisite
+
+  # 系統設計關聯
+  - parent: Caching
+    child: Rate Limiting
+    relation: related
+
+  - parent: CAP Theorem
+    child: Load Balancing
+    relation: related
+
+  # 系統程式設計前置關係
+  - parent: Memory Management
+    child: Thread Synchronization
+    relation: prerequisite
+
+  - parent: Thread Synchronization
+    child: Lock-free Programming
+    relation: prerequisite
+
+  - parent: Memory Management
+    child: Process Communication
+    relation: related
