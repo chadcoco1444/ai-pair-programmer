@@ -6,7 +6,6 @@ describe("wrapPythonCode", () => {
     const wrapped = wrapPythonCode("class Solution:\n    def isValid(self, s): pass");
     expect(wrapped).toContain("import collections");
     expect(wrapped).toContain("from collections import defaultdict");
-    expect(wrapped).toContain("_parse_input");
     expect(wrapped).toContain("_format_result");
     expect(wrapped).toContain("class Solution:");
   });
@@ -28,10 +27,20 @@ describe("wrapPythonCode", () => {
     expect(wrapped).toContain("json.dumps(r)");
   });
 
-  it("REGRESSION: should handle 'var = value' input format with bracket counting", () => {
+  it("should read JSON from stdin (not free-form text)", () => {
     const wrapped = wrapPythonCode("pass");
-    expect(wrapped).toContain("_split_top_level");
-    expect(wrapped).toContain("depth");
+    expect(wrapped).toContain("json.loads(sys.stdin.read())");
+    expect(wrapped).not.toContain("_parse_input");
+    expect(wrapped).not.toContain("_split_top_level");
+    expect(wrapped).not.toContain("_looks_like_assignment");
+  });
+
+  it("should contain TreeNode and ListNode classes", () => {
+    const wrapped = wrapPythonCode("pass");
+    expect(wrapped).toContain("class TreeNode");
+    expect(wrapped).toContain("class ListNode");
+    expect(wrapped).toContain("_build_tree");
+    expect(wrapped).toContain("_build_list");
   });
 
   it("REGRESSION: should auto-import collections for defaultdict/Counter/deque", () => {
@@ -56,15 +65,15 @@ describe("wrapPythonCode", () => {
 describe("wrapJavaScriptCode", () => {
   it("should contain I/O wrapper", () => {
     const wrapped = wrapJavaScriptCode("function solve() {}");
-    expect(wrapped).toContain("_parseInput");
     expect(wrapped).toContain("_formatResult");
-    expect(wrapped).toContain("_splitTopLevel");
+    expect(wrapped).toContain("JSON.parse");
   });
 
-  it("REGRESSION: should handle 'var = value' input format", () => {
+  it("should read JSON from stdin (not free-form text)", () => {
     const wrapped = wrapJavaScriptCode("pass");
-    expect(wrapped).toContain("depth");
-    expect(wrapped).toContain("_splitTopLevel");
+    expect(wrapped).toContain("JSON.parse");
+    expect(wrapped).not.toContain("_parseInput");
+    expect(wrapped).not.toContain("_splitTopLevel");
   });
 
   it("REGRESSION: empty output without I/O wrapper", () => {
