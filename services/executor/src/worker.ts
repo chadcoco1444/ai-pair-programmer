@@ -1,5 +1,6 @@
 import { Worker } from "bullmq";
 import Redis from "ioredis";
+import Docker from "dockerode";
 import type { ExecutionJob } from "./queue";
 import type { RunConfig, RunResult, JudgeResult, TestCaseInput } from "./runners/types";
 import { runPython } from "./runners/python";
@@ -7,6 +8,8 @@ import { runC, compileC, runCCompiled } from "./runners/c";
 import { runCpp, compileCpp, runCppCompiled } from "./runners/cpp";
 import { runJavaScript } from "./runners/javascript";
 import { judgeSubmission } from "./judge";
+
+const docker = new Docker();
 
 const connection = new Redis(process.env.REDIS_URL ?? "redis://localhost:6379", {
   maxRetriesPerRequest: null,
@@ -90,7 +93,7 @@ export function startWorker(): Worker {
     async (job) => processJob(job),
     {
       connection,
-      concurrency: 3,
+      concurrency: 1,
       limiter: {
         max: 5,
         duration: 1000,

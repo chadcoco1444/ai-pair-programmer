@@ -202,7 +202,7 @@ export async function compileInSandbox(
     }
 
     // Commit compiled container as new image
-    const tag = Date.now().toString();
+    const tag = `${Date.now()}-${Math.random().toString(36).slice(2, 10)}`;
     await container.commit({ repo: "skill-compiled", tag });
 
     return { success: true, compiledImage: `skill-compiled:${tag}` };
