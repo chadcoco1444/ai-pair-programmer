@@ -6,8 +6,12 @@ export function parseTestInput(input: string): any[] {
   const raw = input.trim();
   if (!raw) return [];
 
-  // Format 1: var = val
+  // Format 0: multi-op (ops = [...], args = [...])
   if (looksLikeAssignment(raw)) {
+    const multiOp = tryParseMultiOp(raw);
+    if (multiOp) return multiOp;
+
+    // Format 1: var = val
     return parseVarValFormat(raw);
   }
 
@@ -129,6 +133,26 @@ function splitTopLevel(s: string): string[] {
   }
   if (current.trim()) tokens.push(current.trim());
   return tokens;
+}
+
+function tryParseMultiOp(raw: string): any[] | null {
+  const parts = parseVarValFormat(raw);
+  // Expect exactly 2 arrays
+  if (parts.length !== 2 || !Array.isArray(parts[0]) || !Array.isArray(parts[1])) {
+    return null;
+  }
+  const ops = parts[0];
+  const args = parts[1];
+  // First element must be an uppercase-starting class name, second must be array of arrays
+  if (
+    ops.length === 0 ||
+    typeof ops[0] !== "string" ||
+    !/^[A-Z]/.test(ops[0]) ||
+    !args.every((a: any) => Array.isArray(a))
+  ) {
+    return null;
+  }
+  return [{ __multiOp: true, ops, args }];
 }
 
 function tryJsonParse(s: string): any | undefined {

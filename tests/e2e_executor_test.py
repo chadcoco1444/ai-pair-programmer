@@ -37,8 +37,13 @@ def parse_test_input(input_str):
     if not raw:
         return []
 
-    # Format 1: var = val
+    # Format 0: multi-op (ops = [...], args = [...])
     if _looks_like_assignment(raw):
+        multi = _try_parse_multi_op(raw)
+        if multi is not None:
+            return multi
+
+        # Format 1: var = val
         return _parse_var_val(raw)
 
     # Try JSON parse (single value)
@@ -57,6 +62,23 @@ def parse_test_input(input_str):
         return result
 
     return [raw]
+
+
+def _try_parse_multi_op(raw):
+    """Detect multi-op format: ops=[...], args=[[...], ...] where first op is uppercase class."""
+    parts = _parse_var_val(raw)
+    if len(parts) != 2 or not isinstance(parts[0], list) or not isinstance(parts[1], list):
+        return None
+    ops = parts[0]
+    args = parts[1]
+    if (
+        len(ops) == 0
+        or not isinstance(ops[0], str)
+        or not ops[0][0].isupper()
+        or not all(isinstance(a, list) for a in args)
+    ):
+        return None
+    return [{"__multiOp": True, "ops": ops, "args": args}]
 
 
 _SENTINEL = object()

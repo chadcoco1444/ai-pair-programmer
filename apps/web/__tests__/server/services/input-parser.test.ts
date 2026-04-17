@@ -141,6 +141,47 @@ describe("parseTestInput", () => {
     expect(parseTestInput("a = True, b = False")).toEqual([true, false]);
   });
 
+  // ─── Format 0: multi-op ─────────────────────────────────────────────────────
+
+  it("parses multi-op Trie format", () => {
+    const input =
+      'ops = ["Trie","insert","search","search","startsWith","insert","search"], args = [[],["apple"],["apple"],["app"],["app"],["app"],["app"]]';
+    expect(parseTestInput(input)).toEqual([
+      {
+        __multiOp: true,
+        ops: ["Trie", "insert", "search", "search", "startsWith", "insert", "search"],
+        args: [[], ["apple"], ["apple"], ["app"], ["app"], ["app"], ["app"]],
+      },
+    ]);
+  });
+
+  it("parses multi-op MedianFinder format", () => {
+    const input =
+      'ops = ["MedianFinder","addNum","addNum","findMedian","addNum","findMedian"], args = [[],[1],[2],[],[3],[]]';
+    expect(parseTestInput(input)).toEqual([
+      {
+        __multiOp: true,
+        ops: ["MedianFinder", "addNum", "addNum", "findMedian", "addNum", "findMedian"],
+        args: [[], [1], [2], [], [3], []],
+      },
+    ]);
+  });
+
+  it("does not trigger multi-op for regular var=val with two arrays", () => {
+    // First array starts with lowercase string, not a class name
+    expect(parseTestInput('a = ["hello","world"], b = [[1],[2]]')).toEqual([
+      ["hello", "world"],
+      [[1], [2]],
+    ]);
+  });
+
+  it("does not trigger multi-op when args are not array of arrays", () => {
+    expect(parseTestInput('ops = ["Foo","bar"], args = [1,2]')).toEqual([
+      ["Foo", "bar"],
+      [1, 2],
+    ]);
+  });
+
   // ─── Edge cases ────────────────────────────────────────────────────────────
 
   it("returns empty array for empty string", () => {

@@ -161,10 +161,48 @@ def _format_result(r):
         return json.dumps(_list_to_array(r))
     return str(r)
 
+def _run_multi_op(ops, args):
+    """Execute multi-operation mode: instantiate class, call methods, collect results."""
+    # Find the class by name (first op)
+    cls_name = ops[0]
+    cls = globals().get(cls_name)
+    if cls is None:
+        raise RuntimeError(f"Class {cls_name!r} not found")
+    instance = cls(*args[0])
+    results = [None]  # constructor always returns null
+    for i in range(1, len(ops)):
+        method = getattr(instance, ops[i])
+        method_args = args[i] if i < len(args) else []
+        converted = _convert_args(method, method_args)
+        r = method(*converted)
+        results.append(r)
+    return results
+
+def _format_multi_op_result(results):
+    """Format multi-op results as a JSON array."""
+    formatted = []
+    for r in results:
+        if r is None:
+            formatted.append(None)
+        elif isinstance(r, bool):
+            formatted.append(r)
+        elif isinstance(r, TreeNode):
+            formatted.append(_tree_to_array(r))
+        elif isinstance(r, ListNode):
+            formatted.append(_list_to_array(r))
+        else:
+            formatted.append(r)
+    return json.dumps(formatted)
+
 if __name__ == "__main__":
     _args = json.loads(sys.stdin.read())
 
-    if "Solution" in dir():
+    # Multi-op mode: _args = [{ "__multiOp": true, "ops": [...], "args": [...] }]
+    if (len(_args) == 1 and isinstance(_args[0], dict) and _args[0].get("__multiOp")):
+        _multi = _args[0]
+        _results = _run_multi_op(_multi["ops"], _multi["args"])
+        print(_format_multi_op_result(_results))
+    elif "Solution" in dir():
         _sol = Solution()
         _methods = [k for k, v in type(_sol).__dict__.items()
                     if not k.startswith("_") and callable(v)]
