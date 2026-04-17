@@ -67,7 +67,7 @@ export async function runCpp(config: RunConfig): Promise<RunResult & { compileEr
   const result = await runInSandbox({
     image: compileResult.compiledImage!,
     command: ["sh", "-c", lang.runCmd()],
-    stdin: config.input,
+    stdin: "",
     timeout: config.timeout,
     memoryLimit: config.memoryLimit,
   });
