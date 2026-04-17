@@ -158,6 +158,20 @@ export class AdaptiveLearningEngine {
     return mastery;
   }
 
+  /**
+   * Recalculate mastery for every concept linked to a given problem.
+   * Called after a submission is accepted.
+   */
+  async recalculateMasteryForProblem(userId: string, problemId: string): Promise<void> {
+    const links = await this.prisma.problemConcept.findMany({
+      where: { problemId },
+      select: { conceptId: true },
+    });
+    for (const link of links) {
+      await this.updateMastery(userId, link.conceptId);
+    }
+  }
+
   // 記錄弱點
   async recordWeakness(userId: string, pattern: WeaknessPattern): Promise<void> {
     const existing = await this.prisma.userWeakness.findFirst({
