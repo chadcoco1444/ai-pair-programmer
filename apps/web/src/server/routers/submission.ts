@@ -3,6 +3,7 @@ import { protectedProcedure, router } from "../trpc";
 import { ExecutionClient } from "../services/execution-client";
 import { ProblemService } from "../services/problem";
 import { parseTestInput } from "../services/input-parser";
+import { AdaptiveLearningEngine } from "../services/adaptive-learning";
 
 function getExecutionClient() {
   return new ExecutionClient();
@@ -74,6 +75,17 @@ export const submissionRouter = router({
             results: sanitizeDeep(result.testResults) as any,
           },
         });
+
+        // Auto-update mastery + check level-up for linked concepts on accepted submission
+        if (result.status === "ACCEPTED") {
+          try {
+            const engine = new AdaptiveLearningEngine(ctx.prisma);
+            await engine.recalculateMasteryForProblem(ctx.user.id, input.problemId);
+            await engine.checkLevelUp(ctx.user.id);
+          } catch (err) {
+            console.error("post-submit progression update failed", err);
+          }
+        }
 
         return {
           submissionId: submission.id,
