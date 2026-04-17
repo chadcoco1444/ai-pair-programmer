@@ -4,11 +4,29 @@ import { AdaptiveLearningEngine } from "../services/adaptive-learning";
 
 export const learningRouter = router({
   // 取得推薦題目
-  recommendations: protectedProcedure
-    .query(async ({ ctx }) => {
-      const engine = new AdaptiveLearningEngine(ctx.prisma);
-      return engine.getRecommendations(ctx.user.id);
-    }),
+  recommendations: protectedProcedure.query(async ({ ctx }) => {
+    const engine = new AdaptiveLearningEngine(ctx.prisma);
+    const today = new Date().toISOString().slice(0, 10);
+
+    const cached = await engine.getDailyRecommendation(ctx.user.id, today);
+    if (cached.problemIds.length === 0) return [];
+
+    const problems = await ctx.prisma.problem.findMany({
+      where: { id: { in: cached.problemIds } },
+      select: { id: true, slug: true, title: true, difficulty: true, category: true },
+    });
+
+    const reasonByProblemId = new Map(cached.reasons.map((r: any) => [r.problemId, r]));
+
+    return cached.problemIds
+      .map((pid: string) => {
+        const problem = problems.find((p: any) => p.id === pid);
+        const reason = reasonByProblemId.get(pid) as any;
+        if (!problem || !reason) return null;
+        return { problem, reason: reason.reason, score: reason.score };
+      })
+      .filter((x: any) => x !== null);
+  }),
 
   // 取得學習統計
   stats: protectedProcedure
