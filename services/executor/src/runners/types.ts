@@ -2,6 +2,7 @@ export interface RunConfig {
   language: "PYTHON" | "C" | "CPP" | "JAVASCRIPT";
   code: string;
   input: string;
+  args: any[];
   timeout: number;  // 毫秒
   memoryLimit: number;  // MB
 }
@@ -19,6 +20,7 @@ export interface RunResult {
 export interface TestCaseInput {
   id: string;
   input: string;
+  args: any[];
   expected: string;
   isHidden: boolean;
   isKiller: boolean;
