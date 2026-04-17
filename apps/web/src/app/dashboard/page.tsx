@@ -164,15 +164,25 @@ export default function DashboardPage() {
                 <div className="mb-1.5 flex items-center justify-between text-[13px]">
                   <span className="text-gray-400">掌握概念</span>
                   <span className="text-gray-300">
-                    {stats.nextLevelProgress.conceptsMastered}
+                    {Math.min(
+                      stats.nextLevelProgress.conceptsMastered,
+                      stats.nextLevelProgress.conceptsRequired
+                    )}
                     <span className="text-gray-600">
                       {" "}
                       / {stats.nextLevelProgress.conceptsRequired}
                     </span>
+                    {stats.nextLevelProgress.conceptsMastered >=
+                      stats.nextLevelProgress.conceptsRequired && (
+                      <span className="ml-2 text-emerald-400 text-[11px]">✓ 達標</span>
+                    )}
                   </span>
                 </div>
                 <ProgressBar
-                  value={stats.nextLevelProgress.conceptsMastered}
+                  value={Math.min(
+                    stats.nextLevelProgress.conceptsMastered,
+                    stats.nextLevelProgress.conceptsRequired
+                  )}
                   max={stats.nextLevelProgress.conceptsRequired}
                   color="bg-blue-500"
                 />
@@ -185,15 +195,25 @@ export default function DashboardPage() {
                 <div className="mb-1.5 flex items-center justify-between text-[13px]">
                   <span className="text-gray-400">通過題數</span>
                   <span className="text-gray-300">
-                    {stats.nextLevelProgress.problemsAccepted}
+                    {Math.min(
+                      stats.nextLevelProgress.problemsAccepted,
+                      stats.nextLevelProgress.problemsRequired
+                    )}
                     <span className="text-gray-600">
                       {" "}
                       / {stats.nextLevelProgress.problemsRequired}
                     </span>
+                    {stats.nextLevelProgress.problemsAccepted >=
+                      stats.nextLevelProgress.problemsRequired && (
+                      <span className="ml-2 text-emerald-400 text-[11px]">✓ 達標</span>
+                    )}
                   </span>
                 </div>
                 <ProgressBar
-                  value={stats.nextLevelProgress.problemsAccepted}
+                  value={Math.min(
+                    stats.nextLevelProgress.problemsAccepted,
+                    stats.nextLevelProgress.problemsRequired
+                  )}
                   max={stats.nextLevelProgress.problemsRequired}
                   color="bg-emerald-500"
                 />
