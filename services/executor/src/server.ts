@@ -85,7 +85,7 @@ app.post("/execute/sync", async (req, res) => {
   try {
     const result = await job.waitUntilFinished(
       executionQueueEvents,
-      30000
+      120000
     );
     res.json({ submissionId, ...result });
   } catch (err: any) {
