@@ -301,16 +301,7 @@ def main():
     solution_files = sorted(glob.glob(os.path.join(SOLUTIONS_DIR, "test_*.py")))
     print(f"Found {len(solution_files)} solutions\n")
 
-    # Skip problems that can't be tested through simple stdin/stdout
-    # (e.g., design problems, encode/decode, linked list cycle detection)
-    SKIP_SLUGS = {
-        "encode-and-decode-strings",  # Design problem, no stdin/stdout format
-        "linked-list-cycle",          # Requires cycle construction, can't send via stdin
-        "clone-graph",                # Graph construction from adjacency list
-        "serialize-and-deserialize-binary-tree",  # Design problem
-        "implement-trie",            # Multi-operation design problem
-        "find-median-from-data-stream",  # Multi-operation design problem
-    }
+    SKIP_SLUGS = set()  # All problems now supported
 
     passed = 0
     failed = 0

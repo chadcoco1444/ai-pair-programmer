@@ -53,6 +53,51 @@ def _build_list(values):
         curr = curr.next
     return dummy.next
 
+def _build_list_with_cycle(values, pos):
+    """Build linked list with optional cycle. pos=-1 means no cycle."""
+    if not values:
+        return None
+    nodes = [ListNode(v) for v in values]
+    for i in range(len(nodes) - 1):
+        nodes[i].next = nodes[i + 1]
+    if pos >= 0:
+        nodes[-1].next = nodes[pos]
+    return nodes[0]
+
+def _build_graph(adj_list):
+    """Build graph from adjacency list (1-indexed values). Uses Node class if defined."""
+    if not adj_list:
+        return None
+    _NodeCls = globals().get('Node')
+    if _NodeCls is None:
+        class _NodeCls:
+            def __init__(self, val=0, neighbors=None):
+                self.val = val
+                self.neighbors = neighbors if neighbors is not None else []
+    nodes = [_NodeCls(i + 1) for i in range(len(adj_list))]
+    for i, neighbors in enumerate(adj_list):
+        for j in neighbors:
+            nodes[i].neighbors.append(nodes[j - 1])
+    return nodes[0]
+
+def _graph_to_adj_list(node):
+    """Convert graph back to adjacency list."""
+    if not node:
+        return []
+    from collections import deque as _dq
+    visited = {}
+    queue = _dq([node])
+    visited[node] = True
+    result = {}
+    while queue:
+        n = queue.popleft()
+        result[n.val] = sorted([nb.val for nb in n.neighbors])
+        for nb in n.neighbors:
+            if nb not in visited:
+                visited[nb] = True
+                queue.append(nb)
+    return [result[i] for i in sorted(result.keys())]
+
 def _list_to_array(head):
     """Convert linked list to array"""
     result = []
@@ -142,8 +187,20 @@ def _convert_args(method, args):
                     # List[ListNode]: convert each inner list
                     converted[i] = [_build_list(v) if isinstance(v, list) else v for v in converted[i]]
                 else:
-                    converted[i] = _build_list(converted[i])
+                    # Check if there's an extra arg beyond method params that could be 'pos' (linked-list-cycle pattern)
+                    _extra_idx = len(params)  # index of first extra arg
+                    if _extra_idx < len(converted) and isinstance(converted[_extra_idx], int):
+                        converted[i] = _build_list_with_cycle(converted[i], converted[_extra_idx])
+                        converted[_extra_idx] = '__consumed__'
+                    else:
+                        converted[i] = _build_list(converted[i])
+        elif hint_str and ("Node" in hint_str or "'Node'" in hint_str) and 'TreeNode' not in hint_str and 'ListNode' not in hint_str:
+            # Graph Node (clone-graph style)
+            if isinstance(converted[i], list):
+                converted[i] = _build_graph(converted[i])
 
+    # Remove consumed args (e.g. 'pos' for linked-list-cycle)
+    converted = [a for a in converted if a != '__consumed__']
     return converted
 
 def _format_result(r):
@@ -159,6 +216,8 @@ def _format_result(r):
         return json.dumps(_tree_to_array(r))
     if isinstance(r, ListNode):
         return json.dumps(_list_to_array(r))
+    if hasattr(r, 'val') and hasattr(r, 'neighbors'):
+        return json.dumps(_graph_to_adj_list(r))
     return str(r)
 
 def _run_multi_op(ops, args):
@@ -190,6 +249,8 @@ def _format_multi_op_result(results):
             formatted.append(_tree_to_array(r))
         elif isinstance(r, ListNode):
             formatted.append(_list_to_array(r))
+        elif hasattr(r, 'val') and hasattr(r, 'neighbors'):
+            formatted.append(_graph_to_adj_list(r))
         else:
             formatted.append(r)
     return json.dumps(formatted)
@@ -206,7 +267,18 @@ if __name__ == "__main__":
         _sol = Solution()
         _methods = [k for k, v in type(_sol).__dict__.items()
                     if not k.startswith("_") and callable(v)]
-        if _methods:
+        # Check for roundtrip pattern (encode/decode)
+        if hasattr(_sol, 'encode') and hasattr(_sol, 'decode') and 'encode' in _methods and 'decode' in _methods:
+            _encoded = _sol.encode(_args[0] if _args else [])
+            _result = _sol.decode(_encoded)
+            print(_format_result(_result))
+        elif hasattr(_sol, 'serialize') and hasattr(_sol, 'deserialize') and 'serialize' in _methods and 'deserialize' in _methods:
+            _tree = _build_tree(_args[0]) if _args and isinstance(_args[0], list) else None
+            _serialized = _sol.serialize(_tree)
+            _deserialized = _sol.deserialize(_serialized)
+            _result = _tree_to_array(_deserialized) if _deserialized else []
+            print(_format_result(_result))
+        elif _methods:
             _method = getattr(_sol, _methods[0])
             _converted = _convert_args(_method, _args)
             _result = _method(*_converted)
@@ -221,6 +293,21 @@ if __name__ == "__main__":
                 # ListNode-returning method with empty list: None → []
                 elif 'ListNode' in _ret_hint:
                     _result = []
+                # Graph Node-returning method with empty graph: None → []
+                elif 'Node' in _ret_hint and 'TreeNode' not in _ret_hint and 'ListNode' not in _ret_hint:
+                    _result = []
+            print(_format_result(_result))
+    elif "Codec" in dir():
+        _codec = Codec()
+        if hasattr(_codec, 'encode') and hasattr(_codec, 'decode'):
+            _encoded = _codec.encode(_args[0] if _args else [])
+            _result = _codec.decode(_encoded)
+            print(_format_result(_result))
+        elif hasattr(_codec, 'serialize') and hasattr(_codec, 'deserialize'):
+            _tree = _build_tree(_args[0]) if _args and isinstance(_args[0], list) else None
+            _serialized = _codec.serialize(_tree)
+            _deserialized = _codec.deserialize(_serialized)
+            _result = _tree_to_array(_deserialized) if _deserialized else []
             print(_format_result(_result))
 `;
 }
