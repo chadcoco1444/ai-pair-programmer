@@ -172,6 +172,39 @@ export class AdaptiveLearningEngine {
     }
   }
 
+  /**
+   * Get today's recommendation for user. Checks cache (DailyRecommendation table)
+   * and computes via getRecommendations on miss.
+   */
+  async getDailyRecommendation(userId: string, date: string): Promise<{
+    problemIds: string[];
+    reasons: Array<{ problemId: string; reason: string; score: number }>;
+  }> {
+    const cached = await this.prisma.dailyRecommendation.findUnique({
+      where: { userId_date: { userId, date } },
+    });
+    if (cached) {
+      return {
+        problemIds: cached.problemIds as string[],
+        reasons: cached.reasons as Array<{ problemId: string; reason: string; score: number }>,
+      };
+    }
+
+    const recs = await this.getRecommendations(userId);
+    const problemIds = recs.map((r) => r.problem.id);
+    const reasons = recs.map((r) => ({
+      problemId: r.problem.id,
+      reason: r.reason,
+      score: r.score,
+    }));
+
+    await this.prisma.dailyRecommendation.create({
+      data: { userId, date, problemIds, reasons },
+    });
+
+    return { problemIds, reasons };
+  }
+
   // 記錄弱點
   async recordWeakness(userId: string, pattern: WeaknessPattern): Promise<void> {
     const existing = await this.prisma.userWeakness.findFirst({
