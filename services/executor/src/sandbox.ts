@@ -156,16 +156,22 @@ export async function compileInSandbox(
   code: string,
   filename: string,
   compileCmd: string,
-  timeout: number
+  timeout: number,
+  skipCodeWrite: boolean = false
 ): Promise<{ success: boolean; error?: string; compiledImage?: string }> {
   const codeB64 = Buffer.from(code).toString("base64");
+
+  // If skipCodeWrite, compileCmd already includes file writing (e.g., C++ runner)
+  const cmdStr = skipCodeWrite
+    ? compileCmd
+    : `printf '%s' "${codeB64}" | base64 -d > /tmp/${filename} && ${compileCmd}`;
 
   const container = await docker.createContainer({
     Image: image,
     Cmd: [
       "sh",
       "-c",
-      `printf '%s' "${codeB64}" | base64 -d > /tmp/${filename} && ${compileCmd}`,
+      cmdStr,
     ],
     AttachStdout: true,
     AttachStderr: true,
