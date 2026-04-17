@@ -38,7 +38,7 @@ tests/
 - Create: `apps/web/src/server/services/input-parser.ts`
 - Create: `apps/web/__tests__/server/services/input-parser.test.ts`
 
-- [ ] **Step 1: Write failing tests for all 5 input formats**
+- [x] **Step 1: Write failing tests for all 5 input formats**
 
 ```typescript
 // apps/web/__tests__/server/services/input-parser.test.ts
@@ -136,7 +136,7 @@ describe("parseTestInput", () => {
 });
 ```
 
-- [ ] **Step 2: Run tests to verify they fail**
+- [x] **Step 2: Run tests to verify they fail**
 
 ```bash
 cd apps/web && npx vitest run __tests__/server/services/input-parser.test.ts
@@ -144,7 +144,7 @@ cd apps/web && npx vitest run __tests__/server/services/input-parser.test.ts
 
 Expected: FAIL (module not found)
 
-- [ ] **Step 3: Implement parseTestInput**
+- [x] **Step 3: Implement parseTestInput**
 
 ```typescript
 // apps/web/src/server/services/input-parser.ts
@@ -314,7 +314,7 @@ function tryJsonParse(s: string): any | undefined {
 }
 ```
 
-- [ ] **Step 4: Run tests**
+- [x] **Step 4: Run tests**
 
 ```bash
 cd apps/web && npx vitest run __tests__/server/services/input-parser.test.ts
@@ -322,7 +322,7 @@ cd apps/web && npx vitest run __tests__/server/services/input-parser.test.ts
 
 Expected: ALL PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add apps/web/src/server/services/input-parser.ts apps/web/__tests__/server/services/input-parser.test.ts
@@ -336,7 +336,7 @@ git commit -m "feat: server-side parseTestInput — 5 format support + tests"
 **Files:**
 - Modify: `services/executor/src/runners/types.ts`
 
-- [ ] **Step 1: Add `args` field to RunConfig and TestCaseInput**
+- [x] **Step 1: Add `args` field to RunConfig and TestCaseInput**
 
 In `services/executor/src/runners/types.ts`, change `RunConfig`:
 
@@ -364,7 +364,7 @@ export interface TestCaseInput {
 }
 ```
 
-- [ ] **Step 2: Commit**
+- [x] **Step 2: Commit**
 
 ```bash
 git add services/executor/src/runners/types.ts
@@ -379,7 +379,7 @@ git commit -m "feat: add args field to RunConfig + TestCaseInput"
 - Modify: `services/executor/src/runners/wrapper.ts`
 - Modify: `services/executor/__tests__/wrapper.test.ts`
 
-- [ ] **Step 1: Rewrite wrapper.ts**
+- [x] **Step 1: Rewrite wrapper.ts**
 
 Replace the entire 348-line file with:
 
@@ -541,7 +541,7 @@ else console.log(String(_result));
 // two exported functions returning template literal strings.
 ```
 
-- [ ] **Step 2: Update wrapper tests**
+- [x] **Step 2: Update wrapper tests**
 
 ```typescript
 // services/executor/__tests__/wrapper.test.ts
@@ -597,7 +597,7 @@ describe("wrapJavaScriptCode", () => {
 });
 ```
 
-- [ ] **Step 3: Run tests**
+- [x] **Step 3: Run tests**
 
 ```bash
 cd services/executor && npx vitest run
@@ -605,7 +605,7 @@ cd services/executor && npx vitest run
 
 Expected: ALL PASS
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add services/executor/src/runners/wrapper.ts services/executor/__tests__/wrapper.test.ts
@@ -621,7 +621,7 @@ git commit -m "feat: rewrite wrapper — read JSON stdin, remove parser (~30 lin
 - Modify: `services/executor/src/runners/javascript.ts`
 - Modify: `services/executor/src/worker.ts`
 
-- [ ] **Step 1: Update python.ts**
+- [x] **Step 1: Update python.ts**
 
 ```typescript
 import { runInSandbox } from "../sandbox";
@@ -659,7 +659,7 @@ export async function runPython(config: RunConfig): Promise<RunResult> {
 }
 ```
 
-- [ ] **Step 2: Update javascript.ts**
+- [x] **Step 2: Update javascript.ts**
 
 ```typescript
 import { runInSandbox } from "../sandbox";
@@ -694,7 +694,7 @@ export async function runJavaScript(config: RunConfig): Promise<RunResult> {
 }
 ```
 
-- [ ] **Step 3: Update worker.ts — pass args through**
+- [x] **Step 3: Update worker.ts — pass args through**
 
 In `services/executor/src/worker.ts`, update the `processJob` function. Change how `RunConfig` is built:
 
@@ -709,7 +709,7 @@ const config: RunConfig = {
 };
 ```
 
-- [ ] **Step 4: Run executor tests**
+- [x] **Step 4: Run executor tests**
 
 ```bash
 cd services/executor && npx vitest run
@@ -717,7 +717,7 @@ cd services/executor && npx vitest run
 
 Expected: ALL PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 
 ```bash
 git add services/executor/src/runners/python.ts services/executor/src/runners/javascript.ts services/executor/src/worker.ts
@@ -731,7 +731,7 @@ git commit -m "feat: runners pass JSON args as stdin, worker forwards args"
 **Files:**
 - Modify: `apps/web/src/server/routers/submission.ts`
 
-- [ ] **Step 1: Import parseTestInput and use it in submit mutation**
+- [x] **Step 1: Import parseTestInput and use it in submit mutation**
 
 At the top, add import:
 
@@ -752,7 +752,7 @@ testCases: testCases.map((tc) => ({
 })),
 ```
 
-- [ ] **Step 2: Run web tests**
+- [x] **Step 2: Run web tests**
 
 ```bash
 cd apps/web && npx vitest run
@@ -760,7 +760,7 @@ cd apps/web && npx vitest run
 
 Expected: ALL PASS
 
-- [ ] **Step 3: Commit**
+- [x] **Step 3: Commit**
 
 ```bash
 git add apps/web/src/server/routers/submission.ts
@@ -775,11 +775,11 @@ git commit -m "feat: submission router calls parseTestInput before executor"
 - Modify: `tests/e2e_executor_test.py`
 - Modify: `services/executor/src/server.ts`
 
-- [ ] **Step 1: Update executor server to accept args in API**
+- [x] **Step 1: Update executor server to accept args in API**
 
 In `services/executor/src/server.ts`, the `/execute` and `/execute/sync` endpoints should pass `args` through to the queue. The `ExecutionJob` already gets `testCases` — just make sure `args` is included.
 
-- [ ] **Step 2: Update E2E test script to send args**
+- [x] **Step 2: Update E2E test script to send args**
 
 In `tests/e2e_executor_test.py`, update `submit_to_executor` to call `parseTestInput` (implement a Python version) and send `args`:
 
@@ -821,7 +821,7 @@ test_cases.append({
 })
 ```
 
-- [ ] **Step 3: Run E2E**
+- [x] **Step 3: Run E2E**
 
 ```bash
 python3 tests/e2e_executor_test.py
@@ -829,7 +829,7 @@ python3 tests/e2e_executor_test.py
 
 Expected: significant improvement from 20/71 → target 55+/71
 
-- [ ] **Step 4: Commit**
+- [x] **Step 4: Commit**
 
 ```bash
 git add tests/e2e_executor_test.py services/executor/src/server.ts
@@ -840,21 +840,21 @@ git commit -m "feat: E2E test sends pre-parsed args to executor"
 
 ### Task 7: Fix remaining failures + update Claude Skill
 
-- [ ] **Step 1: Run E2E and categorize remaining failures**
+- [x] **Step 1: Run E2E and categorize remaining failures**
 
 ```bash
 python3 tests/e2e_executor_test.py 2>&1 | grep FAIL
 ```
 
-- [ ] **Step 2: Fix YAML expected values (quote mismatches like `"bab"` vs `bab`)**
+- [x] **Step 2: Fix YAML expected values (quote mismatches like `"bab"` vs `bab`)**
 
 For problems where expected has extra quotes (e.g., `expected: '"bab"'`), fix the YAML.
 
-- [ ] **Step 3: Fix solution code issues for edge cases**
+- [x] **Step 3: Fix solution code issues for edge cases**
 
 Some solutions may need adjustment for how they receive TreeNode/ListNode args.
 
-- [ ] **Step 4: Run E2E again — must be 0 failures (excluding design/skip problems)**
+- [x] **Step 4: Run E2E again — must be 0 failures (excluding design/skip problems)**
 
 ```bash
 python3 tests/e2e_executor_test.py
@@ -862,11 +862,11 @@ python3 tests/e2e_executor_test.py
 
 Expected: `Fail: 0`
 
-- [ ] **Step 5: Update Claude Skill**
+- [x] **Step 5: Update Claude Skill**
 
 Update `.claude/skills/e2e-solution-regression.md` to reflect the new architecture.
 
-- [ ] **Step 6: Final commit**
+- [x] **Step 6: Final commit**
 
 ```bash
 git add -A
