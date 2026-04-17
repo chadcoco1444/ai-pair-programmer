@@ -15,7 +15,7 @@ public:
 int main() {
     auto args = parse_args();
     Solution sol;
-    uint32_t n = (uint32_t)to_int(args[0]);
+    uint32_t n = (uint32_t)(long long)args[0].to_double();
     int result = sol.hammingWeight(n);
     cout << result << endl;
     return 0;

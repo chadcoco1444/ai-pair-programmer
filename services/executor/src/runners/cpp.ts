@@ -17,22 +17,22 @@ try {
   // Fallback: header may not exist in production
 }
 
-export async function runCpp(config: RunConfig): Promise<RunResult & { compileError?: string }> {
+/**
+ * Compile C++ code once, returning the compiled image tag.
+ * Reusable across multiple test cases for the same submission.
+ */
+export async function compileCpp(code: string): Promise<{ success: boolean; image?: string; error?: string }> {
   const lang = LANGUAGE_CONFIG.CPP;
   const filename = `solution${lang.extension}`;
   const compileCmd = lang.compileCmd!(`/tmp/${filename}`);
 
-  // Build bootstrap that writes code, json_helper.h, and args.json
-  const codeB64 = Buffer.from(config.code).toString("base64");
-  const argsB64 = Buffer.from(JSON.stringify(config.args)).toString("base64");
+  const codeB64 = Buffer.from(code).toString("base64");
   const headerB64 = jsonHelperContent
     ? Buffer.from(jsonHelperContent).toString("base64")
     : "";
 
-  // Construct shell commands to write all files before compiling
   const writeCommands: string[] = [
     `printf '%s' "${codeB64}" | base64 -d > /tmp/${filename}`,
-    `printf '%s' "${argsB64}" | base64 -d > /tmp/args.json`,
   ];
   if (headerB64) {
     writeCommands.push(
@@ -44,33 +44,58 @@ export async function runCpp(config: RunConfig): Promise<RunResult & { compileEr
 
   const compileResult = await compileInSandbox(
     lang.image,
-    "", // code is embedded in fullCmd via base64
+    "",
     filename,
     fullCmd,
     30000,
-    true // skipCodeWrite — we write it ourselves in fullCmd
+    true // skipCodeWrite
   );
 
   if (!compileResult.success) {
+    return { success: false, error: compileResult.error };
+  }
+  return { success: true, image: compileResult.compiledImage };
+}
+
+/**
+ * Run a compiled C++ binary with specific args.
+ * Writes args to /tmp/args.json before running the binary.
+ */
+export async function runCppCompiled(
+  image: string,
+  args: any[],
+  timeout: number,
+  memoryLimit: number
+): Promise<RunResult> {
+  const argsB64 = Buffer.from(JSON.stringify(args)).toString("base64");
+  const cmd = `printf '%s' "${argsB64}" | base64 -d > /tmp/args.json && /tmp/solution`;
+
+  return runInSandbox({
+    image,
+    command: ["sh", "-c", cmd],
+    stdin: "",
+    timeout,
+    memoryLimit,
+  });
+}
+
+/**
+ * Legacy single-step runner: compile + run in one call.
+ * Used when worker doesn't cache compile (e.g., for backward compat).
+ */
+export async function runCpp(config: RunConfig): Promise<RunResult & { compileError?: string }> {
+  const compile = await compileCpp(config.code);
+  if (!compile.success) {
     return {
       stdout: "",
-      stderr: compileResult.error || "編譯失敗",
+      stderr: compile.error || "編譯失敗",
       exitCode: 1,
       runtime: 0,
       memory: 0,
       timedOut: false,
       oomKilled: false,
-      compileError: compileResult.error,
+      compileError: compile.error,
     };
   }
-
-  const result = await runInSandbox({
-    image: compileResult.compiledImage!,
-    command: ["sh", "-c", lang.runCmd()],
-    stdin: "",
-    timeout: config.timeout,
-    memoryLimit: config.memoryLimit,
-  });
-
-  return result;
+  return runCppCompiled(compile.image!, config.args, config.timeout, config.memoryLimit);
 }

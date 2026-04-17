@@ -3,8 +3,8 @@ import Redis from "ioredis";
 import type { ExecutionJob } from "./queue";
 import type { RunConfig, RunResult, JudgeResult, TestCaseInput } from "./runners/types";
 import { runPython } from "./runners/python";
-import { runC } from "./runners/c";
-import { runCpp } from "./runners/cpp";
+import { runC, compileC, runCCompiled } from "./runners/c";
+import { runCpp, compileCpp, runCppCompiled } from "./runners/cpp";
 import { runJavaScript } from "./runners/javascript";
 import { judgeSubmission } from "./judge";
 
@@ -37,6 +37,18 @@ async function processJob(job: { data: ExecutionJob }): Promise<JudgeResult> {
 
   const results: { testCase: TestCaseInput; runResult: RunResult }[] = [];
 
+  // Compile once for C/C++ (reuse image across all test cases)
+  let cachedImage: string | undefined;
+  if (language === "CPP") {
+    const compile = await compileCpp(code);
+    if (!compile.success) return judgeSubmission([], compile.error);
+    cachedImage = compile.image;
+  } else if (language === "C") {
+    const compile = await compileC(code);
+    if (!compile.success) return judgeSubmission([], compile.error);
+    cachedImage = compile.image;
+  }
+
   for (const tc of testCases) {
     const config: RunConfig = {
       language,
@@ -47,7 +59,14 @@ async function processJob(job: { data: ExecutionJob }): Promise<JudgeResult> {
       memoryLimit,
     };
 
-    const runResult = await runner(config);
+    let runResult: RunResult & { compileError?: string };
+    if (language === "CPP" && cachedImage) {
+      runResult = await runCppCompiled(cachedImage, config.args, timeout, memoryLimit);
+    } else if (language === "C" && cachedImage) {
+      runResult = await runCCompiled(cachedImage, config.args, timeout, memoryLimit);
+    } else {
+      runResult = await runner(config);
+    }
 
     // 檢查是否有編譯錯誤
     if ("compileError" in runResult && runResult.compileError) {
