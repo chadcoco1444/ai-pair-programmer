@@ -480,9 +480,11 @@ function _convertArgs(method, args, paramNames) {
   if (!paramNames) paramNames = _getParamNames(method);
   const converted = [...args];
   let treeRoot = null;
+  const _isTreeParam = (n) => n === 'root' || n === 'tree' || n.indexOf('root') >= 0 || n.indexOf('tree') >= 0;
+  const _isListParam = (n) => ['head', 'list', 'list1', 'list2', 'l1', 'l2'].indexOf(n) >= 0;
   for (let i = 0; i < paramNames.length && i < converted.length; i++) {
     const name = paramNames[i].toLowerCase();
-    if (['root', 'tree'].includes(name) && Array.isArray(converted[i])) {
+    if (_isTreeParam(name) && Array.isArray(converted[i])) {
       converted[i] = _buildTree(converted[i]);
       if (!treeRoot) treeRoot = converted[i];
     } else if (['p', 'q'].includes(name) && Array.isArray(converted[i])) {
@@ -490,7 +492,7 @@ function _convertArgs(method, args, paramNames) {
       if (!treeRoot) treeRoot = converted[i];
     } else if (['p', 'q'].includes(name) && typeof converted[i] === 'number' && treeRoot) {
       converted[i] = _findNode(treeRoot, converted[i]);
-    } else if (['head', 'list', 'list1', 'list2', 'l1', 'l2'].includes(name) && Array.isArray(converted[i])) {
+    } else if (_isListParam(name) && Array.isArray(converted[i])) {
       // Check for cycle pattern: extra arg beyond param count
       const extraIdx = paramNames.length;
       if (name === 'head' && extraIdx < converted.length && typeof converted[extraIdx] === 'number') {
@@ -501,8 +503,12 @@ function _convertArgs(method, args, paramNames) {
       }
     } else if (name === 'lists' && Array.isArray(converted[i])) {
       converted[i] = converted[i].map(v => Array.isArray(v) ? _buildList(v) : v);
-    } else if (['node', 'adjlist', 'graph'].includes(name) && Array.isArray(converted[i]) && converted[i].length > 0 && Array.isArray(converted[i][0])) {
-      converted[i] = _buildGraph(converted[i]);
+    } else if (['node', 'adjlist', 'graph'].includes(name) && Array.isArray(converted[i])) {
+      if (converted[i].length === 0) {
+        converted[i] = null;
+      } else if (Array.isArray(converted[i][0])) {
+        converted[i] = _buildGraph(converted[i]);
+      }
     }
   }
   return converted.filter(a => a !== '__consumed__');
@@ -533,7 +539,7 @@ function _formatMultiOpResult(results) {
 const _IN_PLACE_NAMES = /^(rotate|setZeroes|reorderList|sortColors|moveZeroes|reverseString|merge|flatten|connect|recoverTree|deleteNode|sortList|reverseList|reverse|sort|shuffle|swap|flip|invert)/i;
 
 // === User code ===
-\${userCode}
+${userCode}
 
 // === Auto-generated I/O wrapper ===
 const _args = JSON.parse(require("fs").readFileSync("/tmp/args.json", "utf-8"));
@@ -547,9 +553,10 @@ if (_args.length === 1 && _args[0] && typeof _args[0] === 'object' && !Array.isA
   const _instance = new _Cls(...(_opArgs[0] || []));
   const _results = [null];
   for (let _i = 1; _i < _ops.length; _i++) {
-    const _method = _instance[_ops[_i]].bind(_instance);
+    const _unboundMethod = _instance[_ops[_i]];
+    const _method = _unboundMethod.bind(_instance);
     const _methodArgs = _opArgs[_i] || [];
-    const _paramNames = _getParamNames(_method);
+    const _paramNames = _getParamNames(_unboundMethod);
     const _converted = _convertArgs(_method, _methodArgs, _paramNames);
     let _r = _method(..._converted);
     if (_r === undefined) _r = null;
@@ -588,8 +595,9 @@ if (_args.length === 1 && _args[0] && typeof _args[0] === 'object' && !Array.isA
     console.log(_formatResult(_r));
   } else if (_methods.length > 0) {
     const _methodName = _methods[0];
-    const _method = _sol[_methodName].bind(_sol);
-    const _paramNames = _getParamNames(_method);
+    const _unboundMethod = _sol[_methodName];
+    const _method = _unboundMethod.bind(_sol);
+    const _paramNames = _getParamNames(_unboundMethod);
     const _converted = _convertArgs(_method, _args, _paramNames);
     let _result = _method(..._converted);
 
@@ -602,7 +610,17 @@ if (_args.length === 1 && _args[0] && typeof _args[0] === 'object' && !Array.isA
 
     // Convert data structures back to arrays for output
     if (_result === undefined || _result === null) {
-      console.log('null');
+      // Detect if return type should be a data structure (output [] instead of null)
+      const _lowerParams = _paramNames.map(p => p.toLowerCase());
+      const _isBoolMethod = /^(is|has|can|valid|check|contains|search|exist|find.*cycle)/i.test(_methodName);
+      const _hasTreeParam = _lowerParams.some(p => p === 'root' || p.indexOf('root') >= 0 || p.indexOf('tree') >= 0);
+      const _hasListParam = _lowerParams.some(p => ['head', 'list', 'list1', 'list2', 'l1', 'l2', 'lists'].indexOf(p) >= 0);
+      const _hasGraphParam = _lowerParams.some(p => ['node', 'adjlist', 'graph'].indexOf(p) >= 0);
+      if (!_isBoolMethod && (_hasTreeParam || _hasListParam || _hasGraphParam)) {
+        console.log('[]');
+      } else {
+        console.log('null');
+      }
     } else {
       console.log(_formatResult(_result));
     }
