@@ -2,6 +2,7 @@ import { z } from "zod";
 import { protectedProcedure, router } from "../trpc";
 import { ExecutionClient } from "../services/execution-client";
 import { ProblemService } from "../services/problem";
+import { parseTestInput } from "../services/input-parser";
 
 function getExecutionClient() {
   return new ExecutionClient();
@@ -54,6 +55,7 @@ export const submissionRouter = router({
           testCases: testCases.map((tc) => ({
             id: tc.id,
             input: tc.input,
+            args: parseTestInput(tc.input),
             expected: tc.expected,
             isHidden: tc.isHidden,
             isKiller: tc.isKiller,

@@ -12,6 +12,7 @@ export interface ExecutionJob {
   testCases: {
     id: string;
     input: string;
+    args?: any[];
     expected: string;
     isHidden: boolean;
     isKiller: boolean;

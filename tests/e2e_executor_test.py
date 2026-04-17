@@ -24,6 +24,171 @@ EXECUTOR_URL = os.environ.get("EXECUTOR_URL", "http://localhost:4000")
 SOLUTIONS_DIR = os.path.join(os.path.dirname(__file__), "solutions")
 SEED_DIR = os.path.join(os.path.dirname(os.path.dirname(__file__)), "seed", "problems")
 
+
+# ---------------------------------------------------------------------------
+# Python port of TypeScript parseTestInput (server-side parser)
+# ---------------------------------------------------------------------------
+import re
+
+
+def parse_test_input(input_str):
+    """Parse free-form test case input into a list of args (mirrors TS parseTestInput)."""
+    raw = input_str.strip()
+    if not raw:
+        return []
+
+    # Format 1: var = val
+    if _looks_like_assignment(raw):
+        return _parse_var_val(raw)
+
+    # Try JSON parse (single value)
+    val = _try_json(raw)
+    if val is not _SENTINEL:
+        return [val]
+
+    # Format 2/3: space or comma separated tokens
+    tokens = _split_top_level(raw)
+    if len(tokens) > 1:
+        result = []
+        for t in tokens:
+            t = t.strip()
+            p = _try_json(t)
+            result.append(p if p is not _SENTINEL else t)
+        return result
+
+    return [raw]
+
+
+_SENTINEL = object()
+
+
+def _looks_like_assignment(s):
+    m = re.match(r'^[a-zA-Z_]\w*\s*=', s)
+    if not m:
+        return False
+    eq_pos = s.index('=')
+    return eq_pos > 0 and (eq_pos + 1 >= len(s) or s[eq_pos + 1] != '=')
+
+
+def _parse_var_val(raw):
+    joined = raw.replace('\n', ' ').strip()
+    parts = _split_by_assignment(joined)
+    results = []
+    for part in parts:
+        eq_idx = part.index('=')
+        val = part[eq_idx + 1:].strip()
+        p = _try_json(val)
+        results.append(p if p is not _SENTINEL else val)
+    return results
+
+
+def _split_by_assignment(s):
+    parts = []
+    depth = 0
+    in_str = False
+    str_char = ''
+    current = ''
+
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if in_str:
+            current += c
+            if c == str_char and (i == 0 or s[i - 1] != '\\'):
+                in_str = False
+        elif c in ('"', "'"):
+            in_str = True
+            str_char = c
+            current += c
+        elif c in '([{':
+            depth += 1
+            current += c
+        elif c in ')]}':
+            depth -= 1
+            current += c
+        elif c == ',' and depth == 0:
+            rest = s[i + 1:].lstrip()
+            if re.match(r'^[a-zA-Z_]\w*\s*=(?!=)', rest):
+                parts.append(current.strip())
+                current = ''
+                i += 1
+                continue
+            current += c
+        elif c == ' ' and depth == 0:
+            rest = s[i + 1:].lstrip()
+            if current.strip() and re.match(r'^[a-zA-Z_]\w*\s*=(?!=)', rest):
+                parts.append(current.strip())
+                current = ''
+                while i + 1 < len(s) and s[i + 1] in (' ', ','):
+                    i += 1
+                i += 1
+                continue
+            current += c
+        else:
+            current += c
+        i += 1
+
+    if current.strip():
+        parts.append(current.strip())
+    return parts
+
+
+def _split_top_level(s):
+    tokens = []
+    depth = 0
+    in_str = False
+    str_char = ''
+    current = ''
+
+    i = 0
+    while i < len(s):
+        c = s[i]
+        if in_str:
+            current += c
+            if c == str_char and (i == 0 or s[i - 1] != '\\'):
+                in_str = False
+        elif c in ('"', "'"):
+            in_str = True
+            str_char = c
+            current += c
+        elif c in '([{':
+            depth += 1
+            current += c
+        elif c in ')]}':
+            depth -= 1
+            current += c
+        elif c in (' ', ',') and depth == 0 and current.strip():
+            tokens.append(current.strip())
+            current = ''
+            while i + 1 < len(s) and s[i + 1] in (' ', ','):
+                i += 1
+        elif c != ' ' or depth > 0:
+            current += c
+        i += 1
+
+    if current.strip():
+        tokens.append(current.strip())
+    return tokens
+
+
+def _try_json(s):
+    s = s.strip()
+    if not s:
+        return _SENTINEL
+    try:
+        return json.loads(s)
+    except Exception:
+        pass
+    # Try Python-style None/True/False
+    try:
+        normalized = re.sub(r'\bNone\b', 'null', s)
+        normalized = re.sub(r'\bTrue\b', 'true', normalized)
+        normalized = re.sub(r'\bFalse\b', 'false', normalized)
+        return json.loads(normalized)
+    except Exception:
+        pass
+    return _SENTINEL
+
 # Map solution filename → problem slug
 def solution_to_slug(filename):
     """test_two_sum.py → two-sum"""
@@ -148,9 +313,11 @@ def main():
         # Build test cases for executor
         test_cases = []
         for i, tc in enumerate(test_cases_yaml):
+            tc_input = tc.get("input", "")
             test_cases.append({
                 "id": f"tc-{i+1}",
-                "input": tc.get("input", ""),
+                "input": tc_input,
+                "args": parse_test_input(tc_input),
                 "expected": tc.get("expected", ""),
                 "isHidden": tc.get("isHidden", False),
                 "isKiller": tc.get("isKiller", False),
