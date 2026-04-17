@@ -5,7 +5,7 @@ import { LANGUAGE_CONFIG } from "./types";
 export async function runCpp(config: RunConfig): Promise<RunResult & { compileError?: string }> {
   const lang = LANGUAGE_CONFIG.CPP;
   const filename = `solution${lang.extension}`;
-  const compileCmd = lang.compileCmd!(filename);
+  const compileCmd = lang.compileCmd!(`/tmp/${filename}`);
 
   const compileResult = await compileInSandbox(
     lang.image,

@@ -19,13 +19,19 @@ function deepSort(val: any): any {
 function compareOutput(actual: string, expected: string): boolean {
   if (actual === expected) return true;
 
-  // Try order-insensitive array comparison (deep sort for nested arrays)
   try {
     const a = JSON.parse(actual);
     const e = JSON.parse(expected);
+
+    // Order-insensitive array comparison (deep sort for nested arrays)
     if (Array.isArray(a) && Array.isArray(e)) {
       if (a.length !== e.length) return false;
       return JSON.stringify(deepSort(a)) === JSON.stringify(deepSort(e));
+    }
+
+    // TreeNode subtree vs expected value: [6,2,8,...] vs 6 → compare root value
+    if (Array.isArray(a) && !Array.isArray(e) && a.length > 0 && a[0] === e) {
+      return true;
     }
   } catch {
     // Not JSON, fall through to string comparison

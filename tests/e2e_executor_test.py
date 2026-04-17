@@ -189,6 +189,15 @@ def _try_json(s):
         pass
     return _SENTINEL
 
+# Slug aliases: solution filename slug → YAML filename slug
+SLUG_ALIASES = {
+    "construct-binary-tree": "construct-binary-tree-from-preorder-and-inorder",
+    "kth-smallest-in-bst": "kth-smallest-element-in-bst",
+    "longest-substring-without-repeating": "longest-substring-without-repeating-characters",
+    "lowest-common-ancestor-bst": "lowest-common-ancestor-of-bst",
+    "validate-bst": "validate-binary-search-tree",
+}
+
 # Map solution filename → problem slug
 def solution_to_slug(filename):
     """test_two_sum.py → two-sum"""
@@ -197,10 +206,15 @@ def solution_to_slug(filename):
 
 # Find YAML for a slug
 def find_yaml(slug):
-    for root, dirs, files in os.walk(SEED_DIR):
-        for f in files:
-            if f == f"{slug}.yaml":
-                return os.path.join(root, f)
+    # Try exact match first, then alias
+    candidates = [slug, SLUG_ALIASES.get(slug, "")]
+    for candidate in candidates:
+        if not candidate:
+            continue
+        for root, dirs, files in os.walk(SEED_DIR):
+            for f in files:
+                if f == f"{candidate}.yaml":
+                    return os.path.join(root, f)
     return None
 
 # Extract only the Solution class code (no test code)
@@ -274,11 +288,6 @@ def main():
         "serialize-and-deserialize-binary-tree",  # Design problem
         "implement-trie",            # Multi-operation design problem
         "find-median-from-data-stream",  # Multi-operation design problem
-        "merge-k-sorted-lists",      # Linked list input
-        "merge-two-sorted-lists",    # Linked list input
-        "reverse-linked-list",       # Linked list input
-        "remove-nth-node-from-end",  # Linked list input
-        "reorder-list",              # Linked list input
     }
 
     passed = 0

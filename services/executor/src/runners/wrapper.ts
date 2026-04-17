@@ -85,6 +85,20 @@ ${userCode}
 # === Auto-generated I/O wrapper ===
 import sys, json, inspect
 
+def _find_node(root, val):
+    """Find a TreeNode by value via BFS."""
+    if not root:
+        return TreeNode(val)
+    from collections import deque as _dq
+    q = _dq([root])
+    while q:
+        node = q.popleft()
+        if node.val == val:
+            return node
+        if node.left: q.append(node.left)
+        if node.right: q.append(node.right)
+    return TreeNode(val)
+
 def _convert_args(method, args):
     """Auto-convert args based on type hints (TreeNode, ListNode, etc.)."""
     hints = {}
@@ -98,17 +112,37 @@ def _convert_args(method, args):
         params = params[1:]
 
     converted = list(args)
+    _tree_root = None  # Cache for finding nodes by value
     for i, param in enumerate(params):
         if i >= len(converted):
             break
         hint = hints.get(param, None)
         hint_str = str(hint) if hint else ''
 
-        if ('TreeNode' in hint_str or 'treenode' in hint_str.lower()) and isinstance(converted[i], list):
-            vals = [None if v is None or v == 'null' else v for v in converted[i]]
-            converted[i] = _build_tree(vals)
-        elif ('ListNode' in hint_str or 'listnode' in hint_str.lower()) and isinstance(converted[i], list):
-            converted[i] = _build_list(converted[i])
+        _is_collection = 'list[' in hint_str.lower() or 'List[' in hint_str
+        if 'TreeNode' in hint_str or 'treenode' in hint_str.lower():
+            if isinstance(converted[i], list):
+                if _is_collection:
+                    # List[TreeNode]: convert each element
+                    converted[i] = [_build_tree(v) if isinstance(v, list) else v for v in converted[i]]
+                else:
+                    vals = [None if v is None or v == 'null' else v for v in converted[i]]
+                    converted[i] = _build_tree(vals)
+                    if _tree_root is None:
+                        _tree_root = converted[i]
+            elif isinstance(converted[i], (int, float)):
+                # TreeNode hint but got int → find node in tree or wrap as TreeNode
+                if _tree_root:
+                    converted[i] = _find_node(_tree_root, converted[i])
+                else:
+                    converted[i] = TreeNode(converted[i])
+        elif 'ListNode' in hint_str or 'listnode' in hint_str.lower():
+            if isinstance(converted[i], list):
+                if _is_collection:
+                    # List[ListNode]: convert each inner list
+                    converted[i] = [_build_list(v) if isinstance(v, list) else v for v in converted[i]]
+                else:
+                    converted[i] = _build_list(converted[i])
 
     return converted
 
@@ -154,11 +188,22 @@ if __name__ == "__main__":
 }
 
 export function wrapJavaScriptCode(userCode: string): string {
+  // Detect standalone function name from user code (for non-class solutions)
+  let standaloneFn = "";
+  if (!/class\s+Solution\b/.test(userCode)) {
+    // Match: var/let/const name = function, or function name(
+    const fnMatch = userCode.match(
+      /(?:var|let|const)\s+(\w+)\s*=\s*function|function\s+(\w+)\s*\(/
+    );
+    if (fnMatch) {
+      standaloneFn = fnMatch[1] || fnMatch[2];
+    }
+  }
+
   return `${userCode}
 
 // === Auto-generated I/O wrapper ===
-const _stdin = require("fs").readFileSync("/dev/stdin", "utf-8").trim();
-const _args = JSON.parse(_stdin);
+const _args = JSON.parse(require("fs").readFileSync("/tmp/args.json", "utf-8"));
 
 function _formatResult(r) {
   if (typeof r === "boolean") return r ? "true" : "false";
@@ -167,13 +212,15 @@ function _formatResult(r) {
   return String(r);
 }
 
+let _result;
 if (typeof Solution !== "undefined") {
   const _sol = new Solution();
   const _methods = Object.getOwnPropertyNames(Object.getPrototypeOf(_sol))
     .filter(m => m !== "constructor");
-  if (_methods.length > 0) {
-    console.log(_formatResult(_sol[_methods[0]](..._args)));
-  }
-}
+  if (_methods.length > 0) _result = _sol[_methods[0]](..._args);
+}${standaloneFn ? ` else if (typeof ${standaloneFn} === "function") {
+  _result = ${standaloneFn}(..._args);
+}` : ""}
+if (_result !== undefined) console.log(_formatResult(_result));
 `;
 }

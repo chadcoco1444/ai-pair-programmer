@@ -13,15 +13,16 @@ export async function runJavaScript(config: RunConfig): Promise<RunResult> {
   const codeB64 = Buffer.from(wrappedCode).toString("base64");
   const argsB64 = Buffer.from(JSON.stringify(config.args)).toString("base64");
 
-  // Bootstrap: decode code + args via base64, write code to file, pass args as stdin
+  // Bootstrap: decode code + args via base64, write both to files, then run solution
   const bootstrapCmd = [
     `const fs = require('fs');`,
     `const { execSync } = require('child_process');`,
     `const code = Buffer.from('${codeB64}', 'base64').toString('utf-8');`,
-    `const argsJson = Buffer.from('${argsB64}', 'base64');`,
+    `const argsJson = Buffer.from('${argsB64}', 'base64').toString('utf-8');`,
     `fs.writeFileSync('/tmp/solution.js', code);`,
+    `fs.writeFileSync('/tmp/args.json', argsJson);`,
     `try {`,
-    `  const result = execSync('node /tmp/solution.js', { input: argsJson, stdio: ['pipe', 'pipe', 'pipe'] });`,
+    `  const result = execSync('node /tmp/solution.js', { stdio: ['pipe', 'pipe', 'pipe'] });`,
     `  process.stdout.write(result);`,
     `} catch (e) {`,
     `  if (e.stdout) process.stdout.write(e.stdout);`,
