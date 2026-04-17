@@ -137,7 +137,19 @@ if __name__ == "__main__":
         if _methods:
             _method = getattr(_sol, _methods[0])
             _converted = _convert_args(_method, _args)
-            print(_format_result(_method(*_converted)))
+            _result = _method(*_converted)
+            _ret_hint = str(inspect.get_annotations(_method).get('return', ''))
+            if _result is None and _converted:
+                # In-place mutation: -> None means modify first arg and return it
+                if _ret_hint == "<class 'NoneType'>" or _ret_hint == 'None':
+                    _result = _converted[0]
+                # Tree-returning method with empty tree: None → []
+                elif 'TreeNode' in _ret_hint:
+                    _result = []
+                # ListNode-returning method with empty list: None → []
+                elif 'ListNode' in _ret_hint:
+                    _result = []
+            print(_format_result(_result))
 `;
 }
 

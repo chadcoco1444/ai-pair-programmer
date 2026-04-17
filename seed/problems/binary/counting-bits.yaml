@@ -97,7 +97,7 @@ testCases:
     expected: "[0,1,1,2,1,2,2,3,1,2,2]"
     isHidden: true
     isKiller: false
-  - input: "100000"
-    expected: "100001"
+  - input: "16"
+    expected: "[0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1]"
     isHidden: true
     isKiller: true

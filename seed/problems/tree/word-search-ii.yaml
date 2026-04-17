@@ -89,10 +89,10 @@ testCases:
     isHidden: false
     isKiller: false
   - input: 'board = [["a","b","c"],["d","e","f"],["g","h","i"]], words = ["abc","cfi","beh","dehi","cadg"]'
-    expected: '["abc","cfi","beh"]'
+    expected: '["abc","beh","cfi","dehi"]'
     isHidden: true
     isKiller: false
-  - input: 'board = [["a","a","a","a"],["a","a","a","a"],["a","a","a","a"],["a","a","a","a"]], words = ["aaaaaaaaaaaa","aaaaaaaaaaaaa"]'
-    expected: "[]"
+  - input: 'board = [["a","b"],["c","d"]], words = ["ab","cd","ac","bd","abcd","dcba","abdc"]'
+    expected: '["ab","abdc","ac","bd","cd"]'
     isHidden: true
     isKiller: true

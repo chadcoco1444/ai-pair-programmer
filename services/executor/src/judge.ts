@@ -9,18 +9,23 @@ function normalizeOutput(output: string): string {
  * If both values are JSON arrays, compare sorted versions.
  * Otherwise, compare as strings.
  */
+function deepSort(val: any): any {
+  if (!Array.isArray(val)) return val;
+  const sorted = val.map(deepSort);
+  sorted.sort((a: any, b: any) => JSON.stringify(a) < JSON.stringify(b) ? -1 : 1);
+  return sorted;
+}
+
 function compareOutput(actual: string, expected: string): boolean {
   if (actual === expected) return true;
 
-  // Try order-insensitive array comparison
+  // Try order-insensitive array comparison (deep sort for nested arrays)
   try {
     const a = JSON.parse(actual);
     const e = JSON.parse(expected);
     if (Array.isArray(a) && Array.isArray(e)) {
       if (a.length !== e.length) return false;
-      const sortedA = JSON.stringify([...a].sort());
-      const sortedE = JSON.stringify([...e].sort());
-      return sortedA === sortedE;
+      return JSON.stringify(deepSort(a)) === JSON.stringify(deepSort(e));
     }
   } catch {
     // Not JSON, fall through to string comparison

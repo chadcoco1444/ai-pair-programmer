@@ -5,6 +5,24 @@ description: MANDATORY E2E regression for ALL 71 Blind 75 solutions. Must run af
 
 # E2E Solution Regression — 全部 71 題驗證
 
+## Architecture (server-side parser)
+
+The pipeline is:
+1. **TypeScript `parseTestInput()`** converts free-form YAML input → `any[]` args array
+2. **Submission router** calls `parseTestInput` and attaches `args` to each test case
+3. **Executor queue** passes `testCases` (with `args`) to worker
+4. **Worker** builds `RunConfig` with `args: tc.args ?? []`
+5. **Language runner** embeds `JSON.stringify(args)` as base64 in bootstrap command (no stdin piping)
+6. **Python/JS wrapper** reads JSON from stdin, calls `Solution.method(*args)`, prints result
+7. **Judge** compares output with expected (deep-sorted for arrays)
+
+Key files:
+- `apps/web/src/server/services/input-parser.ts` — parseTestInput (5 formats)
+- `services/executor/src/runners/wrapper.ts` — Python/JS wrappers (~140 lines each)
+- `services/executor/src/runners/python.ts` — base64 bootstrap, no stdin piping
+- `services/executor/src/runners/javascript.ts` — same pattern
+- `services/executor/src/judge.ts` — deep-sorted array comparison
+
 ## WHEN TO RUN (MANDATORY)
 
 **Every time ANY of these files change, you MUST run the full E2E test:**
@@ -14,6 +32,7 @@ description: MANDATORY E2E regression for ALL 71 Blind 75 solutions. Must run af
 - `services/executor/src/runners/javascript.ts`
 - `services/executor/src/judge.ts`
 - `services/executor/src/sandbox.ts`
+- `apps/web/src/server/services/input-parser.ts`
 - `seed/problems/**/*.yaml`
 - `tests/solutions/test_*.py`
 
@@ -21,11 +40,17 @@ description: MANDATORY E2E regression for ALL 71 Blind 75 solutions. Must run af
 
 ## HOW TO RUN
 
-### Step 1: Ensure executor is running
+### Step 1: Ensure executor is running (MUST use latest code)
 
 ```bash
-curl -s http://localhost:4000/health || npm run dev:executor
+# Kill ALL old executor processes first!
+wmic process where "name='node.exe'" get ProcessId,CommandLine | grep executor
+# Kill each PID, then:
+npx tsx services/executor/src/server.ts &
+curl -s http://localhost:4000/health
 ```
+
+**IMPORTANT:** tsx can cache old modules. Always kill ALL executor node processes before restarting.
 
 ### Step 2: Run the full E2E test script
 
@@ -37,46 +62,30 @@ This script:
 1. Finds all 71 solution files in `tests/solutions/`
 2. Finds matching YAML test cases in `seed/problems/`
 3. Extracts the Solution class code (strips test functions)
-4. Sends to executor API (`POST /execute/sync`)
-5. Executor wraps code → runs in Docker → judges output
-6. Reports PASS/FAIL/SKIP for every problem
+4. Calls `parse_test_input()` (Python port) to pre-parse args
+5. Sends to executor API (`POST /execute/sync`) with `args` field
+6. Executor wraps code → runs in Docker → judges output
+7. Reports PASS/FAIL/SKIP for every problem
 
 ### Step 3: Verify output
 
 ```
-Total: 71 | Pass: XX | Fail: 0 | Skip: XX
+Total: 71 | Pass: 55 | Fail: 0 | Skip: 16
 ```
 
 **Fail MUST be 0.** Any failure blocks the commit.
-
-## USING SUBAGENTS
-
-When fixing failures, dispatch subagents in parallel by category:
-
-```
-Agent 1: Fix Array problems (two-sum, container, product, etc.)
-Agent 2: Fix DP problems (coin-change, house-robber, etc.)
-Agent 3: Fix Tree problems (BST, invert, level-order, etc.)
-Agent 4: Fix String problems (anagram, palindrome, etc.)
-```
-
-Each subagent should:
-1. Read the failing problem's error message
-2. Check the YAML test case format
-3. Check the solution code
-4. Fix wrapper/solution/test-case as needed
-5. Re-run that problem through executor API to verify
 
 ## COMMON FAILURE PATTERNS
 
 | Symptom | Root Cause | Fix |
 |---------|-----------|-----|
-| `missing positional argument` | Input not parsed into enough args | Fix YAML input format or wrapper parser |
-| `unsupported operand type` | Args parsed as string not int/list | Fix `_parse_value` or `null→None` conversion |
-| `actual=bab expected="bab"` | Expected has quotes, actual doesn't | Fix YAML expected to not have quotes |
-| `actual=null expected=[]` | void method returns None | Fix `_format_result` for None → `[]` |
-| `RUNTIME_ERROR` with no stderr | Docker container crashed | Check code + wrapper escaping |
-| Wrong method called | `dir()` alphabetical ordering | Use `type().__dict__` for definition order |
+| `json.loads(sys.stdin.rea` (truncated) | Docker stdin race condition | Use base64 args in bootstrap cmd, not stdin pipe |
+| `missing positional argument` | Wrong args count from parser | Fix parseTestInput or YAML input format |
+| `actual=bab expected="bab"` | Expected has extra quotes | Fix YAML expected to not have quotes |
+| `actual=null expected=[[...]]` | In-place mutation (-> None) | Wrapper detects `-> None` hint, returns first arg |
+| `actual=null expected=[]` | Tree method returns None for empty tree | Wrapper detects TreeNode return hint |
+| Sort mismatch for nested arrays | Shallow sort in judge | Judge uses deepSort for nested array comparison |
+| Old wrapper still running | tsx module caching | Kill ALL node executor PIDs before restart |
 
 ## ADDING NEW PROBLEMS
 
@@ -92,3 +101,4 @@ Each subagent should:
 - ❌ "Local Python test passes so it's fine" → Executor pipeline is different
 - ❌ "Only wrapper changed, no need to test solutions" → Wrapper IS the integration point
 - ❌ "I'll test later" → Test NOW, before commit
+- ❌ "Executor is already running" → Kill and restart to get latest code

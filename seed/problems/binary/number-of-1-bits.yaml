@@ -67,7 +67,7 @@ starterCode:
     };
 
 testCases:
-  - input: "11"
+  - input: "3"
     expected: "2"
     isHidden: false
     isKiller: false

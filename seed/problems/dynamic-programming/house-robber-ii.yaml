@@ -92,6 +92,6 @@ testCases:
     isHidden: true
     isKiller: false
   - input: "[200,3,140,20,10,200,100,5,100,200]"
-    expected: "740"
+    expected: "640"
     isHidden: true
     isKiller: true

@@ -104,6 +104,6 @@ testCases:
     isHidden: true
     isKiller: false
   - input: "\"111111111111111111111111111111111111111111111\""
-    expected: "1134903170"
+    expected: "1836311903"
     isHidden: true
     isKiller: true

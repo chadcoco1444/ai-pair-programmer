@@ -68,22 +68,22 @@ starterCode:
     };
 testCases:
   - input: '"ADOBECODEBANC", "ABC"'
-    expected: '"BANC"'
+    expected: BANC
     isHidden: false
     isKiller: false
   - input: '"a", "a"'
-    expected: '"a"'
+    expected: a
     isHidden: false
     isKiller: false
   - input: '"a", "aa"'
-    expected: '""'
+    expected: ""
     isHidden: false
     isKiller: false
   - input: '"aa", "aa"'
-    expected: '"aa"'
+    expected: aa
     isHidden: true
     isKiller: false
   - input: '"cabwefgewcwaefgcf", "cae"'
-    expected: '"cwae"'
+    expected: cwae
     isHidden: true
     isKiller: true

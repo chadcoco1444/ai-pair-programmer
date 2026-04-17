@@ -65,22 +65,22 @@ starterCode:
     };
 testCases:
   - input: '"babad"'
-    expected: '"bab"'
+    expected: bab
     isHidden: false
     isKiller: false
   - input: '"cbbd"'
-    expected: '"bb"'
+    expected: bb
     isHidden: false
     isKiller: false
   - input: '"a"'
-    expected: '"a"'
+    expected: a
     isHidden: false
     isKiller: false
   - input: '"racecar"'
-    expected: '"racecar"'
+    expected: racecar
     isHidden: true
     isKiller: false
   - input: '"aacabdkacaa"'
-    expected: '"aca"'
+    expected: aca
     isHidden: true
     isKiller: true

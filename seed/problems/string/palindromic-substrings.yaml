@@ -76,6 +76,6 @@ testCases:
     isHidden: true
     isKiller: false
   - input: '"abacaba"'
-    expected: "10"
+    expected: "12"
     isHidden: true
     isKiller: true
