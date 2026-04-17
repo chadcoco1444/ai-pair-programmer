@@ -315,7 +315,7 @@ if __name__ == "__main__":
 export function wrapJavaScriptCode(userCode: string): string {
   // Detect standalone function name from user code (for non-class solutions)
   let standaloneFn = "";
-  if (!/class\s+Solution\b/.test(userCode)) {
+  if (!/class\s+Solution\b/.test(userCode) && !/class\s+Codec\b/.test(userCode)) {
     // Match: var/let/const name = function, or function name(
     const fnMatch = userCode.match(
       /(?:var|let|const)\s+(\w+)\s*=\s*function|function\s+(\w+)\s*\(/
@@ -325,27 +325,295 @@ export function wrapJavaScriptCode(userCode: string): string {
     }
   }
 
-  return `${userCode}
+  return `// === Common data structures ===
+class TreeNode {
+  constructor(val = 0, left = null, right = null) {
+    this.val = val;
+    this.left = left;
+    this.right = right;
+  }
+}
+
+class ListNode {
+  constructor(val = 0, next = null) {
+    this.val = val;
+    this.next = next;
+  }
+}
+
+class Node {
+  constructor(val = 0, neighbors = []) {
+    this.val = val;
+    this.neighbors = [...neighbors];
+  }
+}
+
+function _buildTree(values) {
+  if (!values || values.length === 0 || values[0] == null) return null;
+  const root = new TreeNode(values[0]);
+  const queue = [root];
+  let i = 1;
+  while (queue.length > 0 && i < values.length) {
+    const node = queue.shift();
+    if (i < values.length && values[i] != null) {
+      node.left = new TreeNode(values[i]);
+      queue.push(node.left);
+    }
+    i++;
+    if (i < values.length && values[i] != null) {
+      node.right = new TreeNode(values[i]);
+      queue.push(node.right);
+    }
+    i++;
+  }
+  return root;
+}
+
+function _buildList(values) {
+  const dummy = new ListNode(0);
+  let curr = dummy;
+  for (const v of values) {
+    curr.next = new ListNode(v);
+    curr = curr.next;
+  }
+  return dummy.next;
+}
+
+function _buildListWithCycle(values, pos) {
+  if (!values || values.length === 0) return null;
+  const nodes = values.map(v => new ListNode(v));
+  for (let i = 0; i < nodes.length - 1; i++) {
+    nodes[i].next = nodes[i + 1];
+  }
+  if (pos >= 0) {
+    nodes[nodes.length - 1].next = nodes[pos];
+  }
+  return nodes[0];
+}
+
+function _treeToArray(root) {
+  if (!root) return [];
+  const result = [];
+  const queue = [root];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node) {
+      result.push(node.val);
+      queue.push(node.left);
+      queue.push(node.right);
+    } else {
+      result.push(null);
+    }
+  }
+  while (result.length > 0 && result[result.length - 1] === null) {
+    result.pop();
+  }
+  return result;
+}
+
+function _listToArray(head) {
+  const result = [];
+  const seen = new Set();
+  while (head) {
+    if (seen.has(head)) break;
+    seen.add(head);
+    result.push(head.val);
+    head = head.next;
+  }
+  return result;
+}
+
+function _buildGraph(adjList) {
+  if (!adjList || adjList.length === 0) return null;
+  const nodes = [];
+  for (let i = 0; i < adjList.length; i++) {
+    nodes.push(new Node(i + 1));
+  }
+  for (let i = 0; i < adjList.length; i++) {
+    for (const j of adjList[i]) {
+      nodes[i].neighbors.push(nodes[j - 1]);
+    }
+  }
+  return nodes[0];
+}
+
+function _graphToAdjList(node) {
+  if (!node) return [];
+  const visited = new Map();
+  const queue = [node];
+  visited.set(node, true);
+  const result = {};
+  while (queue.length > 0) {
+    const n = queue.shift();
+    result[n.val] = n.neighbors.map(nb => nb.val).sort((a, b) => a - b);
+    for (const nb of n.neighbors) {
+      if (!visited.has(nb)) {
+        visited.set(nb, true);
+        queue.push(nb);
+      }
+    }
+  }
+  const keys = Object.keys(result).map(Number).sort((a, b) => a - b);
+  return keys.map(k => result[k]);
+}
+
+function _findNode(root, val) {
+  if (!root) return new TreeNode(val);
+  const queue = [root];
+  while (queue.length > 0) {
+    const node = queue.shift();
+    if (node.val === val) return node;
+    if (node.left) queue.push(node.left);
+    if (node.right) queue.push(node.right);
+  }
+  return new TreeNode(val);
+}
+
+function _getParamNames(fn) {
+  const s = fn.toString();
+  const m = s.match(/^[^(]*\\(([^)]*)\\)/);
+  if (!m) return [];
+  return m[1].split(',').map(p => p.trim().replace(/=.*$/, '').replace(/\\.\\.\\./, '')).filter(Boolean);
+}
+
+function _convertArgs(method, args, paramNames) {
+  if (!paramNames) paramNames = _getParamNames(method);
+  const converted = [...args];
+  let treeRoot = null;
+  for (let i = 0; i < paramNames.length && i < converted.length; i++) {
+    const name = paramNames[i].toLowerCase();
+    if (['root', 'tree'].includes(name) && Array.isArray(converted[i])) {
+      converted[i] = _buildTree(converted[i]);
+      if (!treeRoot) treeRoot = converted[i];
+    } else if (['p', 'q'].includes(name) && Array.isArray(converted[i])) {
+      converted[i] = _buildTree(converted[i]);
+      if (!treeRoot) treeRoot = converted[i];
+    } else if (['p', 'q'].includes(name) && typeof converted[i] === 'number' && treeRoot) {
+      converted[i] = _findNode(treeRoot, converted[i]);
+    } else if (['head', 'list', 'list1', 'list2', 'l1', 'l2'].includes(name) && Array.isArray(converted[i])) {
+      // Check for cycle pattern: extra arg beyond param count
+      const extraIdx = paramNames.length;
+      if (name === 'head' && extraIdx < converted.length && typeof converted[extraIdx] === 'number') {
+        converted[i] = _buildListWithCycle(converted[i], converted[extraIdx]);
+        converted[extraIdx] = '__consumed__';
+      } else {
+        converted[i] = _buildList(converted[i]);
+      }
+    } else if (name === 'lists' && Array.isArray(converted[i])) {
+      converted[i] = converted[i].map(v => Array.isArray(v) ? _buildList(v) : v);
+    } else if (['node', 'adjlist', 'graph'].includes(name) && Array.isArray(converted[i]) && converted[i].length > 0 && Array.isArray(converted[i][0])) {
+      converted[i] = _buildGraph(converted[i]);
+    }
+  }
+  return converted.filter(a => a !== '__consumed__');
+}
+
+function _formatResult(r) {
+  if (typeof r === 'boolean') return r ? 'true' : 'false';
+  if (r === null || r === undefined) return 'null';
+  if (r instanceof TreeNode) return JSON.stringify(_treeToArray(r));
+  if (r instanceof ListNode) return JSON.stringify(_listToArray(r));
+  if (r instanceof Node && r.neighbors !== undefined) return JSON.stringify(_graphToAdjList(r));
+  if (Array.isArray(r) || typeof r === 'object') return JSON.stringify(r);
+  return String(r);
+}
+
+function _formatMultiOpResult(results) {
+  const formatted = results.map(r => {
+    if (r === null || r === undefined) return null;
+    if (r instanceof TreeNode) return _treeToArray(r);
+    if (r instanceof ListNode) return _listToArray(r);
+    if (r instanceof Node && r.neighbors !== undefined) return _graphToAdjList(r);
+    return r;
+  });
+  return JSON.stringify(formatted);
+}
+
+// In-place mutation detection: method name patterns that modify first arg
+const _IN_PLACE_NAMES = /^(rotate|setZeroes|reorderList|sortColors|moveZeroes|reverseString|merge|flatten|connect|recoverTree|deleteNode|sortList|reverseList|reverse|sort|shuffle|swap|flip|invert)/i;
+
+// === User code ===
+\${userCode}
 
 // === Auto-generated I/O wrapper ===
 const _args = JSON.parse(require("fs").readFileSync("/tmp/args.json", "utf-8"));
 
-function _formatResult(r) {
-  if (typeof r === "boolean") return r ? "true" : "false";
-  if (r === null || r === undefined) return "null";
-  if (Array.isArray(r) || typeof r === "object") return JSON.stringify(r);
-  return String(r);
-}
-
-let _result;
-if (typeof Solution !== "undefined") {
+// Multi-op mode
+if (_args.length === 1 && _args[0] && typeof _args[0] === 'object' && !Array.isArray(_args[0]) && _args[0].__multiOp) {
+  const _multi = _args[0];
+  const _ops = _multi.ops;
+  const _opArgs = _multi.args;
+  const _Cls = eval(_ops[0]);
+  const _instance = new _Cls(...(_opArgs[0] || []));
+  const _results = [null];
+  for (let _i = 1; _i < _ops.length; _i++) {
+    const _method = _instance[_ops[_i]].bind(_instance);
+    const _methodArgs = _opArgs[_i] || [];
+    const _paramNames = _getParamNames(_method);
+    const _converted = _convertArgs(_method, _methodArgs, _paramNames);
+    let _r = _method(..._converted);
+    if (_r === undefined) _r = null;
+    _results.push(_r);
+  }
+  console.log(_formatMultiOpResult(_results));
+} else if (typeof Codec !== 'undefined') {
+  // Codec roundtrip mode
+  const _codec = new Codec();
+  if (typeof _codec.encode === 'function' && typeof _codec.decode === 'function') {
+    const _encoded = _codec.encode(_args[0] != null ? _args[0] : []);
+    const _decoded = _codec.decode(_encoded);
+    console.log(_formatResult(_decoded));
+  } else if (typeof _codec.serialize === 'function' && typeof _codec.deserialize === 'function') {
+    const _tree = Array.isArray(_args[0]) ? _buildTree(_args[0]) : null;
+    const _serialized = _codec.serialize(_tree);
+    const _deserialized = _codec.deserialize(_serialized);
+    const _r = _deserialized ? _treeToArray(_deserialized) : [];
+    console.log(_formatResult(_r));
+  }
+} else if (typeof Solution !== 'undefined') {
   const _sol = new Solution();
   const _methods = Object.getOwnPropertyNames(Object.getPrototypeOf(_sol))
-    .filter(m => m !== "constructor");
-  if (_methods.length > 0) _result = _sol[_methods[0]](..._args);
-}${standaloneFn ? ` else if (typeof ${standaloneFn} === "function") {
-  _result = ${standaloneFn}(..._args);
+    .filter(m => m !== 'constructor');
+
+  // Check for roundtrip pattern (encode/decode or serialize/deserialize)
+  if (typeof _sol.encode === 'function' && typeof _sol.decode === 'function' && _methods.includes('encode') && _methods.includes('decode')) {
+    const _encoded = _sol.encode(_args[0] != null ? _args[0] : []);
+    const _decoded = _sol.decode(_encoded);
+    console.log(_formatResult(_decoded));
+  } else if (typeof _sol.serialize === 'function' && typeof _sol.deserialize === 'function' && _methods.includes('serialize') && _methods.includes('deserialize')) {
+    const _tree = Array.isArray(_args[0]) ? _buildTree(_args[0]) : null;
+    const _serialized = _sol.serialize(_tree);
+    const _deserialized = _sol.deserialize(_serialized);
+    const _r = _deserialized ? _treeToArray(_deserialized) : [];
+    console.log(_formatResult(_r));
+  } else if (_methods.length > 0) {
+    const _methodName = _methods[0];
+    const _method = _sol[_methodName].bind(_sol);
+    const _paramNames = _getParamNames(_method);
+    const _converted = _convertArgs(_method, _args, _paramNames);
+    let _result = _method(..._converted);
+
+    // In-place mutation handling
+    if (_result === undefined && _converted.length > 0) {
+      if (_IN_PLACE_NAMES.test(_methodName)) {
+        _result = _converted[0];
+      }
+    }
+
+    // Convert data structures back to arrays for output
+    if (_result === undefined || _result === null) {
+      console.log('null');
+    } else {
+      console.log(_formatResult(_result));
+    }
+  }
+}${standaloneFn ? ` else if (typeof ${standaloneFn} === 'function') {
+  const _fn = ${standaloneFn};
+  const _paramNames = _getParamNames(_fn);
+  const _converted = _convertArgs(_fn, _args, _paramNames);
+  let _result = _fn(..._converted);
+  if (_result === undefined) _result = null;
+  console.log(_formatResult(_result));
 }` : ""}
-if (_result !== undefined) console.log(_formatResult(_result));
 `;
 }
