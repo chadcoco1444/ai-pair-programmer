@@ -7,6 +7,7 @@ import { AuthButton } from "./auth-button";
 
 const NAV_ITEMS = [
   { href: "/practice", label: "Problems" },
+  { href: "/learn", label: "Learn Map" },
   { href: "/dashboard", label: "Dashboard", auth: true },
   { href: "/profile", label: "Profile", auth: true },
 ];
