@@ -162,7 +162,31 @@ E2E 測試腳本改為送 `args` 而非 `input`。
 
 ## 測試策略
 
+### Unit Tests
 1. `input-parser.test.ts` — 覆蓋所有 5 種格式 + 71 個實際 test case
 2. `wrapper.test.ts` — 更新為測試極簡 wrapper
-3. `npm run test:e2e` — 全部 71 題 through executor
-4. Fail 數 = 0 才能 commit
+
+### E2E Tests — 4 語言 x 71 題
+
+```
+tests/solutions/
+├── python/          # 71 個 .py 解答
+├── javascript/      # 71 個 .js 解答
+├── c/               # 71 個 .c 解答（適用題目）
+└── cpp/             # 71 個 .cpp 解答（適用題目）
+```
+
+- `npm run test:e2e` — 全部題目 x 全部語言 through executor
+- E2E 腳本依序對每題的每個語言版本 submit
+- Fail 數 = 0 才能 commit
+
+### Claude Skill 要求
+- 修改 wrapper/judge/runner/sandbox 後 MUST 跑 `npm run test:e2e`
+- E2E 測試覆蓋所有 4 語言（Python, JavaScript, C, C++）
+- 新增題目時，4 語言的解答都要加
+
+### 實作順序
+1. 先完成 server-side parser + 極簡 wrapper（本 spec）
+2. Python 71 題 E2E 全通過
+3. 再加 JavaScript 71 題解答
+4. 再加 C/C++ 解答（部分題目不適用，如 Trie、Serialize Tree）
