@@ -42,6 +42,7 @@ async function processJob(job: { data: ExecutionJob }): Promise<JudgeResult> {
       language,
       code,
       input: tc.input,
+      args: tc.args ?? [],
       timeout,
       memoryLimit,
     };

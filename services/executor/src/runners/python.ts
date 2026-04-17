@@ -27,7 +27,7 @@ export async function runPython(config: RunConfig): Promise<RunResult> {
   return runInSandbox({
     image: lang.image,
     command: ["python3", "-c", bootstrapCmd],
-    stdin: config.input,
+    stdin: JSON.stringify(config.args),
     timeout: config.timeout,
     memoryLimit: config.memoryLimit,
   });

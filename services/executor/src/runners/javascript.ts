@@ -31,7 +31,7 @@ export async function runJavaScript(config: RunConfig): Promise<RunResult> {
   return runInSandbox({
     image: lang.image,
     command: ["node", "-e", bootstrapCmd],
-    stdin: config.input,
+    stdin: JSON.stringify(config.args),
     timeout: config.timeout,
     memoryLimit: config.memoryLimit,
   });
