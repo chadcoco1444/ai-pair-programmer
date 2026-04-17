@@ -80,6 +80,109 @@ export const conceptRouter = router({
       return { nodes, edges: edgeList };
     }),
 
+  detail: publicProcedure
+    .input(z.object({ conceptId: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userId = (ctx as any).user?.id ?? ctx.session?.user?.id;
+
+      const [concept, userProgress, problemLinks, prereqEdges, followUpEdges] = await Promise.all([
+        ctx.prisma.concept.findUnique({ where: { id: input.conceptId } }),
+        userId
+          ? ctx.prisma.userProgress.findUnique({
+              where: { userId_conceptId: { userId, conceptId: input.conceptId } },
+            })
+          : Promise.resolve(null),
+        ctx.prisma.problemConcept.findMany({
+          where: { conceptId: input.conceptId },
+          include: { problem: { select: { id: true, slug: true, title: true, difficulty: true } } },
+          orderBy: { relevance: "desc" },
+        }),
+        ctx.prisma.conceptEdge.findMany({
+          where: { childId: input.conceptId, relation: "prerequisite" },
+          include: { parent: { select: { id: true, name: true } } },
+        }),
+        ctx.prisma.conceptEdge.findMany({
+          where: { parentId: input.conceptId, relation: "prerequisite" },
+          include: { child: { select: { id: true, name: true } } },
+        }),
+      ]);
+
+      if (!concept) {
+        throw new Error(`Concept ${input.conceptId} not found`);
+      }
+
+      const problemIds = (problemLinks as any[]).map((l) => l.problem.id);
+
+      const [solvedSubs, recentSubs, weaknesses, prereqProgress, followUpProgress] = await Promise.all([
+        userId && problemIds.length > 0
+          ? ctx.prisma.submission.findMany({
+              where: { userId, problemId: { in: problemIds }, status: "ACCEPTED" },
+              select: { problemId: true },
+              distinct: ["problemId"],
+            })
+          : Promise.resolve([]),
+        userId && problemIds.length > 0
+          ? ctx.prisma.submission.findMany({
+              where: { userId, problemId: { in: problemIds } },
+              orderBy: { createdAt: "desc" },
+              take: 3,
+              select: { id: true, status: true, createdAt: true, problem: { select: { slug: true, title: true } } },
+            })
+          : Promise.resolve([]),
+        userId
+          ? ctx.prisma.userWeakness.findMany({
+              where: { userId },
+              orderBy: { frequency: "desc" },
+              take: 3,
+              select: { pattern: true, frequency: true },
+            })
+          : Promise.resolve([]),
+        userId && (prereqEdges as any[]).length > 0
+          ? ctx.prisma.userProgress.findMany({
+              where: { userId, conceptId: { in: (prereqEdges as any[]).map((e) => e.parentId) } },
+            })
+          : Promise.resolve([]),
+        userId && (followUpEdges as any[]).length > 0
+          ? ctx.prisma.userProgress.findMany({
+              where: { userId, conceptId: { in: (followUpEdges as any[]).map((e) => e.childId) } },
+            })
+          : Promise.resolve([]),
+      ]);
+
+      const solvedSet = new Set((solvedSubs as any[]).map((s) => s.problemId));
+      const prereqMastery = new Map((prereqProgress as any[]).map((p) => [p.conceptId, p.mastery]));
+      const followUpMastery = new Map((followUpProgress as any[]).map((p) => [p.conceptId, p.mastery]));
+
+      return {
+        concept: { id: concept.id, name: concept.name, domain: concept.domain, description: concept.description },
+        mastery: userProgress?.mastery ?? 0,
+        problems: (problemLinks as any[]).map((l) => ({
+          slug: l.problem.slug,
+          title: l.problem.title,
+          difficulty: l.problem.difficulty as "EASY" | "MEDIUM" | "HARD",
+          relevance: l.relevance,
+          solved: solvedSet.has(l.problem.id),
+        })),
+        prerequisites: (prereqEdges as any[]).map((e) => ({
+          id: e.parent.id,
+          name: e.parent.name,
+          mastery: prereqMastery.get(e.parent.id) ?? 0,
+        })),
+        followUps: (followUpEdges as any[]).map((e) => ({
+          id: e.child.id,
+          name: e.child.name,
+          mastery: followUpMastery.get(e.child.id) ?? 0,
+        })),
+        recentSubmissions: (recentSubs as any[]).map((s) => ({
+          problemSlug: s.problem.slug,
+          problemTitle: s.problem.title,
+          status: s.status,
+          createdAt: s.createdAt,
+        })),
+        weaknessStats: weaknesses,
+      };
+    }),
+
   prerequisites: publicProcedure
     .input(z.object({ conceptId: z.string() }))
     .query(async ({ ctx, input }) => {
