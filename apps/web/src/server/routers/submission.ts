@@ -109,7 +109,7 @@ export const submissionRouter = router({
     .input(
       z.object({
         problemId: z.string().optional(),
-        limit: z.number().min(1).max(50).default(10),
+        limit: z.number().min(1).max(500).default(10),
       })
     )
     .query(async ({ ctx, input }) => {

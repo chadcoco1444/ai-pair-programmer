@@ -2,6 +2,7 @@
 
 import { useSession } from "next-auth/react";
 import { redirect } from "next/navigation";
+import Link from "next/link";
 import { trpc } from "@/lib/trpc-client";
 
 const STATUS_STYLE: Record<string, { label: string; cls: string }> = {
@@ -191,10 +192,19 @@ export default function ProfilePage() {
                   return (
                     <tr
                       key={s.id}
-                      className="transition-colors hover:bg-[#222]"
+                      className="cursor-pointer transition-colors hover:bg-[#222]"
+                      onClick={() => {
+                        window.location.href = `/practice/${s.problem.slug}`;
+                      }}
                     >
                       <td className="px-5 py-3 text-[13px] font-medium text-white">
-                        {s.problem.title}
+                        <Link
+                          href={`/practice/${s.problem.slug}`}
+                          className="hover:text-emerald-300"
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          {s.problem.title}
+                        </Link>
                       </td>
                       <td className="px-5 py-3 text-[12px] text-gray-500 uppercase">
                         {s.language}
