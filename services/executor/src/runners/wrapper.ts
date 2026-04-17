@@ -10,10 +10,78 @@ from collections import defaultdict, Counter, deque, OrderedDict
 from typing import List, Optional, Tuple, Dict, Set
 from functools import lru_cache
 
+# === Common data structures (TreeNode, ListNode) ===
+class TreeNode:
+    def __init__(self, val=0, left=None, right=None):
+        self.val = val
+        self.left = left
+        self.right = right
+
+class ListNode:
+    def __init__(self, val=0, next=None):
+        self.val = val
+        self.next = next
+
+def _build_tree(values):
+    """Build binary tree from level-order list like [3,9,20,None,None,15,7]"""
+    if not values or values[0] is None:
+        return None
+    from collections import deque as _dq
+    root = TreeNode(values[0])
+    queue = _dq([root])
+    i = 1
+    while queue and i < len(values):
+        node = queue.popleft()
+        if i < len(values) and values[i] is not None:
+            node.left = TreeNode(values[i])
+            queue.append(node.left)
+        i += 1
+        if i < len(values) and values[i] is not None:
+            node.right = TreeNode(values[i])
+            queue.append(node.right)
+        i += 1
+    return root
+
+def _build_list(values):
+    """Build linked list from array like [1,2,3,4,5]"""
+    dummy = ListNode(0)
+    curr = dummy
+    for v in values:
+        curr.next = ListNode(v)
+        curr = curr.next
+    return dummy.next
+
+def _list_to_array(head):
+    """Convert linked list to array"""
+    result = []
+    while head:
+        result.append(head.val)
+        head = head.next
+    return result
+
+def _tree_to_array(root):
+    """Convert binary tree to level-order array"""
+    if not root:
+        return []
+    from collections import deque as _dq
+    result = []
+    queue = _dq([root])
+    while queue:
+        node = queue.popleft()
+        if node:
+            result.append(node.val)
+            queue.append(node.left)
+            queue.append(node.right)
+        else:
+            result.append(None)
+    while result and result[-1] is None:
+        result.pop()
+    return result
+
 ${userCode}
 
 # === Auto-generated I/O wrapper ===
-import sys, json, ast
+import sys, json, ast, inspect
 
 def _parse_input(raw):
     raw = raw.strip()
@@ -106,10 +174,48 @@ def _parse_value(s):
     if _looks_like_assignment(s):
         eq_pos = s.index('=')
         s = s[eq_pos+1:].strip()
+    # Replace JSON null/true/false with Python equivalents
+    s_py = s.replace('null', 'None').replace('true', 'True').replace('false', 'False')
+    try:
+        return ast.literal_eval(s_py)
+    except:
+        pass
     try:
         return ast.literal_eval(s)
     except:
         return s
+
+def _convert_args(method, args):
+    """Auto-convert args based on type hints (TreeNode, ListNode, etc.)."""
+    hints = {}
+    try:
+        hints = inspect.get_annotations(method)
+    except:
+        pass
+
+    params = list(inspect.signature(method).parameters.keys())
+    # Skip 'self' for bound methods
+    if params and params[0] == 'self':
+        params = params[1:]
+
+    converted = list(args)
+    for i, param in enumerate(params):
+        if i >= len(converted):
+            break
+        hint = hints.get(param, None)
+        hint_str = str(hint) if hint else ''
+
+        # Convert list → TreeNode if type hint says Optional[TreeNode] or TreeNode
+        if ('TreeNode' in hint_str or 'treenode' in hint_str.lower()) and isinstance(converted[i], list):
+            # Replace None strings with actual None
+            vals = [None if v is None or v == 'null' else v for v in converted[i]]
+            converted[i] = _build_tree(vals)
+
+        # Convert list → ListNode if type hint says Optional[ListNode] or ListNode
+        elif ('ListNode' in hint_str or 'listnode' in hint_str.lower()) and isinstance(converted[i], list):
+            converted[i] = _build_list(converted[i])
+
+    return converted
 
 def _format_result(r):
     if isinstance(r, bool):
@@ -120,6 +226,12 @@ def _format_result(r):
         return r
     if r is None:
         return "null"
+    # Convert TreeNode result to list
+    if isinstance(r, TreeNode):
+        return json.dumps(_tree_to_array(r))
+    # Convert ListNode result to list
+    if isinstance(r, ListNode):
+        return json.dumps(_list_to_array(r))
     return str(r)
 
 if __name__ == "__main__":
@@ -135,15 +247,19 @@ if __name__ == "__main__":
         _methods = [k for k, v in type(_sol).__dict__.items()
                     if not k.startswith("_") and callable(v)]
         if _methods:
-            _result = getattr(_sol, _methods[0])(*_args)
+            _method = getattr(_sol, _methods[0])
+            _converted = _convert_args(_method, _args)
+            _result = _method(*_converted)
             _found = True
 
     if not _found:
-        import types
+        import types as _types
         _funcs = [(k, v) for k, v in list(globals().items())
-                  if isinstance(v, types.FunctionType) and not k.startswith("_")]
+                  if isinstance(v, _types.FunctionType) and not k.startswith("_")]
         if _funcs:
-            _result = _funcs[-1][1](*_args)
+            _func = _funcs[-1][1]
+            _converted = _convert_args(_func, _args)
+            _result = _func(*_converted)
             _found = True
 
     if _found:
