@@ -59,6 +59,7 @@ model User {
   conversations Conversation[]
   progress      UserProgress[]
   weaknesses    UserWeakness[]
+  dailyRecommendations DailyRecommendation[]
 }
 
 enum Level {
@@ -265,4 +266,17 @@ enum SubmissionStatus {
   MEMORY_LIMIT
   RUNTIME_ERROR
   COMPILE_ERROR
+}
+
+model DailyRecommendation {
+  id         String   @id @default(cuid())
+  userId     String
+  date       String   // yyyy-MM-dd
+  problemIds Json     // string[]: ordered problem IDs
+  reasons    Json     // { problemId: string, reason: string, score: number }[]
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, date])
+  @@index([userId])
 }
