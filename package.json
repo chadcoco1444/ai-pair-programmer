@@ -15,6 +15,8 @@
     "dev": "turbo dev",
     "build": "turbo build",
     "test": "turbo test",
+    "test:e2e": "python3 tests/e2e_executor_test.py",
+    "test:solutions": "cd tests/solutions && for f in test_*.py; do python3 \"$f\" || exit 1; done",
     "lint": "turbo lint",
     "db:push": "cd apps/web && npx prisma db push",
     "db:generate": "cd apps/web && npx prisma generate",
