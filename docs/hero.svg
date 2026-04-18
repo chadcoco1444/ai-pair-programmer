@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <circle cx="1" cy="1" r="1" fill="#1e293b" />
+    </pattern>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#22c55e" stop-opacity="1"/>
+      <stop offset="1" stop-color="#22c55e" stop-opacity="0.3"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="400" fill="#0f172a"/>
+  <rect width="1200" height="400" fill="url(#grid)"/>
+  <g transform="translate(80, 120)">
+    <circle cx="0" cy="0" r="6" fill="#22c55e">
+      <animate attributeName="opacity" values="1;0.4;1" dur="2s" repeatCount="indefinite"/>
+    </circle>
+    <text x="20" y="6" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="42" font-weight="700">AI Pair Programmer</text>
+    <text x="0" y="48" fill="#94a3b8" font-family="'Fira Sans', sans-serif" font-size="18">Socratic AI coding tutor · 4 languages · Docker-sandboxed</text>
+    <g transform="translate(0, 96)" font-family="'Fira Code', monospace" font-size="12">
+      <rect x="0" y="0" width="110" height="28" rx="14" fill="#1e293b" stroke="#334155"/>
+      <text x="55" y="18" fill="#f8fafc" text-anchor="middle">71 problems</text>
+      <rect x="120" y="0" width="110" height="28" rx="14" fill="#1e293b" stroke="#334155"/>
+      <text x="175" y="18" fill="#f8fafc" text-anchor="middle">4 languages</text>
+      <rect x="240" y="0" width="110" height="28" rx="14" fill="#1e293b" stroke="#334155"/>
+      <text x="295" y="18" fill="#f8fafc" text-anchor="middle">284 E2E tests</text>
+      <rect x="360" y="0" width="110" height="28" rx="14" fill="#1e293b" stroke="#334155"/>
+      <text x="415" y="18" fill="#22c55e" text-anchor="middle">MIT</text>
+    </g>
+  </g>
+  <g transform="translate(680, 140)" font-family="'Fira Code', monospace" font-size="11">
+    <circle cx="30" cy="60" r="22" fill="#1e293b" stroke="#334155"/>
+    <text x="30" y="64" fill="#f8fafc" text-anchor="middle">User</text>
+    <path d="M58 60 L100 60" stroke="#334155" stroke-width="1.5" fill="none" stroke-dasharray="2,3"/>
+    <rect x="100" y="40" width="80" height="40" rx="8" fill="#1e293b" stroke="#22c55e"/>
+    <text x="140" y="64" fill="#f8fafc" text-anchor="middle">AI Chat</text>
+    <path d="M180 60 L220 60" stroke="#334155" stroke-width="1.5" fill="none" stroke-dasharray="2,3"/>
+    <rect x="220" y="40" width="90" height="40" rx="8" fill="#1e293b" stroke="#22c55e"/>
+    <text x="265" y="64" fill="#f8fafc" text-anchor="middle">Executor</text>
+    <g transform="translate(330, 0)">
+      <rect x="0" y="5" width="60" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+      <text x="30" y="21" fill="#22c55e" text-anchor="middle">Python</text>
+      <rect x="0" y="40" width="60" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+      <text x="30" y="56" fill="#22c55e" text-anchor="middle">JS</text>
+      <rect x="0" y="75" width="60" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+      <text x="30" y="91" fill="#22c55e" text-anchor="middle">C++</text>
+      <rect x="0" y="110" width="60" height="24" rx="4" fill="#1e293b" stroke="#334155"/>
+      <text x="30" y="126" fill="#22c55e" text-anchor="middle">C</text>
+    </g>
+    <path d="M310 60 L330 17" stroke="#334155" stroke-width="1" fill="none"/>
+    <path d="M310 60 L330 52" stroke="#334155" stroke-width="1" fill="none"/>
+    <path d="M310 60 L330 87" stroke="#334155" stroke-width="1" fill="none"/>
+    <path d="M310 60 L330 122" stroke="#334155" stroke-width="1" fill="none"/>
+  </g>
+</svg>
