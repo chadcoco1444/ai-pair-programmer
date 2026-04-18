@@ -28,4 +28,18 @@ describe("renderTree", () => {
     expect(container.querySelectorAll("circle").length).toBe(1);
     expect(container.querySelector("text")?.textContent).toBe("42");
   });
+
+  it("draws edges connecting parent and child nodes", () => {
+    const { container } = render(renderTree([1, 2, 3, 4, 5]));
+    const lines = container.querySelectorAll("line");
+    // 1 has children 2,3 → 2 edges
+    // 2 has children 4,5 → 2 edges
+    // Total: 4 edges
+    expect(lines.length).toBe(4);
+  });
+
+  it("draws no edges for a single root", () => {
+    const { container } = render(renderTree([42]));
+    expect(container.querySelectorAll("line").length).toBe(0);
+  });
 });

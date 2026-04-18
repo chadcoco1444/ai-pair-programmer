@@ -5,67 +5,65 @@ const LEVEL_H = 60;
 const SIBLING_W = 50;
 
 interface Layout {
-  id: number;
   value: number;
+  depth: number;
+  parentIdx: number; // -1 for root
   x: number;
   y: number;
-  parentX?: number;
-  parentY?: number;
 }
 
 function buildLayout(levelOrder: (number | null)[]): Layout[] {
-  // Convert level-order to tree nodes with (depth, index-at-depth)
   if (levelOrder.length === 0 || levelOrder[0] === null) return [];
+
+  // First pass: BFS to establish depth + parent index
   const nodes: Layout[] = [];
-  const queue: { value: number; index: number; depth: number; parentIndex: number }[] = [];
-  queue.push({ value: levelOrder[0] as number, index: 0, depth: 0, parentIndex: -1 });
-  let i = 1;
-  while (queue.length > 0 && i < levelOrder.length) {
-    const node = queue.shift()!;
-    // left child
-    if (i < levelOrder.length && levelOrder[i] !== null) {
-      queue.push({
-        value: levelOrder[i] as number,
-        index: nodes.length + queue.length + 1,
-        depth: node.depth + 1,
-        parentIndex: node.index,
-      });
+  const slotQueue: { slot: number; depth: number; parentIdx: number }[] = [];
+
+  nodes.push({ value: levelOrder[0] as number, depth: 0, parentIdx: -1, x: 0, y: 0 });
+  slotQueue.push({ slot: 0, depth: 0, parentIdx: 0 });
+
+  let cursor = 1;
+  while (cursor < levelOrder.length && slotQueue.length > 0) {
+    const parent = slotQueue.shift()!;
+    // Left child
+    if (cursor < levelOrder.length) {
+      const v = levelOrder[cursor];
+      if (v !== null) {
+        const idx = nodes.length;
+        nodes.push({
+          value: v as number,
+          depth: parent.depth + 1,
+          parentIdx: parent.parentIdx,
+          x: 0,
+          y: 0,
+        });
+        slotQueue.push({ slot: 0, depth: parent.depth + 1, parentIdx: idx });
+      }
+      cursor++;
     }
-    i++;
-    // right child
-    if (i < levelOrder.length && levelOrder[i] !== null) {
-      queue.push({
-        value: levelOrder[i] as number,
-        index: nodes.length + queue.length,
-        depth: node.depth + 1,
-        parentIndex: node.index,
-      });
+    // Right child
+    if (cursor < levelOrder.length) {
+      const v = levelOrder[cursor];
+      if (v !== null) {
+        const idx = nodes.length;
+        nodes.push({
+          value: v as number,
+          depth: parent.depth + 1,
+          parentIdx: parent.parentIdx,
+          x: 0,
+          y: 0,
+        });
+        slotQueue.push({ slot: 0, depth: parent.depth + 1, parentIdx: idx });
+      }
+      cursor++;
     }
-    i++;
-    nodes.push({
-      id: node.index,
-      value: node.value,
-      x: 0, // assigned later
-      y: node.depth * LEVEL_H + NODE_R + 10,
-    });
-  }
-  // Flush remaining queue into nodes
-  while (queue.length > 0) {
-    const node = queue.shift()!;
-    nodes.push({
-      id: node.index,
-      value: node.value,
-      x: 0,
-      y: node.depth * LEVEL_H + NODE_R + 10,
-    });
   }
 
-  // Assign x by depth grouping
+  // Second pass: assign x by depth grouping, y by depth
   const byDepth = new Map<number, Layout[]>();
   for (const n of nodes) {
-    const d = Math.round((n.y - NODE_R - 10) / LEVEL_H);
-    if (!byDepth.has(d)) byDepth.set(d, []);
-    byDepth.get(d)!.push(n);
+    if (!byDepth.has(n.depth)) byDepth.set(n.depth, []);
+    byDepth.get(n.depth)!.push(n);
   }
   const maxDepth = Math.max(...Array.from(byDepth.keys()));
   const totalWidth = Math.pow(2, maxDepth) * SIBLING_W;
@@ -74,8 +72,10 @@ function buildLayout(levelOrder: (number | null)[]): Layout[] {
     const slotW = totalWidth / slots;
     siblings.forEach((n, idx) => {
       n.x = slotW / 2 + idx * slotW;
+      n.y = depth * LEVEL_H + NODE_R + 10;
     });
   }
+
   return nodes;
 }
 
@@ -99,8 +99,25 @@ export function renderTree(levelOrder: (number | null)[]): JSX.Element {
         role="img"
         aria-label="Tree visualization"
       >
+        {/* Edges first (behind nodes) */}
+        {nodes.map((n, i) => {
+          if (n.parentIdx < 0) return null;
+          const p = nodes[n.parentIdx];
+          return (
+            <line
+              key={`edge-${i}`}
+              x1={p.x}
+              y1={p.y}
+              x2={n.x}
+              y2={n.y}
+              stroke="#475569"
+              strokeWidth="1.5"
+            />
+          );
+        })}
+        {/* Nodes */}
         {nodes.map((n, i) => (
-          <g key={i}>
+          <g key={`node-${i}`}>
             <circle
               cx={n.x}
               cy={n.y}
