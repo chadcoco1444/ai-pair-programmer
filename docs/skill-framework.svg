@@ -4,7 +4,8 @@
     <circle cx="40" cy="40" r="34" fill="#0f172a" stroke="#22c55e" stroke-width="2.5"/>
     <text x="40" y="50" fill="#22c55e" font-family="'Fira Code', monospace" font-size="28" font-weight="700" text-anchor="middle">S</text>
     <text x="40" y="100" fill="#f8fafc" font-size="14" font-weight="600" text-anchor="middle">Socratic</text>
-    <text x="40" y="120" fill="#94a3b8" font-size="11" text-anchor="middle">Ask, don't tell</text>
+    <text x="40" y="120" fill="#94a3b8" font-size="11" text-anchor="middle">Ask · walk-through</text>
+    <text x="40" y="136" fill="#22c55e" font-size="9" font-family="'Fira Code', monospace" text-anchor="middle">+ beginner mode</text>
   </g>
   <g transform="translate(120, 120)" stroke="#334155" stroke-width="1.5" fill="none">
     <path d="M0 0 L48 0 M40 -5 L48 0 L40 5"/>
@@ -43,5 +44,5 @@
     <text x="40" y="120" fill="#94a3b8" font-size="11" text-anchor="middle">Update mastery</text>
   </g>
   <text x="500" y="40" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="18" font-weight="700" text-anchor="middle">The SKILL Teaching Framework</text>
-  <text x="500" y="220" fill="#94a3b8" font-size="12" text-anchor="middle">Progressive pedagogy — guide, don't spoon-feed</text>
+  <text x="500" y="240" fill="#94a3b8" font-size="12" text-anchor="middle">Progressive pedagogy — guide, don't spoon-feed</text>
 </svg>

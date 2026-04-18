@@ -11,10 +11,12 @@
       <text x="235" y="92" fill="#f8fafc" text-anchor="middle">React Flow</text>
       <rect x="310" y="72" width="120" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
       <text x="370" y="92" fill="#f8fafc" text-anchor="middle">Monaco</text>
-      <rect x="440" y="72" width="140" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
-      <text x="510" y="92" fill="#f8fafc" text-anchor="middle">Tailwind</text>
-      <rect x="590" y="72" width="120" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
-      <text x="650" y="92" fill="#f8fafc" text-anchor="middle">NextAuth</text>
+      <rect x="440" y="72" width="130" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
+      <text x="505" y="92" fill="#f8fafc" text-anchor="middle">Tailwind</text>
+      <rect x="580" y="72" width="110" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
+      <text x="635" y="92" fill="#f8fafc" text-anchor="middle">NextAuth</text>
+      <rect x="700" y="72" width="170" height="32" rx="16" fill="#0f172a" stroke="#22c55e"/>
+      <text x="785" y="92" fill="#22c55e" text-anchor="middle">Input Visualizer</text>
     </g>
   </g>
   <g stroke="#22c55e" stroke-width="2" fill="none">
