@@ -9,10 +9,10 @@ export function StatsOverview({ totalSolved, passRate, currentLevel, recentActiv
   return (
     <div className="grid grid-cols-4 gap-4">
       {[
-        { label: "已解題數", value: totalSolved },
-        { label: "通過率", value: `${Math.round(passRate * 100)}%` },
-        { label: "目前等級", value: currentLevel },
-        { label: "本週解題", value: recentActivity },
+        { label: "Problems Solved", value: totalSolved },
+        { label: "Acceptance Rate", value: `${Math.round(passRate * 100)}%` },
+        { label: "Current Level", value: currentLevel },
+        { label: "This Week", value: recentActivity },
       ].map((stat) => (
         <div key={stat.label} className="rounded-lg border border-gray-800 bg-gray-900 p-4">
           <div className="text-sm text-gray-400">{stat.label}</div>

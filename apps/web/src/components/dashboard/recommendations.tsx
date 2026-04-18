@@ -13,7 +13,7 @@ interface Recommendation {
 
 export function Recommendations({ items }: { items: Recommendation[] }) {
   if (items.length === 0) {
-    return <div className="text-gray-400">暫無推薦，繼續解題吧！</div>;
+    return <div className="text-gray-400">No recommendations yet — keep solving!</div>;
   }
 
   return (

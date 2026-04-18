@@ -23,7 +23,7 @@ export function ProblemFilters({
         type="text"
         value={search}
         onChange={(e) => onSearchChange(e.target.value)}
-        placeholder="搜尋題目..."
+        placeholder="Search problems..."
         className="rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none"
       />
       <select
@@ -31,7 +31,7 @@ export function ProblemFilters({
         onChange={(e) => onDifficultyChange(e.target.value)}
         className="rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
       >
-        <option value="">所有難度</option>
+        <option value="">All difficulties</option>
         <option value="EASY">Easy</option>
         <option value="MEDIUM">Medium</option>
         <option value="HARD">Hard</option>
@@ -42,12 +42,12 @@ export function ProblemFilters({
         onChange={(e) => onCategoryChange(e.target.value)}
         className="rounded border border-gray-700 bg-gray-800 px-3 py-2 text-sm text-white"
       >
-        <option value="">所有分類</option>
-        <option value="ALGORITHM">演算法</option>
-        <option value="DATA_STRUCTURE">資料結構</option>
-        <option value="SYSTEM_DESIGN">系統設計</option>
-        <option value="SYSTEM_PROGRAMMING">系統程式設計</option>
-        <option value="CONCURRENCY">併發</option>
+        <option value="">All categories</option>
+        <option value="ALGORITHM">Algorithm</option>
+        <option value="DATA_STRUCTURE">Data Structure</option>
+        <option value="SYSTEM_DESIGN">System Design</option>
+        <option value="SYSTEM_PROGRAMMING">System Programming</option>
+        <option value="CONCURRENCY">Concurrency</option>
       </select>
     </div>
   );

@@ -47,7 +47,7 @@ export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
           onKeyDown={handleKeyDown}
           onInput={handleInput}
           disabled={disabled}
-          placeholder={placeholder ?? "輸入你的想法...（Shift+Enter 換行）"}
+          placeholder={placeholder ?? "Share your thoughts... (Shift+Enter for new line)"}
           rows={1}
           className="flex-1 resize-none rounded-lg border border-gray-700 bg-gray-800 px-4 py-3 text-sm text-white placeholder-gray-500 focus:border-blue-500 focus:outline-none disabled:opacity-50"
         />
@@ -56,7 +56,7 @@ export function ChatInput({ onSend, disabled, placeholder }: ChatInputProps) {
           disabled={disabled || !input.trim()}
           className="rounded-lg bg-blue-600 px-4 py-3 text-sm font-medium text-white transition-colors hover:bg-blue-500 disabled:opacity-50 disabled:hover:bg-blue-600"
         >
-          發送
+          Send
         </button>
       </div>
     </div>
