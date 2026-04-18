@@ -65,8 +65,29 @@ describe("buildSKILLPrompt — language mirroring", () => {
       student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
       problem,
     });
-    expect(prompt).toMatch(/match the student's language|mirror.+language|same language/i);
+    expect(prompt).toMatch(/mirror|match the student's language|same language/i);
     expect(prompt).not.toMatch(/respond in English \(technical terms stay in English\)/i);
+  });
+
+  it("uses imperative wording (CRITICAL / MUST) so Gemini does not soft-ignore it", () => {
+    const prompt = buildSKILLPrompt({
+      phase: "SOCRATIC",
+      student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
+      problem,
+    });
+    expect(prompt).toMatch(/CRITICAL/);
+    expect(prompt).toMatch(/\bMUST\b/);
+    expect(prompt).toMatch(/OVERRIDES/);
+  });
+
+  it("includes a final language-check reminder at the end (recency bias)", () => {
+    const prompt = buildSKILLPrompt({
+      phase: "SOCRATIC",
+      student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
+      problem,
+    });
+    expect(prompt).toMatch(/Final language check/i);
+    expect(prompt).toMatch(/MOST RECENT message/);
   });
 
   it("preserves the instruction to keep technical terms in English", () => {

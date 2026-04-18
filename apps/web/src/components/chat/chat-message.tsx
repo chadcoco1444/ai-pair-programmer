@@ -58,10 +58,55 @@ export function ChatMessage({ role, content, skillPhase, isStreaming }: ChatMess
             <SKILLPhaseBadge phase={skillPhase} />
           </div>
         )}
-        <div className="prose prose-invert prose-sm max-w-none">
+        <div className="text-[14px] leading-[1.7]">
           <ReactMarkdown
             remarkPlugins={[remarkGfm]}
             components={{
+              p({ children }) {
+                return <p className="mb-3 last:mb-0">{children}</p>;
+              },
+              strong({ children }) {
+                return <strong className="font-semibold text-white">{children}</strong>;
+              },
+              em({ children }) {
+                return <em className="italic text-slate-300">{children}</em>;
+              },
+              ul({ children }) {
+                return <ul className="mb-3 ml-5 list-disc space-y-1">{children}</ul>;
+              },
+              ol({ children }) {
+                return <ol className="mb-3 ml-5 list-decimal space-y-1">{children}</ol>;
+              },
+              li({ children }) {
+                return <li>{children}</li>;
+              },
+              h1({ children }) {
+                return <h1 className="mt-4 mb-2 text-lg font-semibold text-white">{children}</h1>;
+              },
+              h2({ children }) {
+                return <h2 className="mt-4 mb-2 text-base font-semibold text-white">{children}</h2>;
+              },
+              h3({ children }) {
+                return <h3 className="mt-3 mb-1.5 text-sm font-semibold text-white">{children}</h3>;
+              },
+              blockquote({ children }) {
+                return (
+                  <blockquote className="my-3 border-l-2 border-slate-600 pl-3 italic text-slate-300">
+                    {children}
+                  </blockquote>
+                );
+              },
+              hr() {
+                return <hr className="my-4 border-slate-700" />;
+              },
+              a({ children, href }) {
+                return (
+                  <a href={href} target="_blank" rel="noopener noreferrer"
+                    className="text-emerald-400 underline hover:text-emerald-300">
+                    {children}
+                  </a>
+                );
+              },
               code({ className, children, ...props }) {
                 const match = /language-(\w+)/.exec(className || "");
                 const codeStr = String(children).replace(/\n$/, "");
@@ -72,7 +117,7 @@ export function ChatMessage({ role, content, skillPhase, isStreaming }: ChatMess
 
                 if (match) {
                   return (
-                    <pre className="overflow-x-auto rounded bg-gray-900 p-3">
+                    <pre className="my-3 overflow-x-auto rounded bg-gray-900 p-3 text-[13px] leading-[1.6]">
                       <code className={className} {...props}>
                         {children}
                       </code>
@@ -81,7 +126,7 @@ export function ChatMessage({ role, content, skillPhase, isStreaming }: ChatMess
                 }
 
                 return (
-                  <code className="rounded bg-gray-900 px-1 py-0.5 text-sm" {...props}>
+                  <code className="rounded bg-gray-900 px-1.5 py-0.5 text-[13px] font-mono text-emerald-400" {...props}>
                     {children}
                   </code>
                 );
