@@ -72,17 +72,21 @@ export function SkillTree({ nodes, edges, selectedConceptId, onConceptClick }: S
       maxZoom={1.5}
       proOptions={{ hideAttribution: true }}
     >
-      <Background color="#1f2937" gap={24} />
-      <Controls showInteractive={false} />
+      <Background color="#1e293b" gap={24} />
+      <Controls
+        showInteractive={false}
+        className="!bg-slate-900 !border !border-slate-800 !rounded-md !shadow-none [&_button]:!bg-slate-800 [&_button]:!border-slate-700 [&_button]:!text-slate-300 [&_button:hover]:!bg-slate-700 [&_button:hover]:!text-white [&_button_svg]:!fill-current"
+      />
       <MiniMap
         nodeColor={(n) => {
           const d = n.data as unknown as ConceptNodeData;
-          if (!d.prereqsMet) return "#4b5563";
+          if (!d.prereqsMet) return "#475569";
           if (d.mastery >= 0.7) return "#10b981";
           if (d.mastery >= 0.4) return "#f59e0b";
-          return "#6b7280";
+          return "#64748b";
         }}
-        className="!bg-[#0a0a0f]"
+        maskColor="rgba(15, 23, 42, 0.75)"
+        className="!bg-slate-900 !border !border-slate-800 !rounded-md"
       />
     </ReactFlow>
   );

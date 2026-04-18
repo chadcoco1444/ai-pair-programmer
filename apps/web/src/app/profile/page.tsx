@@ -164,7 +164,7 @@ export default function ProfilePage() {
             </div>
 
             <div className="bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200">
-              <div className="font-mono text-3xl font-bold text-white">
+              <div className="font-mono text-lg font-bold text-white truncate">
                 {stats.currentLevel}
               </div>
               <div className="text-xs text-slate-500 uppercase tracking-wide mt-1">
