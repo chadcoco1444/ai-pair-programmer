@@ -23,13 +23,13 @@
 
 **40-second hero** — Socratic AI walking a beginner through Max Depth of Binary Tree, with the Input Visualizer drawing the tree inline and the skill tree filling with mastery at the end:
 
-<video src="apps/video/out/hero.mp4" controls muted playsinline width="100%"></video>
+![Hero demo — Socratic AI beginner walkthrough](docs/hero.gif)
 
 **Full walkthrough** (2 min 35 s) — the end-to-end loop: open a problem → concrete walk-through → phase transitions → write code → submit → see mastery grow:
 
-<video src="apps/video/out/walkthrough.mp4" controls playsinline width="100%"></video>
+![Full walkthrough — end-to-end product flow](docs/walkthrough.gif)
 
-> Videos are rendered with [Remotion](https://www.remotion.dev/). Source: [`apps/video/`](apps/video/). Re-render with `npm run video:render:hero` or `npm run video:render:walkthrough`.
+> GIFs above are auto-playing previews. High-quality MP4 sources live at [`apps/video/out/`](apps/video/out/) and are rendered with [Remotion](https://www.remotion.dev/); see [`apps/video/`](apps/video/). Re-render with `npm run video:render:hero` or `npm run video:render:walkthrough`.
 
 ---
 
