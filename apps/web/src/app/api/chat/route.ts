@@ -29,7 +29,7 @@ export async function POST(req: Request) {
   const stream = new ReadableStream({
     async start(controller) {
       try {
-        // 先送出階段資訊
+        // Send phase info first
         controller.enqueue(
           encoder.encode(`data: ${JSON.stringify({ type: "phase", phase })}\n\n`)
         );

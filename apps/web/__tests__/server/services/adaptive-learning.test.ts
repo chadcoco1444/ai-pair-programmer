@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest";
 import { calculateMastery } from "@/server/services/adaptive-learning";
 
 describe("calculateMastery", () => {
-  it("全部通過、無提示、一次 AC 應接近 1.0", () => {
+  it("should be close to 1.0 with full pass rate, no hints, one-shot AC", () => {
     const mastery = calculateMastery({
       passRate: 1.0,
       hintsUsed: 0,
@@ -14,7 +14,7 @@ describe("calculateMastery", () => {
     expect(mastery).toBeLessThanOrEqual(1.0);
   });
 
-  it("通過率 0 應接近 0", () => {
+  it("should be close to 0 when pass rate is 0", () => {
     const mastery = calculateMastery({
       passRate: 0,
       hintsUsed: 3,
@@ -25,7 +25,7 @@ describe("calculateMastery", () => {
     expect(mastery).toBeLessThan(0.1);
   });
 
-  it("使用全部提示應降低掌握度", () => {
+  it("using all hints should lower mastery", () => {
     const withHints = calculateMastery({
       passRate: 1.0,
       hintsUsed: 3,
@@ -43,7 +43,7 @@ describe("calculateMastery", () => {
     expect(withHints).toBeLessThan(withoutHints);
   });
 
-  it("多次嘗試應降低掌握度", () => {
+  it("more attempts should lower mastery", () => {
     const oneAttempt = calculateMastery({
       passRate: 1.0,
       hintsUsed: 0,
@@ -61,7 +61,7 @@ describe("calculateMastery", () => {
     expect(fiveAttempts).toBeLessThan(oneAttempt);
   });
 
-  it("時間衰減應降低掌握度", () => {
+  it("time decay should lower mastery", () => {
     const recent = calculateMastery({
       passRate: 1.0,
       hintsUsed: 0,
@@ -79,7 +79,7 @@ describe("calculateMastery", () => {
     expect(old).toBeLessThan(recent);
   });
 
-  it("70 天後掌握度應大約降低一半", () => {
+  it("mastery should roughly halve after 70 days", () => {
     const initial = calculateMastery({
       passRate: 1.0,
       hintsUsed: 0,
@@ -99,7 +99,7 @@ describe("calculateMastery", () => {
     expect(ratio).toBeLessThan(0.6);
   });
 
-  it("掌握度不應超過 1.0", () => {
+  it("mastery should never exceed 1.0", () => {
     const mastery = calculateMastery({
       passRate: 1.0,
       hintsUsed: 0,
@@ -110,7 +110,7 @@ describe("calculateMastery", () => {
     expect(mastery).toBeLessThanOrEqual(1.0);
   });
 
-  it("掌握度不應低於 0", () => {
+  it("mastery should never go below 0", () => {
     const mastery = calculateMastery({
       passRate: 0,
       hintsUsed: 10,

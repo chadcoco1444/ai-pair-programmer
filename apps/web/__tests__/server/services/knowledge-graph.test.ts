@@ -15,7 +15,7 @@ function createMockPrisma() {
 
 describe("KnowledgeGraphService", () => {
   describe("getFullGraph", () => {
-    it("應回傳所有概念節點與邊", async () => {
+    it("should return all concept nodes and edges", async () => {
       const mockPrisma = createMockPrisma();
 
       mockPrisma.concept.findMany.mockResolvedValue([
@@ -48,7 +48,7 @@ describe("KnowledgeGraphService", () => {
   });
 
   describe("generateMermaidGraph", () => {
-    it("應產生有效的 Mermaid 語法", async () => {
+    it("should produce valid Mermaid syntax", async () => {
       const mockPrisma = createMockPrisma();
 
       mockPrisma.concept.findMany.mockResolvedValue([

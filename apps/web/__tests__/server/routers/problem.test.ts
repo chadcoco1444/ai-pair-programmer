@@ -29,7 +29,7 @@ import { prisma } from "@/lib/prisma";
 const createCaller = createCallerFactory(appRouter);
 
 describe("problem.list", () => {
-  it("應回傳題目列表", async () => {
+  it("should return a list of problems", async () => {
     const mockProblems = [
       {
         id: "p1",
@@ -53,7 +53,7 @@ describe("problem.list", () => {
     expect(result).toEqual(mockProblems);
   });
 
-  it("應支援難度篩選", async () => {
+  it("should support filtering by difficulty", async () => {
     vi.mocked(prisma.problem.findMany).mockResolvedValue([]);
 
     const caller = createCaller({
@@ -73,7 +73,7 @@ describe("problem.list", () => {
 });
 
 describe("problem.getBySlug", () => {
-  it("應回傳題目詳情（含可見測資）", async () => {
+  it("should return problem details (including visible test cases)", async () => {
     const mockProblem = {
       id: "p1",
       title: "Two Sum",

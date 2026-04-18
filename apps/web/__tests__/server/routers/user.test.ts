@@ -29,7 +29,7 @@ import { prisma } from "@/lib/prisma";
 const createCaller = createCallerFactory(appRouter);
 
 describe("user.me", () => {
-  it("未登入時應回傳 UNAUTHORIZED", async () => {
+  it("should return UNAUTHORIZED when not signed in", async () => {
     const caller = createCaller({
       session: null,
       prisma,
@@ -39,7 +39,7 @@ describe("user.me", () => {
     await expect(caller.user.me()).rejects.toThrow("UNAUTHORIZED");
   });
 
-  it("已登入時應回傳使用者資料", async () => {
+  it("should return user data when signed in", async () => {
     const mockUser = {
       id: "user-1",
       name: "Test User",

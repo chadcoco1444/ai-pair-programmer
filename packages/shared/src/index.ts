@@ -1,4 +1,4 @@
-// ===== 語言 =====
+// ===== Languages =====
 export const LANGUAGES = ["PYTHON", "C", "CPP", "JAVASCRIPT"] as const;
 export type Language = (typeof LANGUAGES)[number];
 
@@ -9,11 +9,11 @@ export const LANGUAGE_DISPLAY: Record<Language, string> = {
   JAVASCRIPT: "JavaScript",
 };
 
-// ===== 難度 =====
+// ===== Difficulty =====
 export const DIFFICULTIES = ["EASY", "MEDIUM", "HARD", "EXPERT"] as const;
 export type Difficulty = (typeof DIFFICULTIES)[number];
 
-// ===== 分類 =====
+// ===== Categories =====
 export const CATEGORIES = [
   "ALGORITHM",
   "DATA_STRUCTURE",
@@ -23,11 +23,11 @@ export const CATEGORIES = [
 ] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-// ===== 使用者等級 =====
+// ===== User levels =====
 export const LEVELS = ["BEGINNER", "INTERMEDIATE", "ADVANCED", "EXPERT"] as const;
 export type Level = (typeof LEVELS)[number];
 
-// ===== 提交狀態 =====
+// ===== Submission status =====
 export const SUBMISSION_STATUSES = [
   "PENDING",
   "RUNNING",
@@ -40,7 +40,7 @@ export const SUBMISSION_STATUSES = [
 ] as const;
 export type SubmissionStatus = (typeof SUBMISSION_STATUSES)[number];
 
-// ===== SKILL 階段 =====
+// ===== SKILL phases =====
 export const SKILL_PHASES = [
   "SOCRATIC",
   "KNOWLEDGE",
@@ -51,14 +51,14 @@ export const SKILL_PHASES = [
 export type SKILLPhase = (typeof SKILL_PHASES)[number];
 
 export const SKILL_PHASE_LABELS: Record<SKILLPhase, string> = {
-  SOCRATIC: "S - 蘇格拉底式引導",
-  KNOWLEDGE: "K - 知識圖譜連結",
-  ITERATIVE: "I - 疊代優化",
-  LOGIC: "L1 - 邏輯驗證",
-  EVOLUTION: "L2 - 長期演化",
+  SOCRATIC: "S - Socratic guidance",
+  KNOWLEDGE: "K - Knowledge graph linking",
+  ITERATIVE: "I - Iterative optimization",
+  LOGIC: "L1 - Logic verification",
+  EVOLUTION: "L2 - Long-term evolution",
 };
 
-// ===== 執行結果 =====
+// ===== Execution results =====
 export interface TestResult {
   testCaseId: string;
   passed: boolean;
