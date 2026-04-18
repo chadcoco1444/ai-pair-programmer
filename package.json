@@ -4,7 +4,8 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "services/*"
+    "services/*",
+    "apps/video"
   ],
   "scripts": {
     "setup": "node scripts/setup.mjs",
@@ -26,7 +27,10 @@
     "db:generate": "cd apps/web && npx prisma generate",
     "db:seed": "cd apps/web && npx prisma db seed",
     "db:studio": "cd apps/web && npx prisma studio",
-    "db:reset": "cd apps/web && npx prisma db push --force-reset && npx prisma db seed"
+    "db:reset": "cd apps/web && npx prisma db push --force-reset && npx prisma db seed",
+    "video:preview": "npm run preview --workspace=apps/video",
+    "video:render:hero": "npm run render:hero --workspace=apps/video",
+    "video:render:walkthrough": "npm run render:walkthrough --workspace=apps/video"
   },
   "devDependencies": {
     "turbo": "^2.5.0"
