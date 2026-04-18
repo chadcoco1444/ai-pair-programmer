@@ -3,6 +3,8 @@
 import { useEffect, useRef } from "react";
 import { ChatMessage } from "./chat-message";
 import { ChatInput } from "./chat-input";
+import { SuggestionChips } from "./suggestion-chips";
+import type { SuggestionPrompt } from "./suggestion-prompts";
 import { useChat } from "@/hooks/use-chat";
 
 interface ChatContainerProps {
@@ -13,9 +15,18 @@ interface ChatContainerProps {
     content: string;
     skillPhase?: string | null;
   }[];
+  /** Returns current Monaco editor content for code-aware prompts. */
+  getCurrentCode?: () => string;
+  /** Current language label for fenced code block (e.g. "python", "javascript"). */
+  currentLanguage?: string;
 }
 
-export function ChatContainer({ conversationId, initialMessages }: ChatContainerProps) {
+export function ChatContainer({
+  conversationId,
+  initialMessages,
+  getCurrentCode,
+  currentLanguage,
+}: ChatContainerProps) {
   const { messages, isLoading, currentPhase, sendMessage, loadHistory } =
     useChat({ conversationId });
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -29,6 +40,16 @@ export function ChatContainer({ conversationId, initialMessages }: ChatContainer
   useEffect(() => {
     bottomRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
+
+  const handleSuggestion = (p: SuggestionPrompt) => {
+    let message = p.prompt;
+    if (p.needsCode) {
+      const code = getCurrentCode?.() ?? "";
+      const lang = (currentLanguage ?? "").toLowerCase();
+      message += `\n\n\`\`\`${lang}\n${code}\n\`\`\``;
+    }
+    sendMessage(message);
+  };
 
   return (
     <div className="flex h-full flex-col">
@@ -46,6 +67,7 @@ export function ChatContainer({ conversationId, initialMessages }: ChatContainer
           <div ref={bottomRef} />
         </div>
       </div>
+      <SuggestionChips onSelect={handleSuggestion} disabled={isLoading} />
       <ChatInput onSend={sendMessage} disabled={isLoading} />
     </div>
   );
