@@ -7,38 +7,16 @@ import { KnowledgeGraphViz } from "@/components/dashboard/knowledge-graph-viz";
 import Link from "next/link";
 
 const DIFFICULTY_BADGE: Record<string, string> = {
-  EASY: "text-emerald-400 bg-emerald-400/10",
-  MEDIUM: "text-amber-400 bg-amber-400/10",
-  HARD: "text-red-400 bg-red-400/10",
-  EXPERT: "text-purple-400 bg-purple-400/10",
+  EASY: "bg-emerald-500/10 text-emerald-400 border border-emerald-500/30",
+  MEDIUM: "bg-amber-500/10 text-amber-400 border border-amber-500/30",
+  HARD: "bg-red-500/10 text-red-400 border border-red-500/30",
+  EXPERT: "bg-purple-500/10 text-purple-400 border border-purple-500/30",
 };
-
-function StatCard({
-  label,
-  value,
-  sub,
-  accent,
-}: {
-  label: string;
-  value: string | number;
-  sub?: string;
-  accent?: string;
-}) {
-  return (
-    <div className="rounded-xl border border-gray-800/60 bg-[#1a1a1a] p-5">
-      <div className={`text-[28px] font-bold leading-none ${accent ?? "text-white"}`}>
-        {value}
-      </div>
-      <div className="mt-1.5 text-[13px] text-gray-400">{label}</div>
-      {sub && <div className="mt-1 text-[12px] text-gray-600">{sub}</div>}
-    </div>
-  );
-}
 
 function ProgressBar({
   value,
   max,
-  color = "bg-blue-500",
+  color = "bg-emerald-500",
 }: {
   value: number;
   max: number;
@@ -46,7 +24,7 @@ function ProgressBar({
 }) {
   const pct = max > 0 ? Math.min(100, Math.round((value / max) * 100)) : 0;
   return (
-    <div className="h-1.5 w-full overflow-hidden rounded-full bg-gray-800">
+    <div className="h-1.5 w-full overflow-hidden rounded-full bg-slate-800">
       <div
         className={`h-full rounded-full transition-all ${color}`}
         style={{ width: `${pct}%` }}
@@ -76,8 +54,8 @@ export default function DashboardPage() {
 
   if (status === "loading" || statsLoading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#0a0a0f]">
-        <div className="flex items-center gap-2 text-[13px] text-gray-500">
+      <div className="flex min-h-screen items-center justify-center bg-slate-900">
+        <div className="flex items-center gap-2 text-sm text-slate-500">
           <svg
             className="h-4 w-4 animate-spin"
             viewBox="0 0 24 24"
@@ -118,219 +96,225 @@ export default function DashboardPage() {
       : 0;
 
   return (
-    <div className="min-h-screen bg-[#0a0a0f] text-white">
-      <div className="mx-auto max-w-5xl space-y-6 px-6 py-8">
+    <div className="min-h-screen bg-slate-900 text-white">
+      <div className="mx-auto max-w-6xl px-6 py-8">
         {/* Page header */}
-        <div>
-          <h1 className="text-[22px] font-bold text-white">Dashboard</h1>
-          <p className="mt-0.5 text-[13px] text-gray-500">學習進度一覽</p>
-        </div>
+        <h1 className="text-2xl font-mono font-bold text-white mb-6">
+          Dashboard
+        </h1>
 
-        {/* Stats grid */}
-        {stats && (
-          <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
-            <StatCard
-              label="已解題數"
-              value={stats.totalSolved}
-              accent="text-emerald-400"
-            />
-            <StatCard
-              label="通過率"
-              value={`${Math.round(stats.passRate * 100)}%`}
-              accent="text-blue-400"
-            />
-            <StatCard
-              label="目前等級"
-              value={stats.currentLevel}
-              accent="text-amber-400"
-            />
-            <StatCard
-              label="本週解題"
-              value={stats.recentActivity}
-              sub="questions this week"
-              accent="text-purple-400"
-            />
-          </div>
-        )}
-
-        {/* Level progress */}
-        {stats?.nextLevelProgress && (
-          <div className="rounded-xl border border-gray-800/60 bg-[#1a1a1a] p-5">
-            <h2 className="mb-4 text-[14px] font-semibold text-white">
-              升級進度
-            </h2>
-            <div className="space-y-4">
-              <div>
-                <div className="mb-1.5 flex items-center justify-between text-[13px]">
-                  <span className="text-gray-400">掌握概念</span>
-                  <span className="text-gray-300">
-                    {Math.min(
+        {/* Bento grid */}
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          {/* Level progress — col-span-2 */}
+          {stats?.nextLevelProgress && (
+            <div className="md:col-span-2 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200">
+              <div className="flex items-center justify-between mb-4">
+                <h2 className="font-mono text-sm font-semibold text-white uppercase tracking-wide">
+                  Level Progress
+                </h2>
+                <span className="font-mono text-xs text-slate-500">
+                  Lv. {stats.currentLevel}
+                </span>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="text-slate-400">Concepts Mastered</span>
+                    <span className="font-mono text-slate-300">
+                      {Math.min(
+                        stats.nextLevelProgress.conceptsMastered,
+                        stats.nextLevelProgress.conceptsRequired
+                      )}
+                      <span className="text-slate-500">
+                        {" "}/ {stats.nextLevelProgress.conceptsRequired}
+                      </span>
+                    </span>
+                  </div>
+                  <ProgressBar
+                    value={Math.min(
                       stats.nextLevelProgress.conceptsMastered,
                       stats.nextLevelProgress.conceptsRequired
                     )}
-                    <span className="text-gray-600">
-                      {" "}
-                      / {stats.nextLevelProgress.conceptsRequired}
-                    </span>
-                    {stats.nextLevelProgress.conceptsMastered >=
-                      stats.nextLevelProgress.conceptsRequired && (
-                      <span className="ml-2 text-emerald-400 text-[11px]">✓ 達標</span>
-                    )}
-                  </span>
+                    max={stats.nextLevelProgress.conceptsRequired}
+                    color="bg-emerald-500"
+                  />
+                  <div className="mt-1 text-right font-mono text-xs text-slate-500">
+                    {conceptPct}%
+                  </div>
                 </div>
-                <ProgressBar
-                  value={Math.min(
-                    stats.nextLevelProgress.conceptsMastered,
-                    stats.nextLevelProgress.conceptsRequired
-                  )}
-                  max={stats.nextLevelProgress.conceptsRequired}
-                  color="bg-blue-500"
-                />
-                <div className="mt-1 text-right text-[11px] text-gray-600">
-                  {conceptPct}%
-                </div>
-              </div>
 
-              <div>
-                <div className="mb-1.5 flex items-center justify-between text-[13px]">
-                  <span className="text-gray-400">通過題數</span>
-                  <span className="text-gray-300">
-                    {Math.min(
+                <div>
+                  <div className="mb-1.5 flex items-center justify-between text-sm">
+                    <span className="text-slate-400">Problems Accepted</span>
+                    <span className="font-mono text-slate-300">
+                      {Math.min(
+                        stats.nextLevelProgress.problemsAccepted,
+                        stats.nextLevelProgress.problemsRequired
+                      )}
+                      <span className="text-slate-500">
+                        {" "}/ {stats.nextLevelProgress.problemsRequired}
+                      </span>
+                    </span>
+                  </div>
+                  <ProgressBar
+                    value={Math.min(
                       stats.nextLevelProgress.problemsAccepted,
                       stats.nextLevelProgress.problemsRequired
                     )}
-                    <span className="text-gray-600">
-                      {" "}
-                      / {stats.nextLevelProgress.problemsRequired}
-                    </span>
-                    {stats.nextLevelProgress.problemsAccepted >=
-                      stats.nextLevelProgress.problemsRequired && (
-                      <span className="ml-2 text-emerald-400 text-[11px]">✓ 達標</span>
-                    )}
-                  </span>
-                </div>
-                <ProgressBar
-                  value={Math.min(
-                    stats.nextLevelProgress.problemsAccepted,
-                    stats.nextLevelProgress.problemsRequired
-                  )}
-                  max={stats.nextLevelProgress.problemsRequired}
-                  color="bg-emerald-500"
-                />
-                <div className="mt-1 text-right text-[11px] text-gray-600">
-                  {problemPct}%
-                </div>
-              </div>
-
-              {stats.nextLevelProgress.missingDomains.length > 0 && (
-                <div className="rounded-lg border border-amber-800/30 bg-amber-900/10 px-4 py-3 text-[13px]">
-                  <span className="text-amber-400 font-medium">需探索領域：</span>
-                  <span className="ml-1 text-gray-400">
-                    {stats.nextLevelProgress.missingDomains.join("、")}
-                  </span>
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-
-        {/* Weaknesses */}
-        {stats?.topWeaknesses && stats.topWeaknesses.length > 0 && (
-          <div className="rounded-xl border border-gray-800/60 bg-[#1a1a1a] p-5">
-            <h2 className="mb-4 text-[14px] font-semibold text-white">
-              需要加強的地方
-            </h2>
-            <div className="divide-y divide-gray-800/60">
-              {stats.topWeaknesses.map((w) => (
-                <div
-                  key={w.pattern}
-                  className="flex items-center justify-between py-3 first:pt-0 last:pb-0"
-                >
-                  <div className="flex items-center gap-3">
-                    <span className="flex h-1.5 w-1.5 rounded-full bg-red-500" />
-                    <div>
-                      <span className="text-[13px] font-medium text-red-400">
-                        {w.pattern}
-                      </span>
-                      {w.description && (
-                        <span className="ml-2 text-[13px] text-gray-500">
-                          {w.description}
-                        </span>
-                      )}
-                    </div>
+                    max={stats.nextLevelProgress.problemsRequired}
+                    color="bg-emerald-500"
+                  />
+                  <div className="mt-1 text-right font-mono text-xs text-slate-500">
+                    {problemPct}%
                   </div>
-                  <span className="shrink-0 rounded-full bg-red-900/20 px-2.5 py-0.5 text-[11px] text-red-400">
-                    {w.frequency}× 出現
-                  </span>
                 </div>
-              ))}
-            </div>
-          </div>
-        )}
 
-        {/* Recommendations */}
-        <div>
-          <h2 className="mb-3 text-[14px] font-semibold text-white">今日推薦</h2>
-          {recsLoading ? (
-            <div className="rounded-xl border border-gray-800/60 bg-[#1a1a1a] px-5 py-10 text-center text-[13px] text-gray-600">
-              載入推薦中...
+                {stats.nextLevelProgress.missingDomains.length > 0 && (
+                  <div className="rounded-md border border-amber-500/30 bg-amber-500/10 px-3 py-2 text-xs">
+                    <span className="text-amber-400 font-medium">
+                      Missing domains:
+                    </span>{" "}
+                    <span className="text-slate-300">
+                      {stats.nextLevelProgress.missingDomains.join(", ")}
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
-          ) : !recommendations || recommendations.length === 0 ? (
-            <div className="rounded-xl border border-gray-800/60 bg-[#1a1a1a] px-5 py-10 text-center text-[13px] text-gray-600">
-              暫無推薦，繼續解題吧！
+          )}
+
+          {/* Concepts Mastered — single big number */}
+          {stats && (
+            <div className="md:col-span-1 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200 flex flex-col justify-between">
+              <div className="text-xs text-slate-500 uppercase tracking-wide">
+                Concepts Mastered
+              </div>
+              <div className="font-mono text-4xl font-bold text-white mt-2">
+                {stats.nextLevelProgress?.conceptsMastered ?? 0}
+              </div>
+              <div className="text-xs text-slate-500 mt-1">
+                of {stats.nextLevelProgress?.conceptsRequired ?? 0} required
+              </div>
             </div>
-          ) : (
-            <div className="space-y-2">
-              {recommendations.map((item) => {
-                const diffClass =
-                  DIFFICULTY_BADGE[item.problem.difficulty] ??
-                  "text-gray-400 bg-gray-400/10";
-                return (
-                  <Link
-                    key={item.problem.id}
-                    href={`/practice/${item.problem.slug}`}
-                    className="group flex items-center justify-between rounded-xl border border-gray-800/60 bg-[#1a1a1a] px-5 py-4 transition-colors hover:bg-[#222] hover:border-gray-700/50"
+          )}
+
+          {/* Problems Solved — single big number */}
+          {stats && (
+            <div className="md:col-span-1 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200 flex flex-col justify-between">
+              <div className="text-xs text-slate-500 uppercase tracking-wide">
+                Problems Solved
+              </div>
+              <div className="font-mono text-4xl font-bold text-white mt-2">
+                {stats.totalSolved}
+              </div>
+              <div className="text-xs text-slate-500 mt-1">
+                {Math.round(stats.passRate * 100)}% pass rate
+              </div>
+            </div>
+          )}
+
+          {/* Weaknesses — col-span-2 */}
+          {stats?.topWeaknesses && stats.topWeaknesses.length > 0 && (
+            <div className="md:col-span-2 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200">
+              <h2 className="font-mono text-sm font-semibold text-white uppercase tracking-wide mb-4">
+                Weaknesses
+              </h2>
+              <div className="divide-y divide-slate-800">
+                {stats.topWeaknesses.map((w) => (
+                  <div
+                    key={w.pattern}
+                    className="flex items-center justify-between py-2.5 first:pt-0 last:pb-0"
                   >
-                    <div className="min-w-0">
-                      <div className="flex items-center gap-3">
-                        <span className="text-[13px] font-medium text-white group-hover:text-blue-400 transition-colors">
-                          {item.problem.title}
-                        </span>
-                        <span
-                          className={`rounded-full px-2 py-0.5 text-[11px] font-semibold ${diffClass}`}
-                        >
-                          {item.problem.difficulty}
-                        </span>
+                    <div className="flex items-center gap-3 min-w-0">
+                      <span className="flex h-1.5 w-1.5 shrink-0 rounded-full bg-red-500" />
+                      <div className="min-w-0">
+                        <div className="font-mono text-sm font-medium text-red-400 truncate">
+                          {w.pattern}
+                        </div>
+                        {w.description && (
+                          <div className="text-xs text-slate-500 truncate">
+                            {w.description}
+                          </div>
+                        )}
                       </div>
-                      {item.reason && (
-                        <p className="mt-0.5 text-[12px] text-gray-500 truncate">
-                          {item.reason}
-                        </p>
-                      )}
                     </div>
-                    <svg
-                      className="ml-4 h-4 w-4 shrink-0 text-gray-700 group-hover:text-gray-400 transition-colors"
-                      viewBox="0 0 16 16"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth="1.5"
+                    <span className="shrink-0 rounded-full bg-red-500/10 text-red-400 border border-red-500/30 px-2 py-0.5 text-xs font-mono">
+                      ×{w.frequency}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* Recommendations — col-span-2 */}
+          <div className="md:col-span-2 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200">
+            <h2 className="font-mono text-sm font-semibold text-white uppercase tracking-wide mb-4">
+              Recommended Today
+            </h2>
+            {recsLoading ? (
+              <div className="py-8 text-center text-sm text-slate-500">
+                Loading recommendations...
+              </div>
+            ) : !recommendations || recommendations.length === 0 ? (
+              <div className="py-8 text-center text-sm text-slate-500">
+                No recommendations yet — keep practicing!
+              </div>
+            ) : (
+              <div className="space-y-2">
+                {recommendations.slice(0, 3).map((item) => {
+                  const diffClass =
+                    DIFFICULTY_BADGE[item.problem.difficulty] ??
+                    "bg-slate-700/50 text-slate-400";
+                  return (
+                    <Link
+                      key={item.problem.id}
+                      href={`/practice/${item.problem.slug}`}
+                      className="group cursor-pointer flex items-center justify-between rounded-md bg-slate-900/50 border border-slate-800 px-4 py-3 hover:border-slate-700 transition-colors duration-200"
                     >
-                      <polyline points="6,3 10,8 6,13" />
-                    </svg>
-                  </Link>
-                );
-              })}
+                      <div className="min-w-0">
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm font-medium text-slate-100 group-hover:text-emerald-400 transition-colors duration-200">
+                            {item.problem.title}
+                          </span>
+                          <span
+                            className={`rounded-full px-2 py-0.5 text-xs font-medium ${diffClass}`}
+                          >
+                            {item.problem.difficulty}
+                          </span>
+                        </div>
+                        {item.reason && (
+                          <p className="mt-0.5 text-xs text-slate-500 truncate">
+                            {item.reason}
+                          </p>
+                        )}
+                      </div>
+                      <svg
+                        className="ml-4 h-4 w-4 shrink-0 text-slate-600 group-hover:text-slate-400 transition-colors duration-200"
+                        viewBox="0 0 16 16"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="1.5"
+                      >
+                        <polyline points="6,3 10,8 6,13" />
+                      </svg>
+                    </Link>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* Knowledge graph — col-span-4 full width */}
+          {mermaid && (
+            <div className="md:col-span-4 bg-slate-800/50 border border-slate-800 rounded-lg p-5 hover:border-slate-700 transition-colors duration-200">
+              <h2 className="font-mono text-sm font-semibold text-white uppercase tracking-wide mb-4">
+                Knowledge Graph
+              </h2>
+              <KnowledgeGraphViz mermaidCode={mermaid} />
             </div>
           )}
         </div>
-
-        {/* Knowledge graph */}
-        {mermaid && (
-          <div>
-            <h2 className="mb-3 text-[14px] font-semibold text-white">知識圖譜</h2>
-            <KnowledgeGraphViz mermaidCode={mermaid} />
-          </div>
-        )}
       </div>
     </div>
   );
