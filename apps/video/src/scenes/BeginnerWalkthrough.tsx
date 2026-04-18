@@ -4,7 +4,7 @@ import { colors } from "../theme/colors";
 import { type } from "../theme/typography";
 import { typeUpTo, typingProgress } from "../animations/typeLetter";
 import { bubbleIn } from "../animations/bubbleIn";
-import { renderArray } from "../../../web/src/lib/input-visualizer/renderers/array";
+import { renderTree } from "../../../web/src/lib/input-visualizer/renderers/tree";
 import { beginnerWalkthroughTurns } from "../fixtures/walkthrough-script";
 
 /**
@@ -43,13 +43,13 @@ export function BeginnerWalkthrough({ variant }: BeginnerWalkthroughProps) {
           transform: `translateY(${arrayY}px)`,
         }}
       >
-        <div style={{ transform: "scale(1.8)", transformOrigin: "center top" }}>
-          {renderArray([2, 7, 11, 15])}
+        <div style={{ transform: "scale(1.4)", transformOrigin: "center top" }}>
+          {renderTree([3, 9, 20, null, null, 15, 7])}
         </div>
       </div>
 
       <div style={{ ...type.bodySmall, color: colors.slate, textAlign: "center", marginBottom: 30 }}>
-        nums = [2, 7, 11, 15], target = 9
+        root = [3, 9, 20, null, null, 15, 7]
       </div>
 
       {/* Chat turns */}

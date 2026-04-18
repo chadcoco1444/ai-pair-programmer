@@ -28,17 +28,19 @@ export function DailyRecommendation() {
         }}
       >
         <div style={{ ...type.label, color: colors.emerald, letterSpacing: 2 }}>DAILY RECOMMENDATION</div>
-        <div style={{ ...type.h3, color: colors.text, marginTop: 14 }}>3Sum</div>
+        <div style={{ ...type.h3, color: colors.text, marginTop: 14 }}>Diameter of Binary Tree</div>
         <div style={{ ...type.body, color: colors.slate, marginTop: 10 }}>
-          Extends what you learned in Two Sum · Two Pointer · Medium
+          Extends maxDepth's recursion · harder twist · Easy
         </div>
         <div style={{ display: "flex", gap: 14, marginTop: 22 }}>
-          <div style={{ ...type.label, color: colors.amber, padding: "4px 12px",
-            border: `1px solid ${colors.amber}`, borderRadius: 999 }}>MEDIUM</div>
+          <div style={{ ...type.label, color: colors.emerald, padding: "4px 12px",
+            border: `1px solid ${colors.emerald}`, borderRadius: 999 }}>EASY</div>
           <div style={{ ...type.label, color: colors.slate, padding: "4px 12px",
-            border: `1px solid ${colors.border}`, borderRadius: 999 }}>Array</div>
+            border: `1px solid ${colors.border}`, borderRadius: 999 }}>Tree</div>
           <div style={{ ...type.label, color: colors.slate, padding: "4px 12px",
-            border: `1px solid ${colors.border}`, borderRadius: 999 }}>Two Pointer</div>
+            border: `1px solid ${colors.border}`, borderRadius: 999 }}>Recursion</div>
+          <div style={{ ...type.label, color: colors.slate, padding: "4px 12px",
+            border: `1px solid ${colors.border}`, borderRadius: 999 }}>DFS</div>
         </div>
       </div>
     </AbsoluteFill>

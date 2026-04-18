@@ -20,34 +20,36 @@ export const beginnerWalkthroughTurns: ChatTurn[] = [
     role: "assistant",
     phaseTag: "[S]",
     text:
-      "Let's forget algorithms for a moment. Take nums = [2, 7, 11, 15], target = 9. Point at 2 — what number do you need to find to sum to 9?",
+      "Forget algorithms for a moment. Take root = [3, 9, 20, null, null, 15, 7]. Point at the leaf 15. Counting from the root, how deep is that node?",
     startFrame: 0,
-    typingDurationFrames: 180, // 6s to type
+    typingDurationFrames: 180,
   },
   {
     role: "user",
-    text: "7?",
+    text: "3 levels deep.",
     startFrame: 210,
-    typingDurationFrames: 12,
+    typingDurationFrames: 30,
   },
   {
     role: "assistant",
     phaseTag: "[S]",
-    text: "Exactly. Now — how would you REMEMBER which numbers you've already looked at?",
-    startFrame: 260,
-    typingDurationFrames: 120,
+    text:
+      "Good. Now — if you're standing at node 20 and you already know its two children have depths X and Y, what's the depth rooted at 20?",
+    startFrame: 270,
+    typingDurationFrames: 150,
   },
   {
     role: "user",
-    text: "Maybe a hash table?",
-    startFrame: 420,
+    text: "1 + max(X, Y)?",
+    startFrame: 440,
     typingDurationFrames: 60,
   },
   {
     role: "assistant",
     phaseTag: "[K]",
-    text: "Perfect pattern-recognition. Hash Table lets you answer \"have I seen 7 before?\" in O(1).",
-    startFrame: 530,
+    text:
+      "Exactly. Every node's depth is 1 + max(left, right). Base case: a null child contributes depth 0.",
+    startFrame: 540,
     typingDurationFrames: 180,
   },
 ];
@@ -58,21 +60,21 @@ export const knowledgePhaseTurns: ChatTurn[] = [
     role: "assistant",
     phaseTag: "[K]",
     text:
-      "So for each number x in nums, you ask: has `target - x` already been stored? If yes, return both indices.",
+      "So you define maxDepth(node): if node is null return 0, else return 1 + max(maxDepth(left), maxDepth(right)). DFS gives you O(n) time.",
     startFrame: 0,
     typingDurationFrames: 210,
   },
   {
     role: "user",
-    text: "Got it. Let me code this.",
+    text: "OK, coding it now.",
     startFrame: 270,
-    typingDurationFrames: 75,
+    typingDurationFrames: 60,
   },
   {
     role: "assistant",
     phaseTag: "[I]",
-    text: "Go. I'll review when you're done.",
+    text: "Go. I'll review once you've got a first version.",
     startFrame: 390,
-    typingDurationFrames: 90,
+    typingDurationFrames: 120,
   },
 ];

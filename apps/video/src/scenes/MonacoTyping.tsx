@@ -6,7 +6,7 @@ import { type } from "../theme/typography";
 
 /**
  * 1:40–2:00 of Walkthrough (600 frames).
- * Simulates typing a Two Sum solution line by line.
+ * Simulates typing a Maximum Depth of Binary Tree solution line by line.
  */
 type Token = Parameters<typeof CodeLine>[0]["tokens"][number];
 
@@ -17,13 +17,12 @@ interface Line {
 }
 
 const LINES: Line[] = [
-  { indent: 0, revealAt: 30,  tokens: [{ kind: "keyword", text: "def " }, { kind: "ident", text: "twoSum" }, { kind: "plain", text: "(nums, target):" }] },
-  { indent: 1, revealAt: 90,  tokens: [{ kind: "ident", text: "seen" }, { kind: "plain", text: " = {}" }] },
-  { indent: 1, revealAt: 150, tokens: [{ kind: "keyword", text: "for " }, { kind: "ident", text: "i" }, { kind: "plain", text: ", " }, { kind: "ident", text: "x" }, { kind: "keyword", text: " in " }, { kind: "ident", text: "enumerate" }, { kind: "plain", text: "(nums):" }] },
-  { indent: 2, revealAt: 220, tokens: [{ kind: "ident", text: "need" }, { kind: "plain", text: " = target - x" }] },
-  { indent: 2, revealAt: 280, tokens: [{ kind: "keyword", text: "if " }, { kind: "ident", text: "need" }, { kind: "keyword", text: " in " }, { kind: "ident", text: "seen" }, { kind: "plain", text: ":" }] },
-  { indent: 3, revealAt: 350, tokens: [{ kind: "keyword", text: "return " }, { kind: "plain", text: "[" }, { kind: "ident", text: "seen" }, { kind: "plain", text: "[" }, { kind: "ident", text: "need" }, { kind: "plain", text: "], i]" }] },
-  { indent: 2, revealAt: 420, tokens: [{ kind: "ident", text: "seen" }, { kind: "plain", text: "[x] = i" }] },
+  { indent: 0, revealAt: 30,  tokens: [{ kind: "keyword", text: "def " }, { kind: "ident", text: "maxDepth" }, { kind: "plain", text: "(root):" }] },
+  { indent: 1, revealAt: 90,  tokens: [{ kind: "keyword", text: "if not " }, { kind: "ident", text: "root" }, { kind: "plain", text: ":" }] },
+  { indent: 2, revealAt: 150, tokens: [{ kind: "keyword", text: "return " }, { kind: "number", text: "0" }] },
+  { indent: 1, revealAt: 220, tokens: [{ kind: "ident", text: "left" }, { kind: "plain", text: " = " }, { kind: "ident", text: "maxDepth" }, { kind: "plain", text: "(" }, { kind: "ident", text: "root" }, { kind: "plain", text: ".left)" }] },
+  { indent: 1, revealAt: 280, tokens: [{ kind: "ident", text: "right" }, { kind: "plain", text: " = " }, { kind: "ident", text: "maxDepth" }, { kind: "plain", text: "(" }, { kind: "ident", text: "root" }, { kind: "plain", text: ".right)" }] },
+  { indent: 1, revealAt: 350, tokens: [{ kind: "keyword", text: "return " }, { kind: "number", text: "1" }, { kind: "plain", text: " + " }, { kind: "ident", text: "max" }, { kind: "plain", text: "(" }, { kind: "ident", text: "left" }, { kind: "plain", text: ", " }, { kind: "ident", text: "right" }, { kind: "plain", text: ")" }] },
 ];
 
 export function MonacoTyping() {

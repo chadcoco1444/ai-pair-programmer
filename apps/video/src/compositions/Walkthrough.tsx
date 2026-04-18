@@ -57,7 +57,7 @@ export function Walkthrough() {
 
       <Sequence from={2250} durationInFrames={750}>
         <PhaseTransitionKnowledge />
-        <Caption>Your answers unlock the algorithmic pattern — Hash Table.</Caption>
+        <Caption>Your answers unlock the algorithmic pattern — recursion.</Caption>
       </Sequence>
 
       <Sequence from={3000} durationInFrames={600}>
