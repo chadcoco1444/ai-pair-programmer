@@ -1,0 +1,100 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800" font-family="'Fira Sans', sans-serif">
+  <rect width="1200" height="800" fill="#0f172a"/>
+  <g transform="translate(40, 40)">
+    <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+    <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+      <path d="M4 20 Q4 4 20 4 L44 4 Q60 4 60 20 Q60 36 44 36 L28 36 L16 48 L20 36 Q4 36 4 20 Z"/>
+      <text x="32" y="28" fill="#22c55e" font-family="'Fira Code', monospace" font-size="20" font-weight="700" text-anchor="middle">?</text>
+    </g>
+    <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">Socratic AI</text>
+    <text x="30" y="170" fill="#94a3b8" font-size="14">AI doesn't feed answers.</text>
+    <text x="30" y="190" fill="#94a3b8" font-size="14">It asks questions to guide thinking.</text>
+    <g transform="translate(400, 0)">
+      <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+      <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+        <rect x="6" y="20" width="10" height="10"/>
+        <rect x="18" y="20" width="10" height="10"/>
+        <rect x="30" y="20" width="10" height="10"/>
+        <rect x="18" y="8" width="10" height="10"/>
+        <path d="M2 36 Q32 50 52 36" stroke-width="2.5"/>
+      </g>
+      <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">Sandbox Execution</text>
+      <text x="30" y="170" fill="#94a3b8" font-size="14">Docker-isolated runtime.</text>
+      <text x="30" y="190" fill="#94a3b8" font-size="14">Python · JS · C · C++ supported.</text>
+      <g transform="translate(30, 220)" font-family="'Fira Code', monospace" font-size="11">
+        <rect x="0" y="0" width="58" height="24" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="29" y="16" fill="#22c55e" text-anchor="middle">Python</text>
+        <rect x="68" y="0" width="58" height="24" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="97" y="16" fill="#22c55e" text-anchor="middle">JS</text>
+        <rect x="136" y="0" width="58" height="24" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="165" y="16" fill="#22c55e" text-anchor="middle">C++</text>
+        <rect x="204" y="0" width="58" height="24" rx="12" fill="#0f172a" stroke="#334155"/>
+        <text x="233" y="16" fill="#22c55e" text-anchor="middle">C</text>
+      </g>
+    </g>
+    <g transform="translate(800, 0)">
+      <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+      <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+        <circle cx="12" cy="12" r="7"/>
+        <circle cx="48" cy="12" r="7"/>
+        <circle cx="30" cy="44" r="7"/>
+        <path d="M18 16 L28 38"/>
+        <path d="M42 16 L36 38"/>
+      </g>
+      <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">Learn Map</text>
+      <text x="30" y="170" fill="#94a3b8" font-size="14">Interactive skill tree.</text>
+      <text x="30" y="190" fill="#94a3b8" font-size="14">Click concepts to explore problems.</text>
+    </g>
+  </g>
+  <g transform="translate(40, 420)">
+    <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+    <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+      <path d="M32 4 L36 22 L54 26 L36 30 L32 48 L28 30 L10 26 L28 22 Z"/>
+    </g>
+    <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">Adaptive Recs</text>
+    <text x="30" y="170" fill="#94a3b8" font-size="14">Daily problem recommendation.</text>
+    <text x="30" y="190" fill="#94a3b8" font-size="14">Based on mastery + weakness patterns.</text>
+    <g transform="translate(30, 220)">
+      <rect x="0" y="0" width="200" height="6" rx="3" fill="#0f172a"/>
+      <rect x="0" y="0" width="140" height="6" rx="3" fill="#22c55e"/>
+      <text x="210" y="8" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="11">70%</text>
+      <rect x="0" y="16" width="200" height="6" rx="3" fill="#0f172a"/>
+      <rect x="0" y="16" width="90" height="6" rx="3" fill="#f59e0b"/>
+      <text x="210" y="24" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="11">45%</text>
+      <rect x="0" y="32" width="200" height="6" rx="3" fill="#0f172a"/>
+      <rect x="0" y="32" width="30" height="6" rx="3" fill="#64748b"/>
+      <text x="210" y="40" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="11">15%</text>
+    </g>
+    <g transform="translate(400, 0)">
+      <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+      <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+        <rect x="6" y="6" width="40" height="8"/>
+        <rect x="6" y="16" width="40" height="8"/>
+        <rect x="6" y="26" width="40" height="8"/>
+        <rect x="6" y="36" width="40" height="8"/>
+      </g>
+      <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">71 Curated Problems</text>
+      <text x="30" y="170" fill="#94a3b8" font-size="14">Full Blind 75 coverage.</text>
+      <text x="30" y="190" fill="#94a3b8" font-size="14">Array · DP · Graph · Tree · String...</text>
+      <text x="30" y="250" fill="#22c55e" font-family="'Fira Code', monospace" font-size="48" font-weight="700">71</text>
+      <text x="30" y="280" fill="#94a3b8" font-family="'Fira Code', monospace" font-size="12">problems across 10 categories</text>
+    </g>
+    <g transform="translate(800, 0)">
+      <rect width="360" height="340" rx="16" fill="#1e293b" stroke="#334155"/>
+      <g transform="translate(30, 30)" stroke="#22c55e" stroke-width="2" fill="none">
+        <rect x="4" y="6" width="52" height="40" rx="4"/>
+        <path d="M14 20 L20 26 L14 32"/>
+        <path d="M26 34 L40 34"/>
+      </g>
+      <text x="30" y="140" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="20" font-weight="700">Code Editor</text>
+      <text x="30" y="170" fill="#94a3b8" font-size="14">Monaco with AI chat.</text>
+      <text x="30" y="190" fill="#94a3b8" font-size="14">Submit inline, see results live.</text>
+      <g transform="translate(30, 220)" font-family="'Fira Code', monospace" font-size="11">
+        <rect width="300" height="70" rx="6" fill="#0f172a"/>
+        <text x="12" y="20" fill="#94a3b8">def twoSum(nums, target):</text>
+        <text x="12" y="38" fill="#f8fafc">    m = {}</text>
+        <text x="12" y="56" fill="#22c55e">    # AC: 2ms · 14MB</text>
+      </g>
+    </g>
+  </g>
+</svg>
