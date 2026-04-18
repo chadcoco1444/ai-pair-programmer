@@ -390,7 +390,12 @@ export default function PracticePage() {
               <p className="text-slate-500 text-sm">Please sign in to use AI Tutor</p>
             </div>
           ) : conversationId ? (
-            <ChatContainer conversationId={conversationId} initialMessages={initialMessages} />
+            <ChatContainer
+              conversationId={conversationId}
+              initialMessages={initialMessages}
+              getCurrentCode={() => editorRef.current?.getCode() ?? ""}
+              currentLanguage={language.toLowerCase()}
+            />
           ) : (
             <div className="flex flex-1 items-center justify-center">
               <div className="text-slate-500 text-sm">Starting AI Tutor...</div>
