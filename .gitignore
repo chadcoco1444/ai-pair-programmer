@@ -6,3 +6,10 @@ dist/
 *.log
 .turbo/
 coverage/
+
+# Allow committed final video renders
+!apps/video/out/
+apps/video/out/*
+!apps/video/out/hero.mp4
+!apps/video/out/walkthrough.mp4
+!apps/video/out/.gitkeep

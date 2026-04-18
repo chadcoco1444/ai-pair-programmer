@@ -1,3 +1,6 @@
 node_modules
-out
 .DS_Store
+out/*
+!out/hero.mp4
+!out/walkthrough.mp4
+!out/.gitkeep
