@@ -15,7 +15,7 @@ export interface ConceptWithProgression extends FixtureConcept {
   endMastery: number;
 }
 
-export const concepts: ConceptWithProgression[] = [
+export const concepts: readonly ConceptWithProgression[] = [
   { id: "array",        name: "Array",         mastery: 0.9,  startMastery: 0.40, endMastery: 0.90, col: 0, row: 0 },
   { id: "two-pointer",  name: "Two Pointer",   mastery: 0.8,  startMastery: 0.30, endMastery: 0.80, col: 1, row: 0 },
   { id: "sliding",      name: "Sliding Window",mastery: 0.6,  startMastery: 0.10, endMastery: 0.60, col: 2, row: 0 },
@@ -38,4 +38,4 @@ export const concepts: ConceptWithProgression[] = [
   { id: "greedy",       name: "Greedy",        mastery: 0.50, startMastery: 0.20, endMastery: 0.50, col: 4, row: 3 },
   { id: "interval",     name: "Interval",      mastery: 0.45, startMastery: 0.15, endMastery: 0.45, col: 1, row: 4 },
   { id: "matrix",       name: "Matrix",        mastery: 0.55, startMastery: 0.20, endMastery: 0.55, col: 3, row: 4 },
-];
+] as const;

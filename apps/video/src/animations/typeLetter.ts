@@ -19,6 +19,7 @@ export function typingProgress(
   startFrame: number,
   durationFrames: number
 ): number {
+  if (durationFrames <= 0) return frame >= startFrame ? 1 : 0;
   if (frame <= startFrame) return 0;
   if (frame >= startFrame + durationFrames) return 1;
   return (frame - startFrame) / durationFrames;

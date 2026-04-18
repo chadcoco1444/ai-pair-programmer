@@ -9,8 +9,8 @@ export interface FixtureProblem {
   title: string;
   difficulty: "EASY" | "MEDIUM" | "HARD";
   description: string;
-  testCases: FixtureTestCase[];
-  concepts: string[];
+  testCases: readonly FixtureTestCase[];
+  concepts: readonly string[];
 }
 
 /**
@@ -18,7 +18,7 @@ export interface FixtureProblem {
  * `getBySlug` in apps/web (shape only, not a runtime fetch). Drift is
  * acceptable — update this file manually when the seed changes.
  */
-export const twoSum: FixtureProblem = {
+export const twoSum = {
   slug: "two-sum",
   title: "Two Sum",
   difficulty: "EASY",
@@ -42,4 +42,4 @@ export const twoSum: FixtureProblem = {
     },
   ],
   concepts: ["Array", "Hash Table"],
-};
+} as const satisfies FixtureProblem;
