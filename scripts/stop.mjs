@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
 // ============================================================
-// SKILL Platform — 停止所有服務
+// SKILL Platform — Stop all services
 // ============================================================
 
 import { execSync } from "child_process";
@@ -11,6 +11,6 @@ import { fileURLToPath } from "url";
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = resolve(__dirname, "..");
 
-console.log("停止所有 Docker 服務...");
+console.log("Stopping all Docker services...");
 execSync("docker compose down", { cwd: ROOT, stdio: "inherit" });
-console.log("✓ 所有服務已停止");
+console.log("✓ All services stopped");

@@ -45,7 +45,7 @@ async function seedConcepts() {
   const raw = fs.readFileSync(filePath, "utf-8");
   const data = yaml.load(raw) as ConceptsFile;
 
-  console.log(`匯入 ${data.concepts.length} 個概念...`);
+  console.log(`Importing ${data.concepts.length} concepts...`);
 
   for (const concept of data.concepts) {
     await prisma.concept.upsert({
@@ -55,14 +55,14 @@ async function seedConcepts() {
     });
   }
 
-  console.log(`匯入 ${data.edges.length} 條邊...`);
+  console.log(`Importing ${data.edges.length} edges...`);
 
   for (const edge of data.edges) {
     const parent = await prisma.concept.findUnique({ where: { name: edge.parent } });
     const child = await prisma.concept.findUnique({ where: { name: edge.child } });
 
     if (!parent || !child) {
-      console.warn(`跳過邊 ${edge.parent} -> ${edge.child}：找不到概念`);
+      console.warn(`Skipping edge ${edge.parent} -> ${edge.child}: concept not found`);
       continue;
     }
 
@@ -89,7 +89,7 @@ async function seedProblems() {
       const raw = fs.readFileSync(filePath, "utf-8");
       const data = yaml.load(raw) as ProblemSeed;
 
-      console.log(`匯入題目: ${data.title}`);
+      console.log(`Importing problem: ${data.title}`);
 
       const problem = await prisma.problem.upsert({
         where: { slug: data.slug },
@@ -144,7 +144,7 @@ async function seedProblems() {
         for (const conceptRef of data.concepts) {
           const concept = await prisma.concept.findUnique({ where: { name: conceptRef.name } });
           if (!concept) {
-            console.warn(`跳過概念連結 ${conceptRef.name}：找不到概念`);
+            console.warn(`Skipping concept link ${conceptRef.name}: concept not found`);
             continue;
           }
           await prisma.problemConcept.upsert({
@@ -159,18 +159,18 @@ async function seedProblems() {
 }
 
 async function main() {
-  console.log("開始匯入種子資料...\n");
+  console.log("Seeding database...\n");
 
   await seedConcepts();
   console.log("");
   await seedProblems();
 
-  console.log("\n種子資料匯入完成！");
+  console.log("\nSeed data imported successfully.");
 }
 
 main()
   .catch((e) => {
-    console.error("種子資料匯入失敗:", e);
+    console.error("Seed data import failed:", e);
     process.exit(1);
   })
   .finally(() => prisma.$disconnect());

@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // ============================================================
-// SKILL Platform — 一鍵啟動開發環境
-// 啟動 DB + Redis + Executor + Next.js dev server
+// SKILL Platform — One-shot dev environment launcher
+// Starts DB + Redis + Executor + Next.js dev server
 // ============================================================
 
 import { execSync, spawn } from "child_process";
@@ -36,18 +36,18 @@ function cleanup() {
 
 async function main() {
   console.log("==============================");
-  console.log("  SKILL Platform 啟動中...");
+  console.log("  SKILL Platform starting...");
   console.log("==============================\n");
 
-  // 確認 .env
+  // Verify .env
   if (!existsSync(resolve(ROOT, ".env"))) {
-    console.error("錯誤：找不到 .env，請先執行 npm run setup");
+    console.error("Error: .env not found. Run `npm run setup` first.");
     process.exit(1);
   }
   copyFileSync(resolve(ROOT, ".env"), resolve(ROOT, "apps/web/.env"));
 
-  // 啟動 Docker
-  console.log("[1/3] 啟動 PostgreSQL 與 Redis...");
+  // Start Docker
+  console.log("[1/3] Starting PostgreSQL and Redis...");
   run("docker compose up postgres redis -d");
 
   for (let i = 0; i < 20; i++) {
@@ -58,10 +58,10 @@ async function main() {
       await sleep(1000);
     }
   }
-  console.log("  ✓ 資料庫服務就緒\n");
+  console.log("  ✓ Database services ready\n");
 
-  // 啟動 Executor
-  console.log("[2/3] 啟動執行引擎 (port 4000)...");
+  // Start executor
+  console.log("[2/3] Starting executor (port 4000)...");
   const executorDir = resolve(ROOT, "services/executor");
   const tsxCmd = resolve(ROOT, "node_modules", ".bin", process.platform === "win32" ? "tsx.cmd" : "tsx");
   const serverTs = resolve(executorDir, "src", "server.ts");
@@ -88,7 +88,7 @@ async function main() {
     }
   });
 
-  // 等待 executor 真正啟動
+  // Wait for executor to come up
   let executorReady = false;
   for (let i = 0; i < 15; i++) {
     await sleep(1000);
@@ -101,13 +101,13 @@ async function main() {
     } catch {}
   }
   if (executorReady) {
-    console.log("  ✓ 執行引擎已啟動\n");
+    console.log("  ✓ Executor is up\n");
   } else {
-    console.log("  ⚠ 執行引擎啟動超時，提交功能可能不可用\n");
+    console.log("  ⚠ Executor startup timed out; submissions may be unavailable\n");
   }
 
-  // 啟動 Next.js
-  console.log("[3/3] 啟動 Next.js (port 3001)...\n");
+  // Start Next.js
+  console.log("[3/3] Starting Next.js (port 3001)...\n");
   console.log("  ➜ http://localhost:3001\n");
 
   const next = spawn("npx", ["next", "dev", "-p", "3001"], {
@@ -121,13 +121,13 @@ async function main() {
     cleanup();
   });
 
-  // 優雅關閉
+  // Graceful shutdown
   for (const sig of ["SIGINT", "SIGTERM"]) {
     process.on(sig, cleanup);
   }
 }
 
 main().catch((err) => {
-  console.error("啟動失敗:", err.message);
+  console.error("Startup failed:", err.message);
   cleanup();
 });

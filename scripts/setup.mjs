@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 
 // ============================================================
-// SKILL Platform — 首次設定腳本
-// 執行一次即可：安裝依賴、啟動 DB、建立 schema、匯入種子資料
+// SKILL Platform — First-time setup script
+// Run once: install deps, start DB, create schema, seed data
 // ============================================================
 
 import { execSync } from "child_process";
@@ -38,22 +38,22 @@ function sleep(ms) {
 
 async function main() {
   console.log("==============================");
-  console.log("  SKILL Platform 首次設定");
+  console.log("  SKILL Platform first-time setup");
   console.log("==============================\n");
 
-  // 1. 檢查必要工具
-  console.log("[1/8] 檢查必要工具...");
+  // 1. Check required tools
+  console.log("[1/8] Checking required tools...");
   for (const cmd of ["node", "npm", "docker"]) {
     if (!checkCommand(cmd)) {
-      console.error(`  ✗ 找不到 ${cmd}，請先安裝。`);
+      console.error(`  ✗ ${cmd} not found, please install it first.`);
       process.exit(1);
     }
   }
   const nodeV = runSilent("node -v");
   console.log(`  ✓ node ${nodeV}`);
 
-  // 2. 建立 .env
-  console.log("\n[2/8] 檢查環境變數...");
+  // 2. Create .env
+  console.log("\n[2/8] Checking environment variables...");
   const envPath = resolve(ROOT, ".env");
   const envExamplePath = resolve(ROOT, ".env.example");
 
@@ -66,26 +66,26 @@ async function main() {
       secret
     );
     writeFileSync(envPath, content);
-    console.log("  ✓ 已建立 .env 並自動生成 NEXTAUTH_SECRET");
-    console.log("  ⚠ 請編輯 .env 填入 OAuth 和 Anthropic API Key");
+    console.log("  ✓ Created .env and generated NEXTAUTH_SECRET");
+    console.log("  ⚠ Edit .env to fill in OAuth and Anthropic API keys");
   } else {
-    console.log("  ✓ .env 已存在");
+    console.log("  ✓ .env already exists");
   }
 
-  // 複製到 apps/web
+  // Copy to apps/web
   const webEnvPath = resolve(ROOT, "apps/web/.env");
   copyFileSync(envPath, webEnvPath);
 
-  // 3. 安裝依賴
-  console.log("\n[3/8] 安裝依賴...");
+  // 3. Install dependencies
+  console.log("\n[3/8] Installing dependencies...");
   run("npm install");
-  console.log("  ✓ 依賴安裝完成");
+  console.log("  ✓ Dependencies installed");
 
-  // 4. 啟動 Docker 服務
-  console.log("\n[4/8] 啟動 PostgreSQL 與 Redis...");
+  // 4. Start Docker services
+  console.log("\n[4/8] Starting PostgreSQL and Redis...");
   run("docker compose up postgres redis -d");
 
-  console.log("  等待資料庫就緒...");
+  console.log("  Waiting for the database to be ready...");
   for (let i = 0; i < 30; i++) {
     try {
       runSilent("docker compose exec -T postgres pg_isready -U skill -d skill_platform");
@@ -94,25 +94,25 @@ async function main() {
       await sleep(1000);
     }
   }
-  console.log("  ✓ PostgreSQL 與 Redis 已啟動");
+  console.log("  ✓ PostgreSQL and Redis are up");
 
-  // 5. 資料庫 schema
-  console.log("\n[5/8] 同步資料庫 schema...");
+  // 5. Database schema
+  console.log("\n[5/8] Syncing database schema...");
   run("npx prisma generate", { cwd: resolve(ROOT, "apps/web") });
   run("npx prisma db push", { cwd: resolve(ROOT, "apps/web") });
-  console.log("  ✓ 資料庫 schema 已同步");
+  console.log("  ✓ Database schema synced");
 
-  // 6. 種子資料
-  console.log("\n[6/8] 匯入種子資料...");
+  // 6. Seed data
+  console.log("\n[6/8] Seeding database...");
   try {
     run("npx prisma db seed", { cwd: resolve(ROOT, "apps/web") });
-    console.log("  ✓ 種子資料匯入完成");
+    console.log("  ✓ Seed data imported");
   } catch {
-    console.log("  ⚠ 種子資料匯入失敗（可能已匯入過）");
+    console.log("  ⚠ Seed import failed (may already be seeded)");
   }
 
-  // 7. 建置語言執行映像
-  console.log("\n[7/8] 建置語言執行環境 Docker 映像...");
+  // 7. Build language runtime images
+  console.log("\n[7/8] Building language runtime Docker images...");
   const images = [
     { name: "skill-runner-python", path: "services/executor/images/python" },
     { name: "skill-runner-c-cpp", path: "services/executor/images/c-cpp" },
@@ -121,34 +121,34 @@ async function main() {
 
   for (const img of images) {
     try {
-      console.log(`  建置 ${img.name}...`);
+      console.log(`  Building ${img.name}...`);
       run(`docker build -t ${img.name} ${img.path}`);
     } catch (err) {
-      console.log(`  ⚠ ${img.name} 建置失敗：${err.message}`);
+      console.log(`  ⚠ ${img.name} build failed: ${err.message}`);
     }
   }
-  console.log("  ✓ 語言映像建置完成");
+  console.log("  ✓ Language images built");
 
-  // 8. 安裝 executor 依賴
-  console.log("\n[8/8] 安裝執行引擎依賴...");
+  // 8. Install executor dependencies
+  console.log("\n[8/8] Installing executor dependencies...");
   run("npm install", { cwd: resolve(ROOT, "services/executor") });
-  console.log("  ✓ 執行引擎依賴安裝完成");
+  console.log("  ✓ Executor dependencies installed");
 
   console.log("\n==============================");
-  console.log("  設定完成！");
+  console.log("  Setup complete!");
   console.log("==============================\n");
-  console.log("  一鍵啟動所有服務：");
+  console.log("  Start everything with:");
   console.log("    npm run dev:web\n");
-  console.log("  開啟瀏覽器：");
+  console.log("  Open in your browser:");
   console.log("    http://localhost:3001\n");
-  console.log("  包含的服務：");
+  console.log("  Services included:");
   console.log("    - PostgreSQL (port 5433)");
   console.log("    - Redis (port 6379)");
-  console.log("    - 執行引擎 (port 4000)");
+  console.log("    - Executor (port 4000)");
   console.log("    - Next.js (port 3001)\n");
 }
 
 main().catch((err) => {
-  console.error("設定失敗:", err.message);
+  console.error("Setup failed:", err.message);
   process.exit(1);
 });
