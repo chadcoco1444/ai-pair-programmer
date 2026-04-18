@@ -35,9 +35,9 @@ export function MacWindow({ title, titleColor = colors.slate, width, height, chi
           borderBottom: `1px solid ${colors.border}`,
         }}
       >
-        <div style={{ width: 12, height: 12, borderRadius: 6, background: "#ef4444" }} />
-        <div style={{ width: 12, height: 12, borderRadius: 6, background: "#f59e0b" }} />
-        <div style={{ width: 12, height: 12, borderRadius: 6, background: "#22c55e" }} />
+        <div style={{ width: 12, height: 12, borderRadius: 6, background: colors.red }} />
+        <div style={{ width: 12, height: 12, borderRadius: 6, background: colors.amber }} />
+        <div style={{ width: 12, height: 12, borderRadius: 6, background: colors.emerald }} />
         <div style={{ ...type.codeSmall, color: titleColor, marginLeft: 10 }}>{title}</div>
       </div>
       <div style={{ padding: 20 }}>{children}</div>

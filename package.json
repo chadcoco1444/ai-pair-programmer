@@ -4,8 +4,7 @@
   "workspaces": [
     "apps/*",
     "packages/*",
-    "services/*",
-    "apps/video"
+    "services/*"
   ],
   "scripts": {
     "setup": "node scripts/setup.mjs",
