@@ -8,23 +8,23 @@ const PORT = process.env.PORT ?? 4000;
 
 app.use(express.json({ limit: "1mb" }));
 
-// 健康檢查
+// Health check
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", service: "executor" });
 });
 
-// 提交程式碼執行
+// Submit code for execution
 app.post("/execute", async (req, res) => {
   const { submissionId, language, code, testCases, timeout, memoryLimit } = req.body as ExecutionJob;
 
   if (!submissionId || !language || !code || !testCases) {
-    res.status(400).json({ error: "缺少必要欄位: submissionId, language, code, testCases" });
+    res.status(400).json({ error: "Missing required fields: submissionId, language, code, testCases" });
     return;
   }
 
   const supportedLanguages = ["PYTHON", "C", "CPP", "JAVASCRIPT"];
   if (!supportedLanguages.includes(language)) {
-    res.status(400).json({ error: `不支援的語言: ${language}` });
+    res.status(400).json({ error: `Unsupported language: ${language}` });
     return;
   }
 
@@ -40,16 +40,16 @@ app.post("/execute", async (req, res) => {
   res.json({
     jobId: job.id,
     submissionId,
-    message: "任務已加入佇列",
+    message: "Job queued",
   });
 });
 
-// 查詢任務狀態
+// Query job status
 app.get("/status/:jobId", async (req, res) => {
   const job = await executionQueue.getJob(req.params.jobId);
 
   if (!job) {
-    res.status(404).json({ error: "找不到任務" });
+    res.status(404).json({ error: "Job not found" });
     return;
   }
 
@@ -64,12 +64,12 @@ app.get("/status/:jobId", async (req, res) => {
   });
 });
 
-// 同步執行（等待結果）
+// Synchronous execution (waits for result)
 app.post("/execute/sync", async (req, res) => {
   const { submissionId, language, code, testCases, timeout, memoryLimit } = req.body as ExecutionJob;
 
   if (!submissionId || !language || !code || !testCases) {
-    res.status(400).json({ error: "缺少必要欄位" });
+    res.status(400).json({ error: "Missing required fields" });
     return;
   }
 
@@ -97,13 +97,13 @@ app.post("/execute/sync", async (req, res) => {
   }
 });
 
-// 啟動
+// Startup
 async function start() {
   await ensureImagesExist();
   startWorker();
 
   app.listen(PORT, () => {
-    console.log(`執行引擎服務啟動於 port ${PORT}`);
+    console.log(`Executor service listening on port ${PORT}`);
   });
 }
 

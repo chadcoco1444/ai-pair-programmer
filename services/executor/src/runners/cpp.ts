@@ -88,7 +88,7 @@ export async function runCpp(config: RunConfig): Promise<RunResult & { compileEr
   if (!compile.success) {
     return {
       stdout: "",
-      stderr: compile.error || "編譯失敗",
+      stderr: compile.error || "Compile failed",
       exitCode: 1,
       runtime: 0,
       memory: 0,

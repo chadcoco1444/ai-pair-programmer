@@ -3,7 +3,7 @@ export interface RunConfig {
   code: string;
   input: string;
   args: any[];
-  timeout: number;  // 毫秒
+  timeout: number;  // milliseconds
   memoryLimit: number;  // MB
 }
 
@@ -11,7 +11,7 @@ export interface RunResult {
   stdout: string;
   stderr: string;
   exitCode: number;
-  runtime: number;   // 毫秒
+  runtime: number;   // milliseconds
   memory: number;    // KB
   timedOut: boolean;
   oomKilled: boolean;

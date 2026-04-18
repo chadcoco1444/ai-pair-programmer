@@ -34,7 +34,7 @@ async function processJob(job: { data: ExecutionJob }): Promise<JudgeResult> {
       testResults: [],
       totalRuntime: 0,
       totalMemory: 0,
-      compileError: `不支援的語言: ${language}`,
+      compileError: `Unsupported language: ${language}`,
     };
   }
 
@@ -71,14 +71,14 @@ async function processJob(job: { data: ExecutionJob }): Promise<JudgeResult> {
       runResult = await runner(config);
     }
 
-    // 檢查是否有編譯錯誤
+    // Check for a compile error
     if ("compileError" in runResult && runResult.compileError) {
       return judgeSubmission([], runResult.compileError);
     }
 
     results.push({ testCase: tc, runResult });
 
-    // 如果超時或 OOM，停止執行後續測資
+    // Stop running remaining test cases on timeout or OOM
     if (runResult.timedOut || runResult.oomKilled || runResult.exitCode !== 0) {
       break;
     }
@@ -102,14 +102,14 @@ export function startWorker(): Worker {
   );
 
   worker.on("completed", (job, result) => {
-    console.log(`任務 ${job.id} 完成: ${result.status}`);
+    console.log(`Job ${job.id} completed: ${result.status}`);
   });
 
   worker.on("failed", (job, err) => {
-    console.error(`任務 ${job?.id} 失敗:`, err.message);
+    console.error(`Job ${job?.id} failed:`, err.message);
   });
 
-  console.log("執行 Worker 已啟動，等待任務...");
+  console.log("Executor worker started, waiting for jobs...");
 
   return worker;
 }
