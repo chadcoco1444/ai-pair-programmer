@@ -54,28 +54,39 @@ export const conceptRouter = router({
         }
       }
 
-      const nodes = concepts.map((c: any) => {
-        const mastery = (masteryByConceptId.get(c.id) as number) ?? 0;
-        const prereqs = prereqMap.get(c.id) ?? [];
-        const prereqsMet = prereqs.every(
-          (pid) => ((masteryByConceptId.get(pid) as number) ?? 0) >= 0.7
-        );
-        return {
-          id: c.id,
-          name: c.name,
-          domain: c.domain,
-          mastery,
-          prereqsMet,
-          problemCount: (problemCountByConceptId.get(c.id) as number) ?? 0,
-          solvedCount: solvedCountByConceptId.get(c.id) ?? 0,
-        };
-      });
+      // Hide concepts without linked problems (e.g. system-design topics awaiting content)
+      const visibleConceptIds = new Set(
+        concepts
+          .filter((c: any) => ((problemCountByConceptId.get(c.id) as number) ?? 0) > 0)
+          .map((c: any) => c.id)
+      );
 
-      const edgeList = (edges as any[]).map((e) => ({
-        source: e.parentId,
-        target: e.childId,
-        type: e.relation as "prerequisite" | "related",
-      }));
+      const nodes = concepts
+        .filter((c: any) => visibleConceptIds.has(c.id))
+        .map((c: any) => {
+          const mastery = (masteryByConceptId.get(c.id) as number) ?? 0;
+          const prereqs = (prereqMap.get(c.id) ?? []).filter((pid) => visibleConceptIds.has(pid));
+          const prereqsMet = prereqs.every(
+            (pid) => ((masteryByConceptId.get(pid) as number) ?? 0) >= 0.7
+          );
+          return {
+            id: c.id,
+            name: c.name,
+            domain: c.domain,
+            mastery,
+            prereqsMet,
+            problemCount: (problemCountByConceptId.get(c.id) as number) ?? 0,
+            solvedCount: solvedCountByConceptId.get(c.id) ?? 0,
+          };
+        });
+
+      const edgeList = (edges as any[])
+        .filter((e) => visibleConceptIds.has(e.parentId) && visibleConceptIds.has(e.childId))
+        .map((e) => ({
+          source: e.parentId,
+          target: e.childId,
+          type: e.relation as "prerequisite" | "related",
+        }));
 
       return { nodes, edges: edgeList };
     }),
