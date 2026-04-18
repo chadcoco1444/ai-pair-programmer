@@ -69,6 +69,9 @@ export const CodeEditor = forwardRef<CodeEditorHandle, CodeEditorProps>(
             options={{
               minimap: { enabled: false },
               fontSize: 14,
+              lineHeight: 1.6,
+              fontFamily: "var(--font-mono), ui-monospace, SFMono-Regular, monospace",
+              fontLigatures: true,
               lineNumbers: "on",
               scrollBeyondLastLine: false,
               automaticLayout: true,
