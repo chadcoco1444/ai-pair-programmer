@@ -1,0 +1,50 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" font-family="'Fira Sans', sans-serif">
+  <rect width="1200" height="400" fill="#0f172a"/>
+  <text x="600" y="40" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="16" font-weight="700" text-anchor="middle">Execution Pipeline</text>
+  <g transform="translate(20, 120)">
+    <rect width="170" height="90" rx="10" fill="#1e293b" stroke="#334155"/>
+    <text x="85" y="30" fill="#94a3b8" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 1</text>
+    <text x="85" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="14" font-weight="700" text-anchor="middle">Editor</text>
+    <text x="85" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">Monaco code submit</text>
+  </g>
+  <g stroke="#22c55e" stroke-width="1.5" fill="none"><path d="M200 165 L210 165 M202 160 L210 165 L202 170"/></g>
+  <g transform="translate(220, 120)">
+    <rect width="170" height="90" rx="10" fill="#1e293b" stroke="#334155"/>
+    <text x="85" y="30" fill="#94a3b8" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 2</text>
+    <text x="85" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="14" font-weight="700" text-anchor="middle">parseTestInput</text>
+    <text x="85" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">YAML → JSON args</text>
+  </g>
+  <g stroke="#22c55e" stroke-width="1.5" fill="none"><path d="M400 165 L410 165 M402 160 L410 165 L402 170"/></g>
+  <g transform="translate(420, 120)">
+    <rect width="170" height="90" rx="10" fill="#1e293b" stroke="#334155"/>
+    <text x="85" y="30" fill="#94a3b8" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 3</text>
+    <text x="85" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="14" font-weight="700" text-anchor="middle">Queue (BullMQ)</text>
+    <text x="85" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">Redis-backed, 1 worker</text>
+  </g>
+  <g stroke="#22c55e" stroke-width="1.5" fill="none"><path d="M600 165 L610 165 M602 160 L610 165 L602 170"/></g>
+  <g transform="translate(620, 120)">
+    <rect width="170" height="90" rx="10" fill="#1e293b" stroke="#22c55e"/>
+    <text x="85" y="30" fill="#22c55e" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 4 · CACHED</text>
+    <text x="85" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="13" font-weight="700" text-anchor="middle">Compile (C/C++)</text>
+    <text x="85" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">1× per submission, 5× speedup</text>
+  </g>
+  <g stroke="#22c55e" stroke-width="1.5" fill="none"><path d="M800 165 L810 165 M802 160 L810 165 L802 170"/></g>
+  <g transform="translate(820, 120)">
+    <rect width="170" height="90" rx="10" fill="#1e293b" stroke="#334155"/>
+    <text x="85" y="30" fill="#94a3b8" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 5</text>
+    <text x="85" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="14" font-weight="700" text-anchor="middle">Docker Sandbox</text>
+    <text x="85" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">Isolated, no network, 256MB</text>
+  </g>
+  <g stroke="#22c55e" stroke-width="1.5" fill="none"><path d="M1000 165 L1010 165 M1002 160 L1010 165 L1002 170"/></g>
+  <g transform="translate(1020, 120)">
+    <rect width="160" height="90" rx="10" fill="#1e293b" stroke="#22c55e"/>
+    <text x="80" y="30" fill="#22c55e" font-family="'Fira Code', monospace" font-size="9" text-anchor="middle">STEP 6</text>
+    <text x="80" y="52" fill="#f8fafc" font-family="'Fira Code', monospace" font-size="14" font-weight="700" text-anchor="middle">Judge</text>
+    <text x="80" y="72" fill="#94a3b8" font-size="10" text-anchor="middle">Deep-sort + TreeNode</text>
+  </g>
+  <g transform="translate(600, 300)">
+    <rect x="-250" y="0" width="500" height="50" rx="8" fill="#064e3b" stroke="#22c55e"/>
+    <text x="0" y="22" fill="#22c55e" font-family="'Fira Code', monospace" font-size="11" font-weight="700" text-anchor="middle">COMPILE CACHE</text>
+    <text x="0" y="38" fill="#f8fafc" font-size="11" text-anchor="middle">3-5s compile → reused across all test cases = 5× speedup for C/C++</text>
+  </g>
+</svg>
