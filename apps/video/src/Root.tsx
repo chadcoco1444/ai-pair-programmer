@@ -1,13 +1,13 @@
 import { Composition } from "remotion";
-import { HookKineticText } from "./scenes/HookKineticText";
+import { Hero } from "./compositions/Hero";
 
 export const Root = () => {
   return (
     <>
       <Composition
-        id="HookKineticTextPreview"
-        component={HookKineticText}
-        durationInFrames={90}
+        id="Hero"
+        component={Hero}
+        durationInFrames={1200}
         fps={30}
         width={1920}
         height={1080}
