@@ -26,11 +26,13 @@
 </p>
 
 - **Socratic AI Tutor** — The AI doesn't feed you answers. It asks questions that expose your assumptions and guides you toward your own insights, using the five-stage SKILL framework.
+- **Beginner Mode** — `BEGINNER` and `INTERMEDIATE` users get an automatic concrete walk-through on their first message: the AI picks a real input from the problem and asks three hand-simulation questions before touching any algorithm name.
+- **Input Visualizer** — Every problem page renders its test-case inputs as inline SVGs. Arrays become index-labelled boxes, trees become node diagrams with edges, matrices become grids, linked lists show arrow chains. New shape? Add one renderer file.
+- **AI Tutor Suggestion Chips** — Six starter prompts above the chat (Approach / Review / Hint / Explain / Complexity / Edge cases) with code injection, so beginners don't stare at an empty input.
 - **Multi-language Sandbox Execution** — Submit Python, JavaScript, C, or C++ and get instant results. Code runs in isolated Docker containers with memory/CPU limits and no network access.
-- **Interactive Learn Map** — Skill-tree-style knowledge graph of 31 algorithm concepts. Click a concept to see related problems, your mastery level, prerequisites, and the next recommended step.
+- **Interactive Learn Map** — Skill-tree-style knowledge graph of 22 visible algorithm concepts (31 total in the seed). Click a concept to see related problems, your mastery level, prerequisites, and the next recommended step.
 - **Adaptive Recommendations** — Every submission updates your concept mastery. The daily recommendation surfaces the next problem that fills your weakest spot.
 - **71 Curated Problems** — The full Blind 75 list (minus a few design-style problems), across Array, DP, Graph, Tree, String, Linked List, Interval, Matrix, Binary, and Heap.
-- **AI Chat Sidebar** — Every problem page has an AI chat paired with a Monaco code editor, so you can ask questions without leaving the workspace.
 
 ---
 
@@ -118,7 +120,7 @@ A five-stage pedagogy designed to build lasting algorithmic intuition.
 
 | Stage | Behavior |
 |-------|----------|
-| **S** — Socratic | Ask questions to probe understanding. Never assume what the learner knows or doesn't. |
+| **S** — Socratic | Ask questions to probe understanding. Never assume what the learner knows or doesn't. For `BEGINNER`/`INTERMEDIATE` users, the first Socratic exchange is a forced concrete walk-through on a specific input. |
 | **K** — Knowledge | Progressively reveal algorithmic patterns. Let the learner discover them. |
 | **I** — Iterative | Start with brute force → identify bottlenecks → optimize. |
 | **L1** — Logic | Hit the solution with killer test cases. Force edge-case reasoning. |
@@ -132,7 +134,7 @@ A five-stage pedagogy designed to build lasting algorithmic intuition.
   <img src="docs/learn-map.svg" alt="Learn Map preview" width="100%"/>
 </p>
 
-The `/learn` page renders a top-down skill tree of 31 concepts, colored by your mastery:
+The `/learn` page renders a top-down skill tree of 22 concepts (concepts without linked problems are hidden), colored by your mastery:
 
 - 🟢 **Mastered** (>70%) — Emerald
 - 🟡 **Learning** (40–70%) — Amber
@@ -236,7 +238,7 @@ The project has two test layers:
 **Unit tests** — Vitest, located next to the code they verify.
 
 ```bash
-cd apps/web && npx vitest run          # 83 tests
+cd apps/web && npx vitest run          # 136 tests (SKILL prompts, input-visualizer, chips, routers, ...)
 cd services/executor && npx vitest run # 37 tests
 ```
 
