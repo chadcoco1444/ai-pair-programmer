@@ -17,6 +17,7 @@ import { AuthButton } from "@/components/auth-button";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import { PricingModal } from "@/components/pricing-modal";
+import { ExampleVisualizations } from "@/components/practice/ExampleVisualizations";
 import type { Language } from "@skill/shared";
 
 const LANGUAGES: { value: Language; label: string }[] = [
@@ -357,6 +358,9 @@ export default function PracticePage() {
                 {problem.description}
               </ReactMarkdown>
             </div>
+            {problem.testCases && problem.testCases.length > 0 && (
+              <ExampleVisualizations testCases={problem.testCases} />
+            )}
             {problem.hints && problem.hints.length > 0 && (
               <div className="mt-6 border-t border-slate-800 pt-4">
                 <details>

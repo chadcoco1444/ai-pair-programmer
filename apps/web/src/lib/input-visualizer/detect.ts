@@ -104,12 +104,11 @@ export function detectInputType(raw: string): InputShape {
   // Case 2: multiple "name = val, name2 = val2"
   const assignments = splitAssignments(trimmed);
   if (assignments.length > 1) {
-    const parts = assignments
-      .map((a) => {
-        const v = tryJson(a.rawValue);
-        return v !== undefined ? { name: a.name, value: v } : null;
-      })
-      .filter((p): p is { name: string; value: unknown } => p !== null);
+    const parts: { name: string; value: unknown }[] = [];
+    for (const a of assignments) {
+      const v = tryJson(a.rawValue);
+      if (v !== undefined) parts.push({ name: a.name, value: v });
+    }
     if (parts.length === 0) return { kind: "unknown" };
     return { kind: "multi-arg", parts };
   }

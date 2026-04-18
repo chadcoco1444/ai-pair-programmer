@@ -6,7 +6,7 @@ interface TestCase {
   id: string;
   input: string;
   expected: string;
-  isHidden: boolean;
+  isHidden?: boolean;
 }
 
 interface ExampleVisualizationsProps {
