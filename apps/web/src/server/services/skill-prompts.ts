@@ -164,6 +164,9 @@ export function detectPhaseTransition(
   // Simple keyword-based phase detection
   const lower = messageContent.toLowerCase();
 
+  // Bilingual keyword detection: English + Traditional/Simplified Chinese
+  const raw = messageContent;
+
   switch (currentPhase) {
     case "SOCRATIC":
       // When the student proposes a concrete direction, move to Knowledge
@@ -173,7 +176,12 @@ export function detectPhaseTransition(
         lower.includes("i will use") ||
         lower.includes("could use") ||
         lower.includes("my idea is") ||
-        lower.includes("i think i can")
+        lower.includes("i think i can") ||
+        raw.includes("我想用") ||
+        raw.includes("我要用") ||
+        raw.includes("可以用") ||
+        raw.includes("我的想法") ||
+        raw.includes("我覺得可以")
       ) {
         return "KNOWLEDGE";
       }
@@ -187,7 +195,10 @@ export function detectPhaseTransition(
         lower.includes("int ") ||
         lower.includes("class ") ||
         lower.includes("i wrote") ||
-        lower.includes("my code")
+        lower.includes("my code") ||
+        raw.includes("我寫了") ||
+        raw.includes("我的程式") ||
+        raw.includes("我的代碼")
       ) {
         return "ITERATIVE";
       }
@@ -199,7 +210,11 @@ export function detectPhaseTransition(
         lower.includes("submit") ||
         lower.includes("i think i'm done") ||
         lower.includes("should be good") ||
-        lower.includes("ready to submit")
+        lower.includes("ready to submit") ||
+        raw.includes("提交") ||
+        raw.includes("我覺得完成了") ||
+        raw.includes("我覺得好了") ||
+        raw.includes("應該可以了")
       ) {
         return "LOGIC";
       }
