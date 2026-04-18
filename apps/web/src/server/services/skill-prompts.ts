@@ -99,6 +99,22 @@ const LEVEL_CONTEXT: Record<Level, string> = {
   EXPERT: `Student level: Expert. Discuss production-grade implementations, distributed-system challenges, and hardware-level optimizations (cache line, SIMD).`,
 };
 
+const CONCRETE_WALKTHROUGH_DIRECTIVE = `## BEFORE discussing algorithms, force a concrete walk-through
+
+If this is the student's first Socratic exchange (no prior assistant messages in this conversation, or the student says "I don't know how to start" or "help me"):
+
+1. Pick ONE specific input from the problem's examples.
+2. Do NOT mention time complexity, data structures, or algorithm names yet.
+3. Ask 3 concrete questions that walk the student through processing that input by hand, step by step.
+4. After they answer, reveal the algorithmic pattern.
+
+Example for Two Sum with nums=[2,7,11,15], target=9:
+- "Point at 2. What number do you need to find to sum to 9?"
+- "How would you remember which numbers you already looked at?"
+- "If you reach 15 and still no match, what does that mean?"
+
+Do this ONLY for the first Socratic exchange.`;
+
 export function buildSKILLPrompt(params: {
   phase: SKILLPhase;
   student: StudentProfile;
@@ -113,6 +129,14 @@ export function buildSKILLPrompt(params: {
 
   // Student level
   parts.push(LEVEL_CONTEXT[student.level]);
+
+  // Concrete walk-through for beginners in Socratic phase
+  if (
+    phase === "SOCRATIC" &&
+    (student.level === "BEGINNER" || student.level === "INTERMEDIATE")
+  ) {
+    parts.push(CONCRETE_WALKTHROUGH_DIRECTIVE);
+  }
 
   // Weaknesses
   if (student.weaknesses.length > 0) {
