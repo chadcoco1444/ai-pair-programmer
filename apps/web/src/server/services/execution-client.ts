@@ -33,7 +33,7 @@ export interface ExecuteResult {
 }
 
 export class ExecutionClient {
-  // 同步執行（等待結果）
+  // Synchronous execution (waits for result)
   async executeSync(request: ExecuteRequest): Promise<ExecuteResult> {
     let response: Response;
     try {
@@ -50,13 +50,13 @@ export class ExecutionClient {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || `執行引擎錯誤: ${response.status}`);
+      throw new Error(error.error || `Executor error: ${response.status}`);
     }
 
     return response.json();
   }
 
-  // 非同步執行（放入佇列）
+  // Asynchronous execution (enqueue)
   async executeAsync(request: ExecuteRequest): Promise<{ jobId: string }> {
     const response = await fetch(`${EXECUTOR_URL}/execute`, {
       method: "POST",
@@ -66,13 +66,13 @@ export class ExecutionClient {
 
     if (!response.ok) {
       const error = await response.json();
-      throw new Error(error.error || `執行引擎錯誤: ${response.status}`);
+      throw new Error(error.error || `Executor error: ${response.status}`);
     }
 
     return response.json();
   }
 
-  // 查詢任務狀態
+  // Query job status
   async getStatus(jobId: string): Promise<{
     jobId: string;
     state: string;
@@ -82,13 +82,13 @@ export class ExecutionClient {
     const response = await fetch(`${EXECUTOR_URL}/status/${jobId}`);
 
     if (!response.ok) {
-      throw new Error(`查詢失敗: ${response.status}`);
+      throw new Error(`Status query failed: ${response.status}`);
     }
 
     return response.json();
   }
 
-  // 健康檢查
+  // Health check
   async healthCheck(): Promise<boolean> {
     try {
       const response = await fetch(`${EXECUTOR_URL}/health`);

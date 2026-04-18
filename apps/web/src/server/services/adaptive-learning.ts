@@ -1,6 +1,6 @@
 import type { PrismaClient, Level } from "@prisma/client";
 
-// ===== 掌握度計算 =====
+// ===== Mastery calculation =====
 
 interface MasteryParams {
   passRate: number;        // 0-1
@@ -22,24 +22,24 @@ export function calculateMastery(params: MasteryParams): number {
   return Math.min(1, Math.max(0, rawMastery * decayFactor));
 }
 
-// ===== 弱點模式 =====
+// ===== Weakness patterns =====
 
 export const WEAKNESS_PATTERNS = {
-  "off-by-one": "迴圈邊界錯誤，差一問題",
-  "missing-base-case": "遞迴缺少終止條件",
-  "integer-overflow": "整數溢位未處理",
-  "null-deref": "空指標存取",
-  "race-condition": "多執行緒資料競爭",
-  "memory-leak": "動態記憶體未釋放",
-  "wrong-ds": "選擇了不適合的資料結構",
-  "greedy-fallacy": "誤用貪心法（需要 DP）",
-  "tle-nested-loop": "不必要的巢狀迴圈",
-  "missing-edge-case": "未處理邊際條件",
+  "off-by-one": "Loop boundary error; off-by-one",
+  "missing-base-case": "Recursion missing a terminating base case",
+  "integer-overflow": "Integer overflow not handled",
+  "null-deref": "Null pointer dereference",
+  "race-condition": "Multi-threaded data race",
+  "memory-leak": "Dynamically allocated memory not freed",
+  "wrong-ds": "Chose an unsuitable data structure",
+  "greedy-fallacy": "Misused greedy approach (DP required)",
+  "tle-nested-loop": "Unnecessary nested loops",
+  "missing-edge-case": "Edge cases not handled",
 } as const;
 
 export type WeaknessPattern = keyof typeof WEAKNESS_PATTERNS;
 
-// ===== 等級升級 =====
+// ===== Level progression =====
 
 const LEVEL_UP_CRITERIA: Record<string, {
   minConceptsMastered: number;
@@ -72,7 +72,7 @@ const DIFFICULTY_BY_LEVEL: Record<Level, string[]> = {
   EXPERT: ["HARD", "EXPERT"],
 };
 
-// ===== 推薦結果 =====
+// ===== Recommendation types =====
 
 export interface RecommendedProblem {
   problem: {
@@ -98,17 +98,17 @@ export interface LearningStats {
     missingDomains: string[];
   } | null;
   topWeaknesses: { pattern: string; description: string; frequency: number }[];
-  recentActivity: number; // 最近 7 天解題數
+  recentActivity: number; // Problems solved in the last 7 days
 }
 
-// ===== 自適應學習引擎 =====
+// ===== Adaptive learning engine =====
 
 export class AdaptiveLearningEngine {
   constructor(private prisma: PrismaClient) {}
 
-  // 更新概念掌握度
+  // Update concept mastery
   async updateMastery(userId: string, conceptId: string): Promise<number> {
-    // 取得與該概念相關的提交
+    // Fetch submissions related to this concept
     const submissions = await this.prisma.submission.findMany({
       where: {
         userId,
@@ -205,7 +205,7 @@ export class AdaptiveLearningEngine {
     return { problemIds, reasons };
   }
 
-  // 記錄弱點
+  // Record a weakness
   async recordWeakness(userId: string, pattern: WeaknessPattern): Promise<void> {
     const existing = await this.prisma.userWeakness.findFirst({
       where: { userId, pattern, resolved: false },
@@ -223,7 +223,7 @@ export class AdaptiveLearningEngine {
     }
   }
 
-  // 標記弱點已解決
+  // Mark a weakness as resolved
   async resolveWeakness(userId: string, pattern: string): Promise<void> {
     await this.prisma.userWeakness.updateMany({
       where: { userId, pattern, resolved: false },
@@ -231,7 +231,7 @@ export class AdaptiveLearningEngine {
     });
   }
 
-  // 取得推薦題目
+  // Fetch recommended problems
   async getRecommendations(userId: string): Promise<RecommendedProblem[]> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
@@ -260,7 +260,7 @@ export class AdaptiveLearningEngine {
 
     const candidates: RecommendedProblem[] = [];
 
-    // 優先級 1：補基礎（mastery < 0.4）
+    // Priority 1: Shore up fundamentals (mastery < 0.4)
     const weakPrereqs = progress.filter((p) => p.mastery < 0.4);
     for (const prereq of weakPrereqs) {
       const problems = await this.prisma.problem.findMany({
@@ -276,12 +276,12 @@ export class AdaptiveLearningEngine {
         candidates.push({
           problem: p,
           score: 100 + (0.4 - prereq.mastery) * 50,
-          reason: `基礎概念「${prereq.concept.name}」需要加強（掌握度 ${Math.round(prereq.mastery * 100)}%）`,
+          reason: `Core concept "${prereq.concept.name}" needs reinforcement (mastery ${Math.round(prereq.mastery * 100)}%)`,
         });
       }
     }
 
-    // 優先級 2：弱點強化（frequency >= 3）
+    // Priority 2: Address recurring weaknesses (frequency >= 3)
     const significantWeaknesses = weaknesses.filter((w) => w.frequency >= 3);
     if (significantWeaknesses.length > 0) {
       const weaknessProblems = await this.prisma.problem.findMany({
@@ -297,12 +297,12 @@ export class AdaptiveLearningEngine {
         candidates.push({
           problem: p,
           score: 80 + significantWeaknesses[0].frequency * 5,
-          reason: `你經常出現「${significantWeaknesses[0].pattern}」錯誤，這題可以幫你克服`,
+          reason: `You often hit "${significantWeaknesses[0].pattern}" — this problem targets that weakness`,
         });
       }
     }
 
-    // 優先級 3：正常推進
+    // Priority 3: Normal progression
     const masteredConcepts = progress.filter((p) => p.mastery >= 0.8);
     const masteredIds = new Set(masteredConcepts.map((p) => p.conceptId));
 
@@ -332,12 +332,12 @@ export class AdaptiveLearningEngine {
         candidates.push({
           problem: p,
           score: 50,
-          reason: `下一個建議學習的概念：「${edge.child.name}」`,
+          reason: `Next suggested concept to learn: "${edge.child.name}"`,
         });
       }
     }
 
-    // 去重、排序、取前 5
+    // Deduplicate, sort, take top 5
     const seen = new Set<string>();
     return candidates
       .filter((c) => {
@@ -349,7 +349,7 @@ export class AdaptiveLearningEngine {
       .slice(0, 5);
   }
 
-  // 檢查是否可以升級
+  // Check whether the user can level up
   async checkLevelUp(userId: string): Promise<{
     canLevelUp: boolean;
     currentLevel: Level;
@@ -374,19 +374,19 @@ export class AdaptiveLearningEngine {
       return { canLevelUp: false, currentLevel: user.level, nextLevel };
     }
 
-    // 檢查掌握的概念數
+    // Count mastered concepts
     const masteredConcepts = await this.prisma.userProgress.count({
       where: { userId, mastery: { gte: 0.7 } },
     });
 
-    // 檢查通過的題目數
+    // Count accepted problems
     const acceptedProblems = await this.prisma.submission.findMany({
       where: { userId, status: "ACCEPTED" },
       select: { problemId: true },
       distinct: ["problemId"],
     });
 
-    // 檢查涉及的領域
+    // Check covered domains
     const coveredDomains = await this.prisma.userProgress.findMany({
       where: { userId, mastery: { gte: 0.5 } },
       include: { concept: { select: { domain: true } } },
@@ -410,14 +410,14 @@ export class AdaptiveLearningEngine {
     return { canLevelUp, currentLevel: user.level, nextLevel };
   }
 
-  // 取得學習統計
+  // Fetch learning stats
   async getLearningStats(userId: string): Promise<LearningStats> {
     const user = await this.prisma.user.findUnique({
       where: { id: userId },
       select: { level: true },
     });
 
-    if (!user) throw new Error("使用者不存在");
+    if (!user) throw new Error("User not found");
 
     const allSubmissions = await this.prisma.submission.findMany({
       where: { userId },
@@ -433,7 +433,7 @@ export class AdaptiveLearningEngine {
       ? allSubmissions.filter((s) => s.status === "ACCEPTED").length / allSubmissions.length
       : 0;
 
-    // 最近 7 天
+    // Last 7 days
     const sevenDaysAgo = new Date(Date.now() - 7 * 24 * 60 * 60 * 1000);
     const recentActivity = new Set(
       allSubmissions
@@ -441,7 +441,7 @@ export class AdaptiveLearningEngine {
         .map((s) => s.problemId)
     ).size;
 
-    // 弱點
+    // Weaknesses
     const weaknesses = await this.prisma.userWeakness.findMany({
       where: { userId, resolved: false },
       orderBy: { frequency: "desc" },
@@ -454,7 +454,7 @@ export class AdaptiveLearningEngine {
       frequency: w.frequency,
     }));
 
-    // 升級進度
+    // Level-up progress
     const currentIndex = LEVEL_ORDER.indexOf(user.level);
     let nextLevelProgress: LearningStats["nextLevelProgress"] = null;
 

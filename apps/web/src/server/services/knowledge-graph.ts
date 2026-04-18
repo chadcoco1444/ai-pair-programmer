@@ -4,8 +4,8 @@ export interface ConceptNode {
   id: string;
   name: string;
   domain: string;
-  mastery: number;       // 0-1, 從 UserProgress 取得
-  problemCount: number;  // 關聯的題目數量
+  mastery: number;       // 0-1, sourced from UserProgress
+  problemCount: number;  // Number of linked problems
 }
 
 export interface ConceptGraphData {

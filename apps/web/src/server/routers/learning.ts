@@ -3,7 +3,7 @@ import { protectedProcedure, router } from "../trpc";
 import { AdaptiveLearningEngine } from "../services/adaptive-learning";
 
 export const learningRouter = router({
-  // 取得推薦題目
+  // Fetch recommended problems
   recommendations: protectedProcedure.query(async ({ ctx }) => {
     const engine = new AdaptiveLearningEngine(ctx.prisma);
     const today = new Date().toISOString().slice(0, 10);
@@ -28,21 +28,21 @@ export const learningRouter = router({
       .filter((x: any) => x !== null);
   }),
 
-  // 取得學習統計
+  // Fetch learning stats
   stats: protectedProcedure
     .query(async ({ ctx }) => {
       const engine = new AdaptiveLearningEngine(ctx.prisma);
       return engine.getLearningStats(ctx.user.id);
     }),
 
-  // 檢查升級
+  // Check for level-up
   checkLevelUp: protectedProcedure
     .mutation(async ({ ctx }) => {
       const engine = new AdaptiveLearningEngine(ctx.prisma);
       return engine.checkLevelUp(ctx.user.id);
     }),
 
-  // 更新概念掌握度
+  // Update concept mastery
   updateMastery: protectedProcedure
     .input(z.object({ conceptId: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -51,7 +51,7 @@ export const learningRouter = router({
       return { mastery };
     }),
 
-  // 記錄弱點
+  // Record a weakness
   recordWeakness: protectedProcedure
     .input(z.object({ pattern: z.string() }))
     .mutation(async ({ ctx, input }) => {
@@ -60,7 +60,7 @@ export const learningRouter = router({
       return { success: true };
     }),
 
-  // 標記弱點已解決
+  // Mark a weakness as resolved
   resolveWeakness: protectedProcedure
     .input(z.object({ pattern: z.string() }))
     .mutation(async ({ ctx, input }) => {

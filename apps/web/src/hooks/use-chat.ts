@@ -44,12 +44,12 @@ export function useChat({ conversationId }: UseChatOptions) {
           body: JSON.stringify({ conversationId, content, submissionStatus }),
         });
 
-        if (!response.ok) throw new Error("串流連線失敗");
+        if (!response.ok) throw new Error("Streaming connection failed");
 
         const reader = response.body?.getReader();
         const decoder = new TextDecoder();
 
-        if (!reader) throw new Error("無法讀取回應串流");
+        if (!reader) throw new Error("Unable to read response stream");
 
         let buffer = "";
 
@@ -94,7 +94,7 @@ export function useChat({ conversationId }: UseChatOptions) {
               setMessages((prev) =>
                 prev.map((m) =>
                   m.id === assistantMessage.id
-                    ? { ...m, content: `錯誤：${data.error}`, isStreaming: false }
+                    ? { ...m, content: `Error: ${data.error}`, isStreaming: false }
                     : m
                 )
               );
@@ -105,7 +105,7 @@ export function useChat({ conversationId }: UseChatOptions) {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMessage.id
-              ? { ...m, content: `連線錯誤：${error.message}`, isStreaming: false }
+              ? { ...m, content: `Connection error: ${error.message}`, isStreaming: false }
               : m
           )
         );

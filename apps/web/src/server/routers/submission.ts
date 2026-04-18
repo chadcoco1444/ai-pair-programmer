@@ -10,7 +10,7 @@ function getExecutionClient() {
 }
 
 export const submissionRouter = router({
-  // 提交程式碼
+  // Submit code
   submit: protectedProcedure
     .input(
       z.object({
@@ -23,10 +23,10 @@ export const submissionRouter = router({
     .mutation(async ({ ctx, input }) => {
       const problemService = new ProblemService(ctx.prisma);
 
-      // 取得所有測資（含隱藏）
+      // Fetch all test cases (including hidden)
       const testCases = await problemService.getAllTestCases(input.problemId);
 
-      // 建立輔助函式，過濾 Postgres 不支援的 null byte
+      // Build a helper to strip null bytes that Postgres doesn't accept
       const sanitizeDeep = (obj: any): any => {
         if (typeof obj === 'string') return obj.replace(/\0/g, '');
         if (Array.isArray(obj)) return obj.map(sanitizeDeep);
@@ -36,7 +36,7 @@ export const submissionRouter = router({
         return obj;
       };
 
-      // 建立提交記錄
+      // Create submission record
       const submission = await ctx.prisma.submission.create({
         data: {
           userId: ctx.user.id,
@@ -47,7 +47,7 @@ export const submissionRouter = router({
         },
       });
 
-      // 呼叫執行引擎
+      // Call execution engine
       try {
         const result = await getExecutionClient().executeSync({
           submissionId: submission.id,
@@ -65,7 +65,7 @@ export const submissionRouter = router({
           memoryLimit: 256,
         });
 
-        // 更新提交記錄
+        // Update submission record
         await ctx.prisma.submission.update({
           where: { id: submission.id },
           data: {
@@ -96,12 +96,12 @@ export const submissionRouter = router({
           compileError: result.compileError,
         };
       } catch (error: any) {
-        // 執行引擎不可用時
+        // Handle executor service unavailable
         await ctx.prisma.submission.update({
           where: { id: submission.id },
           data: {
             status: "RUNTIME_ERROR",
-            aiAnalysis: `執行引擎錯誤: ${error.message}`.replace(/\0/g, ""),
+            aiAnalysis: `Executor error: ${error.message}`.replace(/\0/g, ""),
           },
         });
 
@@ -116,7 +116,7 @@ export const submissionRouter = router({
       }
     }),
 
-  // 查詢提交歷史
+  // Fetch submission history
   history: protectedProcedure
     .input(
       z.object({
@@ -146,7 +146,7 @@ export const submissionRouter = router({
       });
     }),
 
-  // 查詢單一提交詳情
+  // Fetch a single submission
   get: protectedProcedure
     .input(z.object({ submissionId: z.string() }))
     .query(async ({ ctx, input }) => {

@@ -6,29 +6,29 @@ import {
 } from "@/server/services/skill-prompts";
 
 describe("buildSKILLPrompt", () => {
-  it("應包含基礎系統角色", () => {
+  it("should include the base system role", () => {
     const prompt = buildSKILLPrompt({
       phase: "SOCRATIC",
       student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
     });
 
-    expect(prompt).toContain("程式設計導師");
+    expect(prompt).toContain("programming mentor");
     expect(prompt).toContain("SKILL");
-    expect(prompt).toContain("絕對不提供完整程式碼");
+    expect(prompt).toContain("Never provide a complete code solution");
   });
 
-  it("應包含對應階段的規則", () => {
+  it("should include the rules for the corresponding phase", () => {
     const prompt = buildSKILLPrompt({
       phase: "ITERATIVE",
       student: { level: "INTERMEDIATE", weaknesses: [], conceptMastery: [] },
     });
 
-    expect(prompt).toContain("疊代優化");
-    expect(prompt).toContain("暴力解");
-    expect(prompt).toContain("瓶頸分析");
+    expect(prompt).toContain("Iterative optimization");
+    expect(prompt).toContain("brute force");
+    expect(prompt).toContain("bottleneck");
   });
 
-  it("應根據程度調整語言", () => {
+  it("should adjust language to the student's level", () => {
     const beginner = buildSKILLPrompt({
       phase: "SOCRATIC",
       student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
@@ -39,11 +39,11 @@ describe("buildSKILLPrompt", () => {
       student: { level: "EXPERT", weaknesses: [], conceptMastery: [] },
     });
 
-    expect(beginner).toContain("初學者");
-    expect(expert).toContain("專家");
+    expect(beginner).toContain("Beginner");
+    expect(expert).toContain("Expert");
   });
 
-  it("應包含弱點資訊", () => {
+  it("should include weakness information", () => {
     const prompt = buildSKILLPrompt({
       phase: "SOCRATIC",
       student: {
@@ -57,7 +57,7 @@ describe("buildSKILLPrompt", () => {
     expect(prompt).toContain("missing-base-case");
   });
 
-  it("應包含題目資訊", () => {
+  it("should include problem info", () => {
     const prompt = buildSKILLPrompt({
       phase: "KNOWLEDGE",
       student: { level: "ADVANCED", weaknesses: [], conceptMastery: [] },
@@ -65,9 +65,9 @@ describe("buildSKILLPrompt", () => {
         title: "Two Sum",
         category: "ALGORITHM",
         difficulty: "EASY",
-        description: "找出兩個數字的和",
+        description: "Find two numbers that sum to the target",
         concepts: ["Array", "Hash Table"],
-        hints: ["用 hash map"],
+        hints: ["Use a hash map"],
       },
     });
 
@@ -78,38 +78,38 @@ describe("buildSKILLPrompt", () => {
 });
 
 describe("detectPhaseTransition", () => {
-  it("ACCEPTED 應轉換到 EVOLUTION", () => {
-    const phase = detectPhaseTransition("LOGIC", "結果出來了", "ACCEPTED");
+  it("ACCEPTED should transition to EVOLUTION", () => {
+    const phase = detectPhaseTransition("LOGIC", "result is in", "ACCEPTED");
     expect(phase).toBe("EVOLUTION");
   });
 
-  it("WRONG_ANSWER 應轉換到 ITERATIVE", () => {
-    const phase = detectPhaseTransition("LOGIC", "有測資沒過", "WRONG_ANSWER");
+  it("WRONG_ANSWER should transition to ITERATIVE", () => {
+    const phase = detectPhaseTransition("LOGIC", "a test case failed", "WRONG_ANSWER");
     expect(phase).toBe("ITERATIVE");
   });
 
-  it("TIME_LIMIT 應轉換到 ITERATIVE", () => {
-    const phase = detectPhaseTransition("LOGIC", "超時了", "TIME_LIMIT");
+  it("TIME_LIMIT should transition to ITERATIVE", () => {
+    const phase = detectPhaseTransition("LOGIC", "timed out", "TIME_LIMIT");
     expect(phase).toBe("ITERATIVE");
   });
 
-  it("學生提出解法時應從 SOCRATIC 轉到 KNOWLEDGE", () => {
-    const phase = detectPhaseTransition("SOCRATIC", "我想用 hash map 來解", undefined);
+  it("should move SOCRATIC to KNOWLEDGE when student proposes a solution", () => {
+    const phase = detectPhaseTransition("SOCRATIC", "I want to use a hash map to solve it", undefined);
     expect(phase).toBe("KNOWLEDGE");
   });
 
-  it("學生寫程式碼時應從 KNOWLEDGE 轉到 ITERATIVE", () => {
-    const phase = detectPhaseTransition("KNOWLEDGE", "我寫了一個 function", undefined);
+  it("should move KNOWLEDGE to ITERATIVE when student writes code", () => {
+    const phase = detectPhaseTransition("KNOWLEDGE", "I wrote a function", undefined);
     expect(phase).toBe("ITERATIVE");
   });
 
-  it("學生要提交時應從 ITERATIVE 轉到 LOGIC", () => {
-    const phase = detectPhaseTransition("ITERATIVE", "我覺得可以提交了", undefined);
+  it("should move ITERATIVE to LOGIC when student wants to submit", () => {
+    const phase = detectPhaseTransition("ITERATIVE", "I think I'm done, ready to submit", undefined);
     expect(phase).toBe("LOGIC");
   });
 
-  it("無匹配時應保持當前階段", () => {
-    const phase = detectPhaseTransition("SOCRATIC", "你好", undefined);
+  it("should keep the current phase when nothing matches", () => {
+    const phase = detectPhaseTransition("SOCRATIC", "hello", undefined);
     expect(phase).toBe("SOCRATIC");
   });
 });

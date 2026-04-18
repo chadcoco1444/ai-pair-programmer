@@ -3,7 +3,7 @@ import { protectedProcedure, router } from "../trpc";
 import { SKILLOrchestrator } from "../services/skill-orchestrator";
 
 export const conversationRouter = router({
-  // 開始新對話
+  // Start a new conversation
   start: protectedProcedure
     .input(
       z.object({
@@ -20,7 +20,7 @@ export const conversationRouter = router({
       });
     }),
 
-  // 發送訊息（非串流，回傳完整回應）
+  // Send a message (non-streaming; returns the full response)
   sendMessage: protectedProcedure
     .input(
       z.object({
@@ -39,7 +39,7 @@ export const conversationRouter = router({
         submissionStatus: input.submissionStatus,
       });
 
-      // 收集完整串流回應
+      // Collect the full streamed response
       let fullResponse = "";
       for await (const chunk of orchestrator.streamResponse({
         systemPrompt,
@@ -53,7 +53,7 @@ export const conversationRouter = router({
       return { response: fullResponse, phase };
     }),
 
-  // 取得對話歷史
+  // Fetch conversation history
   history: protectedProcedure
     .input(z.object({ conversationId: z.string() }))
     .query(async ({ ctx, input }) => {
@@ -61,7 +61,7 @@ export const conversationRouter = router({
       return orchestrator.getConversationHistory(input.conversationId);
     }),
 
-  // 列出使用者的對話
+  // List the user's conversations
   list: protectedProcedure
     .query(async ({ ctx }) => {
       return ctx.prisma.conversation.findMany({

@@ -16,10 +16,10 @@ export interface ConversationMessage {
 function formatAIError(error: any): string {
   const msg = error?.message || String(error);
   if (msg.includes("429") || msg.includes("Quota exceeded")) {
-    return "服務呼叫次數已達上限 (Rate Limit)，請稍候大約一分鐘後再試一次。";
+    return "Rate limit reached. Please try again in about a minute.";
   }
   if (msg.includes("503") || msg.includes("Service Unavailable")) {
-    return "AI 模型伺服器目前較為繁忙，請稍待片刻後重試。";
+    return "The AI model is currently busy. Please wait a moment and retry.";
   }
   return msg;
 }
@@ -99,7 +99,7 @@ export class SKILLOrchestrator {
       },
     });
 
-    // 如果有題目，生成開場白
+    // If a problem is attached, generate an opening message
     if (params.problemId) {
       const problem = await this.getProblemContext(params.problemId);
 
@@ -140,10 +140,10 @@ export class SKILLOrchestrator {
         const result = await model.generateContent("Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.");
         assistantMessage = result.response.text();
       } catch (error: any) {
-        assistantMessage = `⚠️ 系統提示：${formatAIError(error)}`;
+        assistantMessage = `⚠️ System notice: ${formatAIError(error)}`;
       }
 
-      // 儲存系統訊息
+      // Save system message
       await this.prisma.message.create({
         data: {
           conversationId: conversation.id,
@@ -153,7 +153,7 @@ export class SKILLOrchestrator {
         },
       });
 
-      // 儲存 AI 回應
+      // Save AI response
       await this.prisma.message.create({
         data: {
           conversationId: conversation.id,
@@ -189,21 +189,21 @@ export class SKILLOrchestrator {
       },
     });
 
-    if (!conversation) throw new Error("找不到對話");
+    if (!conversation) throw new Error("Conversation not found");
 
-    // 取得當前階段
+    // Get the current phase
     const lastPhase =
       (conversation.messages.findLast((m) => m.skillPhase)?.skillPhase as SKILLPhase) ??
       "SOCRATIC";
 
-    // 偵測階段轉換
+    // Detect phase transition
     const newPhase = detectPhaseTransition(
       lastPhase,
       params.content,
       params.submissionStatus
     );
 
-    // 儲存使用者訊息
+    // Save user message
     await this.prisma.message.create({
       data: {
         conversationId: params.conversationId,
@@ -213,7 +213,7 @@ export class SKILLOrchestrator {
       },
     });
 
-    // 組裝 prompt
+    // Build the prompt
     const student = await this.getStudentProfile(params.userId);
     const problem = conversation.problemId
       ? await this.getProblemContext(conversation.problemId)
@@ -225,7 +225,7 @@ export class SKILLOrchestrator {
       problem,
     });
 
-    // 組裝對話歷史（排除 SYSTEM 訊息）
+    // Build conversation history (excluding SYSTEM messages)
     const messages: ConversationMessage[] = conversation.messages
       .filter((m) => m.role !== "SYSTEM")
       .map((m) => ({
@@ -233,7 +233,7 @@ export class SKILLOrchestrator {
         content: m.content,
       }));
 
-    // 加入當前訊息
+    // Append the current message
     messages.push({ role: "user", content: params.content });
 
     return { systemPrompt, messages, phase: newPhase };
@@ -267,10 +267,10 @@ export class SKILLOrchestrator {
         systemInstruction: params.systemPrompt,
       });
 
-      // 組裝 Gemini 對話歷史（排除最後一條 user message）
+      // Build Gemini conversation history (excluding the last user message)
       const history = this.buildGeminiHistory(params.messages.slice(0, -1));
-      
-      // Gemini API 規定 history 第一筆必須是 'user'，如果不符合則塞入一個 dummy 訊息
+
+      // Gemini API requires the first history entry to be 'user'; insert a dummy if not
       if (history.length > 0 && history[0].role === "model") {
         history.unshift({ role: "user" as const, parts: [{ text: "Start conversation" }] });
       }
@@ -288,12 +288,12 @@ export class SKILLOrchestrator {
         }
       }
     } catch (error: any) {
-      const errorMsg = `\n\n---\n⚠️ 系統提示：${formatAIError(error)}`;
+      const errorMsg = `\n\n---\n⚠️ System notice: ${formatAIError(error)}`;
       fullResponse += errorMsg;
       yield errorMsg;
     }
 
-    // 儲存完整回應
+    // Save the full response
     await this.prisma.message.create({
       data: {
         conversationId: params.conversationId,
