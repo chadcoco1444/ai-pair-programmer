@@ -57,3 +57,24 @@ describe("buildSKILLPrompt — walkthrough directive", () => {
     expect(prompt).not.toContain("BEFORE discussing algorithms");
   });
 });
+
+describe("buildSKILLPrompt — language mirroring", () => {
+  it("instructs the AI to mirror the student's language (not hard-coded English)", () => {
+    const prompt = buildSKILLPrompt({
+      phase: "SOCRATIC",
+      student: { level: "BEGINNER", weaknesses: [], conceptMastery: [] },
+      problem,
+    });
+    expect(prompt).toMatch(/match the student's language|mirror.+language|same language/i);
+    expect(prompt).not.toMatch(/respond in English \(technical terms stay in English\)/i);
+  });
+
+  it("preserves the instruction to keep technical terms in English", () => {
+    const prompt = buildSKILLPrompt({
+      phase: "SOCRATIC",
+      student: { level: "ADVANCED", weaknesses: [], conceptMastery: [] },
+      problem,
+    });
+    expect(prompt).toMatch(/technical terms.+English/i);
+  });
+});
