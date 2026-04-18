@@ -30,12 +30,14 @@ export default function LearnPage() {
   };
 
   return (
-    <main className="min-h-[calc(100vh-3.5rem)] bg-[#0a0a0f] px-4 py-6 sm:px-8">
+    <main className="min-h-[calc(100vh-3.5rem)] bg-slate-900 px-4 py-6 sm:px-8">
       <div className="mx-auto max-w-7xl">
-        <div className="mb-4 flex items-baseline justify-between">
-          <h1 className="text-[22px] font-bold text-white">Learn Map</h1>
-          <div className="text-[12px] text-gray-500">
-            點選概念查看題目 · 依 prerequisite 排列
+        <div className="mb-4 flex items-baseline justify-between gap-4 flex-wrap">
+          <h1 className="font-mono text-2xl font-bold text-white">
+            Learn <span className="text-emerald-400">Map</span>
+          </h1>
+          <div className="text-xs text-slate-500">
+            Click a concept to explore problems · arranged by prerequisite
           </div>
         </div>
 
@@ -43,18 +45,39 @@ export default function LearnPage() {
           <RecommendationBanner onPickConcept={(cid) => selectConcept(cid)} />
         )}
 
-        <div className="rounded-xl border border-gray-800 bg-[#0d0d12] h-[calc(100vh-14rem)]">
+        <div className="relative rounded-lg border border-slate-800 bg-slate-900/50 h-[calc(100vh-14rem)]">
           {isLoading || !graph ? (
-            <div className="flex h-full items-center justify-center text-[13px] text-gray-500">
-              載入圖譜...
+            <div className="flex h-full items-center justify-center text-sm text-slate-500">
+              Loading graph...
             </div>
           ) : (
-            <SkillTree
-              nodes={graph.nodes}
-              edges={graph.edges}
-              selectedConceptId={selectedConceptId}
-              onConceptClick={(id) => selectConcept(id)}
-            />
+            <>
+              <SkillTree
+                nodes={graph.nodes}
+                edges={graph.edges}
+                selectedConceptId={selectedConceptId}
+                onConceptClick={(id) => selectConcept(id)}
+              />
+              {/* Legend */}
+              <div className="absolute bottom-4 right-4 bg-slate-900/80 backdrop-blur border border-slate-800 rounded-lg p-3 text-xs z-10">
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-emerald-500" />
+                  <span className="text-slate-300">Mastered</span>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-amber-500" />
+                  <span className="text-slate-300">Learning</span>
+                </div>
+                <div className="flex items-center gap-2 mb-1">
+                  <span className="w-2 h-2 rounded-full bg-slate-500" />
+                  <span className="text-slate-300">Untouched</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-slate-700" />
+                  <span className="text-slate-500">Locked</span>
+                </div>
+              </div>
+            </>
           )}
         </div>
       </div>
