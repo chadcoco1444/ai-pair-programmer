@@ -8,6 +8,8 @@ concepts:
     relevance: 1.0
   - name: Dynamic Programming
     relevance: 0.8
+  - name: Divide and Conquer
+    relevance: 0.7
 description: |
   A **path** in a binary tree is defined as a sequence starting from some node and ending at another node, where each pair of adjacent nodes in the sequence has an edge. A path **must contain at least one node** and does not need to pass through the root.
 

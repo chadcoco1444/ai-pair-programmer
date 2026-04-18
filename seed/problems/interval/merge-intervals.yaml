@@ -8,6 +8,8 @@ concepts:
     relevance: 0.8
   - name: Sorting
     relevance: 1.0
+  - name: Interval
+    relevance: 0.9
 description: |
   Given an array of `intervals` where `intervals[i] = [starti, endi]`, merge all overlapping intervals, and return an array of the non-overlapping intervals that cover all the intervals in the input.
 

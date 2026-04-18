@@ -8,6 +8,8 @@ concepts:
     relevance: 1.0
   - name: Heap
     relevance: 0.9
+  - name: Divide and Conquer
+    relevance: 0.7
 description: |
   Given an array `lists` of `k` sorted linked lists, merge all the lists into one sorted linked list and return it.
 

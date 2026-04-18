@@ -8,6 +8,10 @@ concepts:
     relevance: 0.9
   - name: Backtracking
     relevance: 1.0
+  - name: Matrix
+    relevance: 0.7
+  - name: Trie
+    relevance: 0.8
 description: |
   Given an `m x n` character matrix `board` and a list of strings `words`, return all words that can be found in the matrix.
 

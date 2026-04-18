@@ -6,6 +6,8 @@ tags: [array, matrix]
 concepts:
   - name: Array
     relevance: 1.0
+  - name: Matrix
+    relevance: 0.9
 description: |
   Given an `m x n` matrix `matrix`, return all elements of the matrix in **spiral order**.
 

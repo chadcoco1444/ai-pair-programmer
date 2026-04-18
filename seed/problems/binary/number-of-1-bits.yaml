@@ -8,6 +8,8 @@ concepts:
     relevance: 0.1
   - name: Greedy
     relevance: 0.2
+  - name: Bit Manipulation
+    relevance: 0.9
 description: |
   Write a function that takes the binary representation of a positive integer and returns the number of set bits it has (also known as the **Hamming weight**).
 

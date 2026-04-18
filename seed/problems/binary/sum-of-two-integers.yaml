@@ -8,6 +8,8 @@ concepts:
     relevance: 0.2
   - name: Greedy
     relevance: 0.3
+  - name: Bit Manipulation
+    relevance: 0.9
 description: |
   Given two integers `a` and `b`, return the sum of the two integers **without** using the operators `+` and `-`.
 

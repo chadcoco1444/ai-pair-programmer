@@ -8,6 +8,8 @@ concepts:
     relevance: 0.1
   - name: Greedy
     relevance: 0.2
+  - name: Bit Manipulation
+    relevance: 0.9
 description: |
   Reverse bits of a given 32-bit unsigned integer.
 

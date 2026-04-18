@@ -8,6 +8,8 @@ concepts:
     relevance: 0.9
   - name: Hash Table
     relevance: 0.8
+  - name: Trie
+    relevance: 0.9
 description: |
   Implement a **Trie (prefix tree)** class that supports the following operations:
 

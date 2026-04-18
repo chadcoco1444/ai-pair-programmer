@@ -8,6 +8,8 @@ concepts:
     relevance: 1.0
   - name: Queue
     relevance: 0.7
+  - name: Topological Sort
+    relevance: 0.9
 description: |
   There are a total of `numCourses` courses you have to take, labeled from `0` to `numCourses - 1`.
 

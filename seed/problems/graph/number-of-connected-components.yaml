@@ -8,6 +8,8 @@ concepts:
     relevance: 1.0
   - name: Queue
     relevance: 0.5
+  - name: Union Find
+    relevance: 0.9
 description: |
   Given `n` nodes labeled from `0` to `n - 1` and a list of undirected edges `edges`, where `edges[i] = [ai, bi]` indicates an undirected edge between nodes `ai` and `bi`, return the number of **connected components** in the graph.
 

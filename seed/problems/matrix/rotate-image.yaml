@@ -6,6 +6,8 @@ tags: [array, matrix, math]
 concepts:
   - name: Array
     relevance: 0.9
+  - name: Matrix
+    relevance: 0.9
 description: |
   Given an `n x n` 2D matrix `matrix` representing an image, rotate the image **in-place** by 90 degrees clockwise.
 

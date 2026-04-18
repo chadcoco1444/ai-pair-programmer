@@ -8,6 +8,8 @@ concepts:
     relevance: 0.9
   - name: Hash Table
     relevance: 0.8
+  - name: Matrix
+    relevance: 0.9
 description: |
   Given an `m x n` integer matrix `matrix`, if an element is `0`, set its entire **row** and **column** to `0`s. You must do this **in-place**.
 

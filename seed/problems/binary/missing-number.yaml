@@ -10,6 +10,8 @@ concepts:
     relevance: 0.4
   - name: Sorting
     relevance: 0.3
+  - name: Bit Manipulation
+    relevance: 0.7
 description: |
   Given an array `nums` containing `n` distinct numbers in the range `[0, n]`, return the only number in the range that is missing from the array.
 
