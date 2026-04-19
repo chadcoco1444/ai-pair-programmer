@@ -1,7 +1,7 @@
 import { createAnthropic } from "@ai-sdk/anthropic";
 import { createGoogleGenerativeAI } from "@ai-sdk/google";
 import { createOpenAI } from "@ai-sdk/openai";
-import type { LanguageModel } from "ai";
+import type { LanguageModel, SystemModelMessage } from "ai";
 
 export type Provider = "anthropic" | "google" | "openai";
 
@@ -61,4 +61,26 @@ export function getModel(): LanguageModel {
     case "openai":
       return createOpenAI({ apiKey })(AI_MODEL);
   }
+}
+
+/**
+ * Wraps a system prompt with provider-specific optimizations.
+ *
+ * Anthropic: marks the system prompt as cacheable (ephemeral, 5-min TTL).
+ * Re-sending the same system prompt within 5 minutes is billed at ~10% of
+ * full input rate. Typical savings: 50-70% on a running conversation.
+ *
+ * Other providers: returns the plain string (no-op).
+ */
+export function cacheableSystem(systemPrompt: string): string | SystemModelMessage {
+  if (AI_PROVIDER === "anthropic") {
+    return {
+      role: "system",
+      content: systemPrompt,
+      providerOptions: {
+        anthropic: { cacheControl: { type: "ephemeral" } },
+      },
+    };
+  }
+  return systemPrompt;
 }

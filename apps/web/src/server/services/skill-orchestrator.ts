@@ -1,6 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
 import { streamText, generateText, type ModelMessage } from "ai";
-import { getModel, AI_AVAILABLE, AI_PROVIDER } from "@/lib/ai";
+import { getModel, cacheableSystem, AI_AVAILABLE, AI_PROVIDER } from "@/lib/ai";
 import {
   buildSKILLPrompt,
   detectPhaseTransition,
@@ -16,6 +16,29 @@ export interface ConversationMessage {
 
 const AI_KEY_HINT =
   "Set ANTHROPIC_API_KEY (default), GOOGLE_GENERATIVE_AI_API_KEY, or OPENAI_API_KEY in .env. Switch provider via AI_PROVIDER=anthropic|google|openai.";
+
+// Sliding-window cap on conversation history re-sent each turn (tokens grow linearly otherwise).
+// 24 ≈ 12 user/assistant exchanges — covers typical tutoring sessions without truncating.
+const HISTORY_WINDOW = Math.max(
+  2,
+  Number.parseInt(process.env.AI_HISTORY_WINDOW || "24", 10) || 24
+);
+
+// Cap on AI output tokens. Socratic responses should be short; this bounds worst-case cost.
+const MAX_OUTPUT_TOKENS = Math.max(
+  100,
+  Number.parseInt(process.env.AI_MAX_OUTPUT_TOKENS || "600", 10) || 600
+);
+
+/**
+ * Truncate message history to the last HISTORY_WINDOW entries while keeping
+ * the first message role = "user" (required by Anthropic's API).
+ */
+function applyHistoryWindow(all: ConversationMessage[]): ConversationMessage[] {
+  let sliced = all.length > HISTORY_WINDOW ? all.slice(-HISTORY_WINDOW) : all;
+  while (sliced.length > 0 && sliced[0].role !== "user") sliced = sliced.slice(1);
+  return sliced;
+}
 
 function formatAIError(error: any): string {
   const msg = error?.message || String(error);
@@ -134,9 +157,10 @@ export class SKILLOrchestrator {
       try {
         const { text } = await generateText({
           model: getModel(),
-          system: systemPrompt,
+          system: cacheableSystem(systemPrompt),
           prompt:
             "Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.",
+          maxOutputTokens: 300,
         });
         assistantMessage = text;
       } catch (error: any) {
@@ -226,7 +250,7 @@ export class SKILLOrchestrator {
     });
 
     // Build conversation history (excluding SYSTEM messages)
-    const messages: ConversationMessage[] = conversation.messages
+    const allMessages: ConversationMessage[] = conversation.messages
       .filter((m) => m.role !== "SYSTEM")
       .map((m) => ({
         role: m.role === "USER" ? ("user" as const) : ("assistant" as const),
@@ -234,7 +258,10 @@ export class SKILLOrchestrator {
       }));
 
     // Append the current message
-    messages.push({ role: "user", content: params.content });
+    allMessages.push({ role: "user", content: params.content });
+
+    // Cap token cost with a sliding window; keeps most-recent context
+    const messages = applyHistoryWindow(allMessages);
 
     return { systemPrompt, messages, phase: newPhase };
   }
@@ -269,8 +296,9 @@ export class SKILLOrchestrator {
 
       const result = streamText({
         model: getModel(),
-        system: params.systemPrompt,
+        system: cacheableSystem(params.systemPrompt),
         messages: modelMessages,
+        maxOutputTokens: MAX_OUTPUT_TOKENS,
       });
 
       for await (const delta of result.textStream) {
