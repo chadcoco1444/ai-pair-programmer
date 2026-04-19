@@ -32,8 +32,8 @@
       <text x="80" y="92" fill="#22c55e" text-anchor="middle">tRPC routers</text>
       <rect x="150" y="72" width="100" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
       <text x="200" y="92" fill="#f8fafc" text-anchor="middle">Prisma</text>
-      <rect x="260" y="72" width="140" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
-      <text x="330" y="92" fill="#f8fafc" text-anchor="middle">Gemini API</text>
+      <rect x="260" y="72" width="140" height="32" rx="16" fill="#0f172a" stroke="#22c55e"/>
+      <text x="330" y="92" fill="#22c55e" text-anchor="middle">AI SDK (multi)</text>
       <rect x="410" y="72" width="130" height="32" rx="16" fill="#0f172a" stroke="#334155"/>
       <text x="475" y="92" fill="#f8fafc" text-anchor="middle">OAuth</text>
     </g>

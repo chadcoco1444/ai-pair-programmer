@@ -1,5 +1,6 @@
 import type { PrismaClient } from "@prisma/client";
-import { genai, AI_MODEL, AI_AVAILABLE } from "@/lib/ai";
+import { streamText, generateText, type ModelMessage } from "ai";
+import { getModel, AI_AVAILABLE, AI_PROVIDER } from "@/lib/ai";
 import {
   buildSKILLPrompt,
   detectPhaseTransition,
@@ -13,13 +14,19 @@ export interface ConversationMessage {
   content: string;
 }
 
+const AI_KEY_HINT =
+  "Set ANTHROPIC_API_KEY (default), GOOGLE_GENERATIVE_AI_API_KEY, or OPENAI_API_KEY in .env. Switch provider via AI_PROVIDER=anthropic|google|openai.";
+
 function formatAIError(error: any): string {
   const msg = error?.message || String(error);
-  if (msg.includes("429") || msg.includes("Quota exceeded")) {
+  if (msg.includes("429") || /rate.?limit/i.test(msg) || msg.includes("Quota exceeded")) {
     return "Rate limit reached. Please try again in about a minute.";
   }
-  if (msg.includes("503") || msg.includes("Service Unavailable")) {
+  if (msg.includes("503") || /overloaded/i.test(msg) || msg.includes("Service Unavailable")) {
     return "The AI model is currently busy. Please wait a moment and retry.";
+  }
+  if (msg.includes("401") || /invalid.*api.*key/i.test(msg) || /authentication/i.test(msg)) {
+    return `AI API key rejected for provider "${AI_PROVIDER}". ${AI_KEY_HINT}`;
   }
   return msg;
 }
@@ -79,13 +86,6 @@ export class SKILLOrchestrator {
     };
   }
 
-  private buildGeminiHistory(messages: ConversationMessage[]): { role: "user" | "model"; parts: { text: string }[] }[] {
-    return messages.map((m) => ({
-      role: m.role === "user" ? "user" as const : "model" as const,
-      parts: [{ text: m.content }],
-    }));
-  }
-
   async startConversation(params: {
     userId: string;
     problemId?: string;
@@ -104,7 +104,7 @@ export class SKILLOrchestrator {
       const problem = await this.getProblemContext(params.problemId);
 
       if (!AI_AVAILABLE) {
-        const fallback = "⚠️ AI Tutor unavailable. Set `GEMINI_API_KEY` in `.env`.";
+        const fallback = `⚠️ AI Tutor unavailable. ${AI_KEY_HINT}`;
 
         await this.prisma.message.create({
           data: {
@@ -132,13 +132,13 @@ export class SKILLOrchestrator {
 
       let assistantMessage: string;
       try {
-        const model = genai.getGenerativeModel({
-          model: AI_MODEL,
-          systemInstruction: systemPrompt,
+        const { text } = await generateText({
+          model: getModel(),
+          system: systemPrompt,
+          prompt:
+            "Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.",
         });
-
-        const result = await model.generateContent("Greet the student briefly (1-2 sentences). Do NOT repeat the problem description — they can already see it. Instead, ask them ONE thought-provoking question to get them thinking about their approach. Keep it short.");
-        assistantMessage = result.response.text();
+        assistantMessage = text;
       } catch (error: any) {
         assistantMessage = `⚠️ System notice: ${formatAIError(error)}`;
       }
@@ -246,7 +246,7 @@ export class SKILLOrchestrator {
     phase: SKILLPhase;
   }): AsyncGenerator<string> {
     if (!AI_AVAILABLE) {
-      const fallback = "⚠️ AI Tutor is offline. Set `GEMINI_API_KEY` in `.env` to enable it.\n\nYou can still write code and submit!";
+      const fallback = `⚠️ AI Tutor is offline. ${AI_KEY_HINT}\n\nYou can still write code and submit!`;
       yield fallback;
       await this.prisma.message.create({
         data: {
@@ -262,29 +262,21 @@ export class SKILLOrchestrator {
     let fullResponse = "";
 
     try {
-      const model = genai.getGenerativeModel({
-        model: AI_MODEL,
-        systemInstruction: params.systemPrompt,
+      const modelMessages: ModelMessage[] = params.messages.map((m) => ({
+        role: m.role,
+        content: m.content,
+      }));
+
+      const result = streamText({
+        model: getModel(),
+        system: params.systemPrompt,
+        messages: modelMessages,
       });
 
-      // Build Gemini conversation history (excluding the last user message)
-      const history = this.buildGeminiHistory(params.messages.slice(0, -1));
-
-      // Gemini API requires the first history entry to be 'user'; insert a dummy if not
-      if (history.length > 0 && history[0].role === "model") {
-        history.unshift({ role: "user" as const, parts: [{ text: "Start conversation" }] });
-      }
-
-      const lastMessage = params.messages[params.messages.length - 1].content;
-
-      const chat = model.startChat({ history });
-      const result = await chat.sendMessageStream(lastMessage);
-
-      for await (const chunk of result.stream) {
-        const text = chunk.text();
-        if (text) {
-          fullResponse += text;
-          yield text;
+      for await (const delta of result.textStream) {
+        if (delta) {
+          fullResponse += delta;
+          yield delta;
         }
       }
     } catch (error: any) {

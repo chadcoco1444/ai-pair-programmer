@@ -59,7 +59,7 @@
 Three layers:
 
 1. **Client** — Next.js 15 (App Router) + React 19. React Flow for the skill tree, Monaco for the editor, Tailwind for styling, NextAuth.js v5 for Google/GitHub OAuth.
-2. **API** — tRPC v11 (type-safe), Prisma ORM, Google Gemini 2.0 Flash for AI chat. All requests are type-checked end-to-end.
+2. **API** — tRPC v11 (type-safe), Prisma ORM, [Vercel AI SDK](https://ai-sdk.dev/) with pluggable providers (Anthropic Claude / Google Gemini / OpenAI — defaults to Anthropic Haiku 4.5). All requests are type-checked end-to-end.
 3. **Infrastructure** — PostgreSQL 16 + Redis 7 (BullMQ). A standalone Executor service pulls submissions off the queue and runs them in language-specific Docker containers (Python, JS, C/C++).
 
 | Layer | Tech |
@@ -68,7 +68,7 @@ Three layers:
 | API | tRPC v11, NextAuth.js v5 |
 | Database | PostgreSQL 16 + Prisma ORM |
 | Cache / Queue | Redis 7 + BullMQ |
-| AI | Google Gemini 2.0 Flash (free tier available) |
+| AI | Vercel AI SDK — Anthropic Claude (default) / Google Gemini / OpenAI, swap via `AI_PROVIDER` env |
 | Code Execution | Docker sandboxes + BullMQ worker |
 | Testing | Vitest (unit) + custom Python E2E harness |
 
@@ -97,8 +97,13 @@ This installs dependencies, starts PostgreSQL and Redis, applies the Prisma sche
 Edit `.env` and fill in:
 
 ```env
-# AI tutor — free tier at https://aistudio.google.com/apikey
-GEMINI_API_KEY="your-key"
+# AI tutor — pick any one provider (defaults to Anthropic)
+AI_PROVIDER="anthropic"                  # or "google" or "openai"
+ANTHROPIC_API_KEY="your-key"             # https://console.anthropic.com/
+# OR
+GEMINI_API_KEY="your-key"                # https://aistudio.google.com/apikey
+# OR
+OPENAI_API_KEY="your-key"                # https://platform.openai.com/api-keys
 
 # OAuth — set at least one provider
 GITHUB_CLIENT_ID="..."

@@ -47,7 +47,7 @@ export function PricingModal({ onClose }: PricingModalProps) {
               </li>
               <li className="flex items-center gap-2">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#3b82f6" strokeWidth="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
-                Access to Gemini 2.5 Pro model
+                Access to premium models (Claude Sonnet / GPT-4o / Gemini Pro)
               </li>
             </ul>
             <button className="w-full rounded-lg bg-blue-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-700">
